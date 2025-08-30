@@ -256,8 +256,8 @@ Our Awesome Contributors
 | Channel                                                         | Typical Response Time | Best For                                             |
 | --------------------------------------------------------------- | --------------------- | ---------------------------------------------------- |
 | 🎮 [Discord](https://discord.gg/FkrWfGtZn3)                     | Real-time             | Quick questions, community discussions               |
-| 📧 [Email Support](mailto:rawx18.dev@gmail.com)                 | 24–48 hours           | Technical issues, detailed bug reports               |
-| 🐦 [Twitter / X](https://x.com/RAWx18_dev)                      | Online                | Tagging the project, general updates, public reports |
+| 📧 [Email Support](students@iiitm.ac.in)                 | 24–48 hours           | Technical issues, detailed bug reports               |
+| 🐦 [Twitter / X](https://x.com/IiitmAurora)                      | Online                | Tagging the project, general updates, public reports |
 | 🐛 [GitHub Issues](https://github.com/LF-Decentralized-Trust-Mentorships/gitmesh/issues) | 1–3 days              | Bug reports, feature requests, feedback              |
 
 </div>
