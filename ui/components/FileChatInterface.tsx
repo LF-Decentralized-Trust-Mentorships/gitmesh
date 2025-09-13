@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { FileSelector } from '@/components/ui/file-selector';
 import {
   Dialog,
   DialogContent,
@@ -2650,12 +2651,11 @@ console.log('File: ${filePath}');`;
               <div className="space-y-3">
                 <div>
                   <Label htmlFor="file-upload">Documents</Label>
-                  <Input
+                  <FileSelector
                     id="file-upload"
-                    type="file"
                     multiple
                     accept=".pdf,.doc,.docx,.txt,.md"
-                    onChange={(e) => setImportFormData({...importFormData, files: e.target.files})}
+                    onFilesChange={(files) => setImportFormData({...importFormData, files})}
                   />
                 </div>
               </div>
