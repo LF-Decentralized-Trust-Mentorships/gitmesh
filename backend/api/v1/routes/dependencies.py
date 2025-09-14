@@ -6,6 +6,7 @@ import structlog
 from models.api.auth_models import User
 from utils.auth_utils import security_utils, jwt_handler
 from .sessions import user_sessions, load_sessions
+from config.key_manager import key_manager
 
 logger = structlog.get_logger(__name__)
 security = HTTPBearer(auto_error=False)
@@ -38,8 +39,7 @@ def get_current_user(credentials: Optional[HTTPAuthorizationCredentials] = Depen
 
 def get_github_token(user: Optional[User] = Depends(get_current_user)) -> str:
     """
-    Dependency to get the authenticated user's GitHub access token.
-    Handles both regular and demo users.
+    Dependency to get the authenticated user's GitHub access token from the KeyManager.
     """
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required")
@@ -47,14 +47,11 @@ def get_github_token(user: Optional[User] = Depends(get_current_user)) -> str:
     if user.login == 'demo-user':
         return 'demo-github-token'
 
-    if not hasattr(user, 'access_token') or not user.access_token:
-        raise HTTPException(status_code=401, detail="GitHub token not found in session")
-
     try:
-        token = security_utils.decrypt_token(user.access_token)
-        # print(f"Decrypted token: {token}")
+        # Retrieve the token from Vault/Redis via the KeyManager
+        token = key_manager.get_github_token(username=user.login)
         if not token:
-            raise HTTPException(status_code=500, detail="Failed to decrypt token")
+            raise HTTPException(status_code=404, detail="GitHub token not found for user.")
         return token
     except Exception as e:
         logger.error(f"Failed to decrypt token for user {user.login}: {e}")

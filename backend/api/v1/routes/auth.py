@@ -110,6 +110,7 @@ async def github_oauth_callback(
         return _redirect_with_error("Authorization code required", "GitHub authorization code is missing")
     
     try:
+        from config.key_manager import key_manager
         # Exchange code for token
         token_response = await github_oauth.exchange_code_for_token(code)
         access_token = token_response['access_token']
@@ -122,6 +123,9 @@ async def github_oauth_callback(
         github_id = user_profile['id']
         login = user_profile['login']
         
+        # Store the token securely in Vault
+        key_manager.set_key(username=login, key_name="github_token", key_value=access_token)
+
         user_info = {
             'id': github_id,
             'github_id': github_id,
@@ -155,7 +159,6 @@ async def github_oauth_callback(
             'login': login,
             'name': user_profile.get('name'),
             'avatar_url': user_profile['avatar_url'],
-            'access_token': security_utils.encrypt_token(access_token),
             'created_at': datetime.now(),
             'last_activity': datetime.now()
         }

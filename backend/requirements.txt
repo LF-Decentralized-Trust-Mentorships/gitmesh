@@ -61,3 +61,7 @@ unstructured
 markdown
 docx
 psycopg2-binary
+
+# Key Management
+hvac
+redis
