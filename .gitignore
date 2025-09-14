@@ -275,9 +275,6 @@ traces.jsonl
 *.sqlite
 *.sqlite3
 
-# Docker
-.dockerignore
-
 # Custom
 GEMINI.md
 qdrant_storage/

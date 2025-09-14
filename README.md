@@ -137,22 +137,142 @@ cp ui/.env.example ui/.env
 
 > **Note**: Replace all placeholder values [REDACTED] with your actual configuration values.
 
-### 👾 Installation
+### 👾 Manual Installation
 
-1. **Setup Python Backend**
+If you prefer to run the application without Docker:
+
+#### **Setup Python Backend**
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Linux/Mac
+# .\venv\Scripts\activate # On Windows
+pip install -r requirements.txt
+```
+
+#### **Setup Frontend**
+
+```bash
+cd ui
+npm install
+```
+
+### 👾 Docker Installation (Recommended)
+
+For a quick and consistent setup, use Docker:
+
+#### **Prerequisites**
+
+- Install [Docker](https://docs.docker.com/get-docker/) (version 20.10+)
+- Install [Docker Compose](https://docs.docker.com/compose/install/) (version 2.0+)
+
+#### **Environment Setup**
+
+1. **Clone the repository**:
+
    ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Linux/Mac
-   .\venv\Scripts\activate # On Windows
-   pip install -r requirements.txt
+   git clone https://github.com/LF-Decentralized-Trust-Mentorships/gitmesh
+   cd gitmesh
    ```
 
-2. **Setup Frontend**
+2. **Configure environment variables**:
+
    ```bash
-   cd ui
-   npm install
+   # Backend configuration
+   cp backend/.env.example backend/.env
+   
+   # Frontend configuration  
+   cp ui/.env.example ui/.env
    ```
+
+   > **Important**: Edit the `.env` files and replace all `[REDACTED]` placeholders with your actual configuration values.
+
+#### **Production Deployment**
+
+Start the full application stack in production mode:
+
+```bash
+# Start all services in production mode
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+**Access Points**:
+
+- **Frontend**: <http://localhost:3000>
+- **Backend API**: <http://localhost:8000>
+- **API Documentation**: <http://localhost:8000/docs>
+
+#### **Development Mode**
+
+For active development with hot-reload and file watching:
+
+```bash
+# Start in development mode with file watching
+docker-compose -f docker-compose.dev.yml up -d
+
+# View development logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop development environment
+docker-compose -f docker-compose.dev.yml down
+```
+
+**Development Features**:
+
+- 🔄 **Hot Reload**: Automatic restarts on code changes
+- 📁 **Volume Mounting**: Real-time file synchronization
+- 🐛 **Debug Mode**: Enhanced logging and error reporting
+- ⚡ **Fast Builds**: Optimized for development iteration
+
+#### **Docker Management Commands**
+
+```bash
+# Rebuild specific service
+docker-compose build backend
+docker-compose build frontend
+
+# Scale services (production only)
+docker-compose up -d --scale backend=2
+
+# View service status
+docker-compose ps
+
+# Access service shell
+docker-compose exec backend bash
+docker-compose exec frontend sh
+
+# Clean up all containers and volumes
+docker-compose down -v --remove-orphans
+docker system prune -a
+```
+
+#### **Environment Variables**
+
+Key environment variables for Docker deployment:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BACKEND_PORT` | `8000` | Backend service port |
+| `FRONTEND_PORT` | `3000` | Frontend service port |
+| `NODE_ENV` | `production` | Node.js environment |
+| `ENVIRONMENT` | `production` | Application environment |
+| `DEBUG` | `false` | Debug mode (dev: `true`) |
+
+#### **Health Checks**
+
+Both services include built-in health checks:
+
+- **Backend**: `<http://localhost:8000/health>`
+- **Frontend**: `<http://localhost:3000>` (root path)
+
+Services automatically restart if health checks fail.
 
 ### 👾 Running the Application
 
@@ -181,12 +301,12 @@ cp ui/.env.example ui/.env
 
 ### 👾 **Q4 2025 - Production Goals**
 - ✅ Refactor and rebase codebase with proper routing architecture
+- ✅ Containerize the application using Docker
 - ⏳ Enhance user interface (UI) for improved usability and aesthetics
 - ⏳ Implement advanced branch visualization
 - ⏳ Shift complete database to cloud
 - ⏳ Develop contribution tracking system
 - ⏳ Strengthen security and optimize rate-limiting mechanisms
-- ⏳ Containerize the application using Docker
 - ⏳ Deploy the complete website to production environment
 - ⏳ Set up and publish project documentation site
 

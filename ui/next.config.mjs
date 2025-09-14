@@ -1,5 +1,12 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -8,6 +15,18 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+  },
+  // Disable static generation to avoid useSearchParams() issues
+  trailingSlash: false,
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': __dirname,
+    };
+    return config;
   },
   async rewrites() {
     return [

@@ -1,0 +1,75 @@
+x-next-env: &next-env
+  NODE_ENV: ${NODE_ENV:-production}
+  NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:8000}
+
+x-backend-common: &backend-common
+  PYTHONPATH: /app
+  PYTHONDONTWRITEBYTECODE: 1
+  PYTHONUNBUFFERED: 1
+  NODE_ENV: ${NODE_ENV:-production}
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: gitmesh-backend
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    env_file:
+      - backend/.env
+    environment:
+      <<: *backend-common
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DEBUG: ${DEBUG:-false}
+    volumes:
+      - backend_data:/app/data
+      - backend_static:/app/static
+      - backend_uploads:/app/data/uploads
+    restart: unless-stopped
+    networks:
+      - gitmesh-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 120s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      target: production
+      args:
+        <<: *next-env
+    container_name: gitmesh-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      <<: *next-env
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - gitmesh-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 120s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  gitmesh-network:
+    driver: bridge
+
+volumes:
+  backend_data:
+    driver: local
+  backend_static:
+    driver: local
+  backend_uploads:
+    driver: local

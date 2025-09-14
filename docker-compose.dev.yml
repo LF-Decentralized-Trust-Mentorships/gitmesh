@@ -1,0 +1,92 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder  # Use builder stage for dev
+    container_name: gitmesh-backend-dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - PYTHONPATH=/app
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - PATH=/opt/venv/bin:/usr/local/bin:/usr/bin:/bin
+      - UVICORN_HOST=0.0.0.0
+      - UVICORN_PORT=8000
+    volumes:
+      - ./backend:/app
+      - ./backend/data:/app/data
+      - ./backend/static:/app/static
+      - backend_cache:/root/.cache
+    working_dir: /app
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - gitmesh-dev-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - __pycache__/
+            - .git/
+            - data/
+        - action: rebuild
+          path: ./backend/requirements.txt
+
+  frontend:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      target: deps  # Use deps stage for dev
+    container_name: gitmesh-frontend-dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./ui/.env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - gitmesh-dev-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    develop:
+      watch:
+        - action: sync
+          path: ./ui
+          target: /app
+          ignore:
+            - node_modules/
+            - .next/
+            - .git/
+        - action: rebuild
+          path: ./ui/package.json
+
+networks:
+  gitmesh-dev-network:
+    driver: bridge
+
+volumes:
+  backend_cache:
+    driver: local
