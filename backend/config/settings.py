@@ -47,6 +47,16 @@ class Settings(BaseSettings):
     supabase_url: Optional[str] = Field(default=None, env="SUPABASE_URL")
     supabase_anon_key: Optional[str] = Field(default=None, env="SUPABASE_ANON_KEY")
     supabase_service_role_key: Optional[str] = Field(default=None, env="SUPABASE_SERVICE_ROLE_KEY")
+
+    # ========================
+    # KEY MANAGER CONFIGURATION
+    # ========================
+    vault_addr: str = Field(default="http://127.0.0.1:8200", env="VAULT_ADDR")
+    vault_token: Optional[str] = Field(default=None, env="VAULT_TOKEN")
+    redis_host: str = Field(default="localhost", env="REDIS_HOST")
+    redis_port: int = Field(default=6379, env="REDIS_PORT")
+    redis_db: int = Field(default=0, env="REDIS_DB")
+    redis_password: Optional[str] = Field(default=None, env="REDIS_PASSWORD")
     
     # Database Pool Settings
     db_pool_size: int = Field(default=10, env="DB_POOL_SIZE")
