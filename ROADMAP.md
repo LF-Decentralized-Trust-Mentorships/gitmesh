@@ -83,7 +83,7 @@ Welcome to the GitMesh roadmap! Below you'll find a detailed list of both curren
   Keeps project documentation continuously in sync with code changes using AI-powered doc generation.
 
 - [ ] **Gamification & Achievement System**  
-  Contributors earn points, badges, and level-ups for various activities, motivating regular participation and skill growth.
+  Contributors earn points, badges, and level-ups for various activities, motivating regular participation and skill growth. [Share your gamification ideas!](GAMIFICATION_IDEAS.md)
 
 - [ ] **Bounty Program Integration**  
   Supports integration with leading bounty and open source support programs so maintainers can reward contributors with cash, prizes, or recognition.

@@ -233,6 +233,7 @@ Remember to always commit your local changes or stash them before pulling update
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 [![Complete Roadmap](https://img.shields.io/badge/View%20our-Roadmap-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LF-Decentralized-Trust-labs/gitmesh/blob/main/ROADMAP.md)
+[![Gamification Ideas](https://img.shields.io/badge/Share-Gamification%20Ideas-purple?style=for-the-badge&logo=gamepad&logoColor=white)](https://github.com/LF-Decentralized-Trust-labs/gitmesh/blob/main/GAMIFICATION_IDEAS.md)
 
 ### 👾 Quick Contributing Steps:
 1. Fork the repository
