@@ -15,7 +15,7 @@ interface ModelCardProps {
 function ModelCard({ model, onUpdate, onDelete }: ModelCardProps) {
   return (
     <Card className="bg-gitmesh-elements-background-depth-3 hover:bg-gitmesh-elements-background-depth-4 transition-all duration-200 shadow-sm hover:shadow-md border border-gitmesh-elements-borderColor hover:border-blue-500/20">
-      <CardContent className="p-5">
+      <CardContent className="pt-6 px-5 pb-5">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2">

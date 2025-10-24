@@ -303,17 +303,9 @@ export default function LocalProvidersTab() {
     <ErrorBoundary>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="flex items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/20 flex items-center justify-center ring-1 ring-blue-500/30">
-              <Cpu className="w-6 h-6 text-blue-500" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-semibold text-gitmesh-elements-textPrimary">Local AI Providers</h2>
-              <p className="text-sm text-gitmesh-elements-textSecondary">Configure and manage your local AI models</p>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <h2 className="text-lg font-semibold text-gitmesh-elements-textPrimary">Local AI Providers</h2>
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gitmesh-elements-textSecondary">Enable All</span>
               <Switch
@@ -322,31 +314,31 @@ export default function LocalProvidersTab() {
                 aria-label="Toggle all local providers"
               />
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setViewMode('guide')}
-                className="bg-gitmesh-elements-background-depth-1 hover:bg-gitmesh-elements-background-depth-3 border-gitmesh-elements-borderColor hover:border-blue-500/30 transition-all duration-200 gap-2"
-              >
-                <BookOpen className="w-4 h-4" />
-                Setup Guide
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setViewMode('status')}
-                className="bg-gitmesh-elements-background-depth-1 hover:bg-gitmesh-elements-background-depth-3 border-gitmesh-elements-borderColor hover:border-blue-500/30 transition-all duration-200 gap-2"
-              >
-                <Activity className="w-4 h-4" />
-                Status
-              </Button>
-            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setViewMode('guide')}
+              className="gap-2"
+            >
+              <BookOpen className="w-4 h-4" />
+              Setup Guide
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setViewMode('status')}
+              className="gap-2"
+            >
+              <Activity className="w-4 h-4" />
+              Status
+            </Button>
           </div>
         </div>
 
         {/* Provider Cards */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           {filteredProviders.map((provider) => (
             <div key={provider.name} className="space-y-4">
               <ProviderCard
@@ -360,11 +352,11 @@ export default function LocalProvidersTab() {
 
               {/* Ollama Models Section */}
               {provider.name === 'Ollama' && provider.settings.enabled && (
-                <Card className="mt-4 bg-gitmesh-elements-background-depth-1">
-                  <CardHeader className="pb-3">
+                <Card className="mt-4 bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+                  <CardHeader className="pt-6 px-6 pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <PackageOpen className="w-5 h-5 text-blue-500" />
+                        <PackageOpen className="w-5 h-5 text-gitmesh-elements-textPrimary" />
                         <h3 className="text-lg font-semibold text-gitmesh-elements-textPrimary">Installed Models</h3>
                       </div>
                       <Button
@@ -372,18 +364,18 @@ export default function LocalProvidersTab() {
                         size="sm"
                         onClick={fetchOllamaModels}
                         disabled={isLoadingModels}
-                        className="bg-transparent hover:bg-gitmesh-elements-background-depth-1"
+                        className="gap-2"
                       >
                         {isLoadingModels ? (
-                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                          <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          <RotateCw className="w-4 h-4 mr-2" />
+                          <RotateCw className="w-4 h-4" />
                         )}
                         Refresh
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="pt-6 px-6 pb-6 space-y-4">
                     {isLoadingModels ? (
                       <div className="space-y-4">
                         {Array.from({ length: 3 }).map((_, i) => (
@@ -412,7 +404,7 @@ export default function LocalProvidersTab() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-gradient-to-r from-blue-500/8 to-blue-600/8 hover:from-blue-500/15 hover:to-blue-600/15 border-blue-500/25 hover:border-blue-500/40 transition-all duration-300 gap-2 group shadow-sm hover:shadow-md font-medium"
+                          className="gap-2"
                           _asChild
                         >
                           <a
@@ -421,8 +413,8 @@ export default function LocalProvidersTab() {
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2"
                           >
-                            <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
-                            <span className="flex-1 text-center font-medium">Browse Models</span>
+                            <ExternalLink className="w-4 h-4" />
+                            <span>Browse Models</span>
                           </a>
                         </Button>
                       </div>
@@ -444,11 +436,11 @@ export default function LocalProvidersTab() {
 
               {/* LM Studio Models Section */}
               {provider.name === 'LMStudio' && provider.settings.enabled && (
-                <Card className="mt-4 bg-gitmesh-elements-background-depth-1">
-                  <CardHeader className="pb-3">
+                <Card className="mt-4 bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+                  <CardHeader className="pt-6 px-6 pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Monitor className="w-5 h-5 text-blue-500" />
+                        <Monitor className="w-5 h-5 text-gitmesh-elements-textPrimary" />
                         <h3 className="text-lg font-semibold text-gitmesh-elements-textPrimary">Available Models</h3>
                       </div>
                       <Button
@@ -456,18 +448,18 @@ export default function LocalProvidersTab() {
                         size="sm"
                         onClick={() => fetchLMStudioModels(provider.settings.baseUrl!)}
                         disabled={isLoadingLMStudioModels}
-                        className="bg-transparent hover:bg-gitmesh-elements-background-depth-1"
+                        className="gap-2"
                       >
                         {isLoadingLMStudioModels ? (
-                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                          <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          <RotateCw className="w-4 h-4 mr-2" />
+                          <RotateCw className="w-4 h-4" />
                         )}
                         Refresh
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="pt-6 px-6 pb-6 space-y-4">
                     {isLoadingLMStudioModels ? (
                       <div className="space-y-4">
                         {Array.from({ length: 3 }).map((_, i) => (
@@ -486,7 +478,7 @@ export default function LocalProvidersTab() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="bg-gradient-to-r from-blue-500/8 to-blue-600/8 hover:from-blue-500/15 hover:to-blue-600/15 border-blue-500/25 hover:border-blue-500/40 transition-all duration-300 gap-2 group shadow-sm hover:shadow-md font-medium"
+                          className="gap-2"
                           _asChild
                         >
                           <a
@@ -495,16 +487,16 @@ export default function LocalProvidersTab() {
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2"
                           >
-                            <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
-                            <span className="flex-1 text-center font-medium">Get LM Studio</span>
+                            <ExternalLink className="w-4 h-4" />
+                            <span>Get LM Studio</span>
                           </a>
                         </Button>
                       </div>
                     ) : (
                       <div className="grid gap-4">
                         {lmStudioModels.map((model) => (
-                          <Card key={model.id} className="bg-gitmesh-elements-background-depth-3">
-                            <CardContent className="p-4">
+                          <Card key={model.id} className="bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor">
+                            <CardContent className="pt-6 px-4 pb-4">
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                   <h4 className="text-sm font-medium text-gitmesh-elements-textPrimary font-mono">
@@ -544,8 +536,8 @@ export default function LocalProvidersTab() {
         </div>
 
         {filteredProviders.length === 0 && (
-          <Card className="bg-gitmesh-elements-background-depth-1">
-            <CardContent className="p-8 text-center">
+          <Card className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+            <CardContent className="pt-8 px-8 pb-8 text-center">
               <Server className="w-16 h-16 mx-auto text-gitmesh-elements-textTertiary mb-4" />
               <h3 className="text-lg font-medium text-gitmesh-elements-textPrimary mb-2">
                 No Local Providers Available

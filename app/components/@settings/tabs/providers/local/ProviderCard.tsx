@@ -40,24 +40,12 @@ function ProviderCard({
   const Icon = getIcon(provider.name);
 
   return (
-    <Card className="bg-gitmesh-elements-background-depth-1 hover:bg-gitmesh-elements-background-depth-3 transition-all duration-300 shadow-sm hover:shadow-md border border-gitmesh-elements-borderColor hover:border-blue-500/30">
-      <CardContent className="p-6">
+    <Card className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+      <CardContent className="pt-8 px-6 pb-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4 flex-1">
-            <div
-              className={classNames(
-                'w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300',
-                provider.settings.enabled
-                  ? 'bg-gradient-to-br from-blue-500/20 to-blue-600/20 ring-1 ring-blue-500/30'
-                  : 'bg-gitmesh-elements-background-depth-3',
-              )}
-            >
-              <Icon
-                className={classNames(
-                  'w-6 h-6 transition-all duration-300',
-                  provider.settings.enabled ? 'text-blue-500' : 'text-gitmesh-elements-textTertiary',
-                )}
-              />
+            <div className="w-12 h-12 rounded-xl bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Icon className="w-6 h-6 text-gitmesh-elements-textPrimary" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
@@ -68,15 +56,15 @@ function ProviderCard({
                 {PROVIDER_DESCRIPTIONS[provider.name as keyof typeof PROVIDER_DESCRIPTIONS]}
               </p>
 
-              {provider.settings.enabled && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gitmesh-elements-textPrimary">API Endpoint</label>
-                  {isEditing ? (
+              <div className="space-y-3 min-h-[60px]">
+                <label className="text-sm font-medium text-gitmesh-elements-textPrimary">API Endpoint</label>
+                {provider.settings.enabled ? (
+                  isEditing ? (
                     <input
                       type="text"
                       defaultValue={provider.settings.baseUrl}
                       placeholder={`Enter ${provider.name} base URL`}
-                      className="w-full px-4 py-3 rounded-lg text-sm bg-gitmesh-elements-background-depth-4 border border-blue-500/30 text-gitmesh-elements-textPrimary placeholder-gitmesh-elements-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 shadow-sm"
+                      className="w-full px-4 py-2.5 rounded-lg text-sm bg-gitmesh-elements-background-depth-4 border border-gitmesh-elements-borderColor text-gitmesh-elements-textPrimary placeholder-gitmesh-elements-textTertiary focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           onUpdateBaseUrl(e.currentTarget.value);
@@ -94,16 +82,23 @@ function ProviderCard({
                   ) : (
                     <button
                       onClick={onStartEditing}
-                      className="w-full px-4 py-3 rounded-lg text-sm bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor hover:border-blue-500/30 hover:bg-gitmesh-elements-background-depth-4 hover:shadow-sm transition-all duration-200 text-left group"
+                      className="w-full px-4 py-2.5 rounded-lg text-sm bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor hover:bg-gitmesh-elements-background-depth-4 text-left"
                     >
-                      <div className="flex items-center gap-3 text-gitmesh-elements-textSecondary group-hover:text-gitmesh-elements-textPrimary">
-                        <Link className="w-4 h-4 group-hover:text-blue-500 transition-colors" />
+                      <div className="flex items-center gap-3 text-gitmesh-elements-textSecondary">
+                        <Link className="w-4 h-4" />
                         <span className="font-mono">{provider.settings.baseUrl || 'Click to set base URL'}</span>
                       </div>
                     </button>
-                  )}
-                </div>
-              )}
+                  )
+                ) : (
+                  <div className="w-full px-4 py-2.5 rounded-lg text-sm bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor text-gitmesh-elements-textTertiary">
+                    <div className="flex items-center gap-3">
+                      <Link className="w-4 h-4" />
+                      <span className="font-mono">Enable provider to configure endpoint</span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <Switch
