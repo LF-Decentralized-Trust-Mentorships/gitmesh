@@ -25,7 +25,7 @@ As mentioned in our [ROADMAP](ROADMAP.md), we're planning to implement a **Gamif
 
 We welcome all gamification ideas! Here's how to contribute:
 
-1. **Open an Issue**: Create a new issue in the [GitMesh repository](https://github.com/LF-Decentralized-Trust-labs/gitmesh/issues) with the label `gamification` or `quest`
+1. **Open an Issue**: Create a new issue in the [GitMesh repository](https://github.com/LF-Decentralized-Trust-labs/gitmesh/issues) with the label `gamification` (for general gamification feature ideas) or `quest` (for specific quest/challenge-related ideas)
 2. **Use This Template**: When submitting ideas, please include:
    - **Feature Name**: A catchy name for your idea
    - **Category**: Badge, XP System, Streak, Leaderboard, Reward, or Other
