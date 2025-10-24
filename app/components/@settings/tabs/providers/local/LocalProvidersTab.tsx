@@ -17,7 +17,7 @@ import ProviderCard from './ProviderCard';
 import ModelCard from './ModelCard';
 import { OLLAMA_API_URL } from './types';
 import type { OllamaModel, LMStudioModel } from './types';
-import { Cpu, Server, BookOpen, Activity, PackageOpen, Monitor, Loader2, RotateCw, ExternalLink } from 'lucide-react';
+import { Server, BookOpen, Activity, PackageOpen, Monitor, Loader2, RotateCw, ExternalLink } from 'lucide-react';
 
 // Type definitions
 type ViewMode = 'dashboard' | 'guide' | 'status';
@@ -316,21 +316,11 @@ export default function LocalProvidersTab() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setViewMode('guide')}
-              className="gap-2"
-            >
+            <Button variant="outline" size="sm" onClick={() => setViewMode('guide')} className="gap-2">
               <BookOpen className="w-4 h-4" />
               Setup Guide
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setViewMode('status')}
-              className="gap-2"
-            >
+            <Button variant="outline" size="sm" onClick={() => setViewMode('status')} className="gap-2">
               <Activity className="w-4 h-4" />
               Status
             </Button>
@@ -401,12 +391,7 @@ export default function LocalProvidersTab() {
                           </a>{' '}
                           to browse available models
                         </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="gap-2"
-                          _asChild
-                        >
+                        <Button variant="outline" size="sm" className="gap-2" _asChild>
                           <a
                             href="https://ollama.com/library"
                             target="_blank"
@@ -475,12 +460,7 @@ export default function LocalProvidersTab() {
                         <p className="text-sm text-gitmesh-elements-textSecondary mb-4">
                           Make sure LM Studio is running with the local server started and CORS enabled.
                         </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="gap-2"
-                          _asChild
-                        >
+                        <Button variant="outline" size="sm" className="gap-2" _asChild>
                           <a
                             href="https://lmstudio.ai/"
                             target="_blank"
@@ -495,7 +475,10 @@ export default function LocalProvidersTab() {
                     ) : (
                       <div className="grid gap-4">
                         {lmStudioModels.map((model) => (
-                          <Card key={model.id} className="bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor">
+                          <Card
+                            key={model.id}
+                            className="bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor"
+                          >
                             <CardContent className="pt-6 px-4 pb-4">
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2">

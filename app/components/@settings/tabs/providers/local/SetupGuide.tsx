@@ -124,12 +124,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                     <Monitor className="w-4 h-4 text-gitmesh-elements-textPrimary" />
                     <strong className="text-gitmesh-elements-textPrimary">macOS</strong>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full gap-2"
-                    _asChild
-                  >
+                  <Button variant="outline" size="sm" className="w-full gap-2" _asChild>
                     <a
                       href="https://ollama.com/download/mac"
                       target="_blank"
@@ -147,12 +142,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                     <Monitor className="w-4 h-4 text-gitmesh-elements-textPrimary" />
                     <strong className="text-gitmesh-elements-textPrimary">Windows</strong>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full gap-2"
-                    _asChild
-                  >
+                  <Button variant="outline" size="sm" className="w-full gap-2" _asChild>
                     <a
                       href="https://ollama.com/download/windows"
                       target="_blank"
@@ -372,12 +362,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
               <p className="text-sm text-gitmesh-elements-textSecondary mb-3">
                 Download LM Studio for Windows, macOS, or Linux from the official website.
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                _asChild
-              >
+              <Button variant="outline" size="sm" className="gap-2" _asChild>
                 <a
                   href="https://lmstudio.ai/"
                   target="_blank"

@@ -22,12 +22,6 @@ export function HubSettingsLayout({ children }: HubSettingsLayoutProps) {
       description: 'Configure application preferences',
     },
     {
-      to: '/hub/settings/notifications',
-      label: 'Notifications',
-      icon: 'i-ph:bell-duotone',
-      description: 'View and manage your notifications',
-    },
-    {
       to: '/hub/settings/features',
       label: 'Features',
       icon: 'i-ph:star-duotone',

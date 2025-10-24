@@ -42,7 +42,10 @@ function StatusDashboard({ onBack }: { onBack: () => void }) {
       ) : (
         <div className="space-y-4">
           {healthStatuses.map((status) => (
-            <Card key={`${status.provider}-${status.baseUrl}`} className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+            <Card
+              key={`${status.provider}-${status.baseUrl}`}
+              className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor"
+            >
               <CardContent className="pt-8 px-6 pb-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
