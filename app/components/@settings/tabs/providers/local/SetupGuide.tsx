@@ -46,11 +46,11 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* Hardware Requirements Overview */}
-      <Card className="bg-gradient-to-r from-blue-500/10 to-blue-500/10 border border-blue-500/20 shadow-sm">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-blue-500" />
+      <Card className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+        <CardContent className="pt-8 px-6 pb-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-lg bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-gitmesh-elements-textPrimary" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gitmesh-elements-textPrimary">System Requirements</h3>
@@ -59,22 +59,22 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
               </p>
             </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-4 text-sm">
-            <div className="space-y-2">
+          <div className="grid md:grid-cols-3 gap-6 text-sm">
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-green-500" />
                 <span className="font-medium text-gitmesh-elements-textPrimary">CPU</span>
               </div>
               <p className="text-gitmesh-elements-textSecondary">8+ cores, modern architecture</p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Database className="w-4 h-4 text-blue-500" />
                 <span className="font-medium text-gitmesh-elements-textPrimary">RAM</span>
               </div>
               <p className="text-gitmesh-elements-textSecondary">16GB minimum, 32GB+ recommended</p>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Monitor className="w-4 h-4 text-blue-500" />
                 <span className="font-medium text-gitmesh-elements-textPrimary">GPU</span>
@@ -87,10 +87,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
 
       {/* Ollama Setup Section */}
       <Card className="bg-gitmesh-elements-background-depth-1 shadow-sm">
-        <CardHeader className="pb-6">
+        <CardHeader className="pt-6 px-6 pb-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center ring-1 ring-blue-500/30">
-              <Server className="w-6 h-6 text-blue-500" />
+            <div className="w-12 h-12 rounded-xl bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Server className="w-6 h-6 text-gitmesh-elements-textPrimary" />
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-semibold text-gitmesh-elements-textPrimary">Ollama Setup</h3>
@@ -110,10 +110,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
             </h4>
 
             {/* Desktop App - New and Recommended */}
-            <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
+            <div className="p-4 rounded-lg bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor">
               <div className="flex items-center gap-2 mb-3">
-                <Monitor className="w-5 h-5 text-green-500" />
-                <h5 className="font-medium text-green-500">🆕 Desktop App (Recommended)</h5>
+                <Monitor className="w-5 h-5 text-gitmesh-elements-textPrimary" />
+                <h5 className="font-medium text-gitmesh-elements-textPrimary">Desktop App (Recommended)</h5>
               </div>
               <p className="text-sm text-gitmesh-elements-textSecondary mb-3">
                 New user-friendly desktop application with built-in model management and web interface.
@@ -127,7 +127,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full bg-gradient-to-r from-blue-500/10 to-blue-600/10 hover:from-blue-500/20 hover:to-blue-600/20 border-blue-500/30 hover:border-blue-500/50 transition-all duration-300 gap-2 group shadow-sm hover:shadow-lg hover:shadow-blue-500/20 font-medium"
+                    className="w-full gap-2"
                     _asChild
                   >
                     <a
@@ -136,9 +136,9 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2"
                     >
-                      <Download className="w-4 h-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 flex-shrink-0" />
-                      <span className="flex-1 text-center font-medium">Download Desktop App</span>
-                      <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
+                      <Download className="w-4 h-4" />
+                      <span className="flex-1 text-center">Download Desktop App</span>
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                   </Button>
                 </div>
@@ -150,7 +150,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full bg-gradient-to-r from-blue-500/10 to-blue-600/10 hover:from-blue-500/20 hover:to-blue-600/20 border-blue-500/30 hover:border-blue-500/50 transition-all duration-300 gap-2 group shadow-sm hover:shadow-lg hover:shadow-blue-500/20 font-medium"
+                    className="w-full gap-2"
                     _asChild
                   >
                     <a
@@ -159,17 +159,17 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2"
                     >
-                      <Download className="w-4 h-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 flex-shrink-0" />
-                      <span className="flex-1 text-center font-medium">Download Desktop App</span>
-                      <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
+                      <Download className="w-4 h-4" />
+                      <span className="flex-1 text-center">Download Desktop App</span>
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                   </Button>
                 </div>
               </div>
-              <div className="mt-3 p-3 rounded-lg bg-blue-500/5 border border-blue-500/20">
+              <div className="mt-3 p-3 rounded-lg bg-gitmesh-elements-background-depth-4 border border-gitmesh-elements-borderColor">
                 <div className="flex items-center gap-2 mb-1">
-                  <Globe className="w-4 h-4 text-blue-500" />
-                  <span className="font-medium text-blue-500 text-sm">Built-in Web Interface</span>
+                  <Globe className="w-4 h-4 text-gitmesh-elements-textPrimary" />
+                  <span className="font-medium text-gitmesh-elements-textPrimary text-sm">Built-in Web Interface</span>
                 </div>
                 <p className="text-xs text-gitmesh-elements-textSecondary">
                   Desktop app includes a web interface at{' '}
@@ -348,10 +348,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
 
       {/* LM Studio Setup Section */}
       <Card className="bg-gitmesh-elements-background-depth-1 shadow-sm">
-        <CardHeader className="pb-6">
+        <CardHeader className="pt-6 px-6 pb-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center ring-1 ring-blue-500/30">
-              <Monitor className="w-6 h-6 text-blue-500" />
+            <div className="w-12 h-12 rounded-xl bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Monitor className="w-6 h-6 text-gitmesh-elements-textPrimary" />
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-semibold text-gitmesh-elements-textPrimary">LM Studio Setup</h3>
@@ -375,7 +375,7 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 hover:from-blue-500/20 hover:to-blue-600/20 border-blue-500/30 hover:border-blue-500/50 transition-all duration-300 gap-2 group shadow-sm hover:shadow-lg hover:shadow-blue-500/20 font-medium"
+                className="gap-2"
                 _asChild
               >
                 <a
@@ -384,9 +384,9 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2"
                 >
-                  <Download className="w-4 h-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 flex-shrink-0" />
-                  <span className="flex-1 text-center font-medium">Download LM Studio</span>
-                  <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
+                  <Download className="w-4 h-4" />
+                  <span className="flex-1 text-center">Download LM Studio</span>
+                  <ExternalLink className="w-3 h-3" />
                 </a>
               </Button>
             </div>
@@ -435,10 +435,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
           </div>
 
           {/* Advantages */}
-          <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+          <div className="p-4 rounded-lg bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-blue-500" />
-              <span className="font-medium text-blue-500">LM Studio Advantages</span>
+              <CheckCircle className="w-4 h-4 text-gitmesh-elements-textPrimary" />
+              <span className="font-medium text-gitmesh-elements-textPrimary">LM Studio Advantages</span>
             </div>
             <ul className="text-xs text-gitmesh-elements-textSecondary space-y-1 list-disc list-inside">
               <li>Built-in model downloader with search</li>
@@ -453,10 +453,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
 
       {/* LocalAI Setup Section */}
       <Card className="bg-gitmesh-elements-background-depth-1 shadow-sm">
-        <CardHeader className="pb-6">
+        <CardHeader className="pt-6 px-6 pb-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center ring-1 ring-green-500/30">
-              <Globe className="w-6 h-6 text-green-500" />
+            <div className="w-12 h-12 rounded-xl bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Globe className="w-6 h-6 text-gitmesh-elements-textPrimary" />
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-semibold text-gitmesh-elements-textPrimary">LocalAI Setup</h3>
@@ -513,10 +513,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
           </div>
 
           {/* Advantages */}
-          <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+          <div className="p-4 rounded-lg bg-gitmesh-elements-background-depth-3 border border-gitmesh-elements-borderColor">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="font-medium text-green-500">LocalAI Advantages</span>
+              <CheckCircle className="w-4 h-4 text-gitmesh-elements-textPrimary" />
+              <span className="font-medium text-gitmesh-elements-textPrimary">LocalAI Advantages</span>
             </div>
             <ul className="text-xs text-gitmesh-elements-textSecondary space-y-1 list-disc list-inside">
               <li>Full OpenAI API compatibility</li>
@@ -530,11 +530,11 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
       </Card>
 
       {/* Performance Optimization */}
-      <Card className="bg-gradient-to-r from-blue-500/10 to-pink-500/10 border border-blue-500/20 shadow-sm">
-        <CardHeader className="pb-4">
+      <Card className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+        <CardHeader className="pt-6 px-6 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <Activity className="w-5 h-5 text-blue-500" />
+            <div className="w-10 h-10 rounded-lg bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Activity className="w-5 h-5 text-gitmesh-elements-textPrimary" />
             </div>
             <div>
               <h3 className="text-lg font-semibold text-gitmesh-elements-textPrimary">Performance Optimization</h3>
@@ -592,10 +592,10 @@ function SetupGuide({ onBack }: { onBack: () => void }) {
 
       {/* Alternative Options */}
       <Card className="bg-gitmesh-elements-background-depth-1 shadow-sm">
-        <CardHeader className="pb-6">
+        <CardHeader className="pt-6 px-6 pb-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center ring-1 ring-orange-500/30">
-              <Wifi className="w-6 h-6 text-orange-500" />
+            <div className="w-12 h-12 rounded-xl bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
+              <Wifi className="w-6 h-6 text-gitmesh-elements-textPrimary" />
             </div>
             <div>
               <h3 className="text-xl font-semibold text-gitmesh-elements-textPrimary">Alternative Options</h3>

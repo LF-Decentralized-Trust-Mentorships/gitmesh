@@ -31,7 +31,7 @@ function StatusDashboard({ onBack }: { onBack: () => void }) {
 
       {healthStatuses.length === 0 ? (
         <Card className="bg-gitmesh-elements-background-depth-1">
-          <CardContent className="p-8 text-center">
+          <CardContent className="pt-8 px-8 pb-8 text-center">
             <Cable className="w-16 h-16 mx-auto text-gitmesh-elements-textTertiary mb-4" />
             <h3 className="text-lg font-medium text-gitmesh-elements-textPrimary mb-2">No Endpoints Configured</h3>
             <p className="text-sm text-gitmesh-elements-textSecondary">
@@ -42,8 +42,8 @@ function StatusDashboard({ onBack }: { onBack: () => void }) {
       ) : (
         <div className="space-y-4">
           {healthStatuses.map((status) => (
-            <Card key={`${status.provider}-${status.baseUrl}`} className="bg-gitmesh-elements-background-depth-1">
-              <CardContent className="p-6">
+            <Card key={`${status.provider}-${status.baseUrl}`} className="bg-gitmesh-elements-background-depth-1 border border-gitmesh-elements-borderColor">
+              <CardContent className="pt-8 px-6 pb-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-gitmesh-elements-background-depth-3 flex items-center justify-center">
