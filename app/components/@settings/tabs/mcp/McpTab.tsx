@@ -9,18 +9,36 @@ const EXAMPLE_MCP_CONFIG: MCPConfig = {
   mcpServers: {
     everything: {
       type: 'stdio',
-      command: 'npx',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
       args: ['-y', '@modelcontextprotocol/server-everything'],
+    },
+    slack: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-slack'],
+      env: {
+        SLACK_BOT_TOKEN: import.meta.env.VITE_SLACK_BOT_TOKEN || '',
+        SLACK_TEAM_ID: import.meta.env.VITE_SLACK_TEAM_ID || '',
+        SLACK_CHANNEL_IDS: import.meta.env.VITE_SLACK_CHANNEL_IDS || '',
+      },
+    },
+    github: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-github'],
+      env: {
+        GITHUB_TOKEN: import.meta.env.VITE_GITHUB_ACCESS_TOKEN || '',
+      },
     },
     deepwiki: {
       type: 'streamable-http',
-      url: 'https://mcp.deepwiki.com/mcp',
+      url: import.meta.env.VITE_DEEPWIKI_URL || 'https://mcp.deepwiki.com/mcp',
     },
     'local-sse': {
       type: 'sse',
-      url: 'http://localhost:8000/sse',
+      url: import.meta.env.VITE_LOCAL_SSE_URL || 'http://localhost:3001/sse',
       headers: {
-        Authorization: 'Bearer mytoken123',
+        Authorization: `Bearer ${import.meta.env.VITE_LOCAL_SSE_TOKEN}` || 'mytoken123',
       },
     },
   },
