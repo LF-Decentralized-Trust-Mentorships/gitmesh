@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useStore } from '@nanostores/react';
 import { classNames } from '~/utils/classNames';
 import { profileStore, updateProfile } from '~/lib/stores/profile';
@@ -8,6 +8,7 @@ import { debounce } from '~/utils/debounce';
 export default function ProfileTab() {
   const profile = useStore(profileStore);
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Create debounced update functions
   const debouncedUpdate = useCallback(
@@ -54,6 +55,10 @@ export default function ProfileTab() {
   const handleRemoveAvatar = () => {
     updateProfile({ avatar: '' });
     toast.success('Profile picture removed');
+    // Reset input to allow re-uploading the same file
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleProfileUpdate = (field: 'username' | 'bio', value: string) => {
@@ -113,6 +118,7 @@ export default function ProfileTab() {
                   )}
                 >
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     className="hidden"
