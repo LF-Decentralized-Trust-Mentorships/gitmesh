@@ -230,7 +230,16 @@ const LogEntryItem = ({ log, isExpanded: forceExpanded, use24Hour, showTimestamp
               <>
                 <button
                   onClick={() => setLocalExpanded(!localExpanded)}
-                  className="text-xs text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                  className="
+    text-xs font-semibold
+    text-gray-800 dark:text-white
+    bg-gray-200 dark:bg-gray-800
+    hover:bg-blue-500 dark:hover:bg-blue-600
+    hover:text-white
+    rounded-md px-3 py-1
+    shadow-sm hover:shadow-md
+    transition-all duration-200 ease-in-out
+  "
                 >
                   {localExpanded ? 'Hide' : 'Show'} Details
                 </button>
