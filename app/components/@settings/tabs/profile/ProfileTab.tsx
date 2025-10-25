@@ -51,6 +51,11 @@ export default function ProfileTab() {
     }
   };
 
+  const handleRemoveAvatar = () => {
+    updateProfile({ avatar: '' });
+    toast.success('Profile picture removed');
+  };
+
   const handleProfileUpdate = (field: 'username' | 'bio', value: string) => {
     // Update the store immediately for UI responsiveness
     updateProfile({ [field]: value });
@@ -92,28 +97,49 @@ export default function ProfileTab() {
                 <div className="i-ph:robot-fill w-16 h-16 text-gray-400 dark:text-gray-500 transition-colors group-hover:text-blue-500/70 transform -translate-y-1" />
               )}
 
-              <label
+              <div
                 className={classNames(
                   'absolute inset-0',
-                  'flex items-center justify-center',
+                  'flex items-center justify-center gap-4',
                   'bg-black/0 group-hover:bg-black/40',
-                  'cursor-pointer transition-all duration-300 ease-out',
-                  isUploading ? 'cursor-wait' : '',
+                  'transition-all duration-300 ease-out',
+                  'pointer-events-none',
                 )}
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleAvatarUpload}
-                  disabled={isUploading}
-                />
-                {isUploading ? (
-                  <div className="i-ph:spinner-gap w-6 h-6 text-white animate-spin" />
-                ) : (
-                  <div className="i-ph:camera-plus w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform group-hover:scale-110" />
+                <label
+                  className={classNames(
+                    'cursor-pointer pointer-events-auto',
+                    isUploading ? 'cursor-wait' : '',
+                  )}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarUpload}
+                    disabled={isUploading}
+                  />
+                  {isUploading ? (
+                    <div className="i-ph:spinner-gap w-6 h-6 text-white animate-spin" />
+                  ) : (
+                    <div className="i-ph:camera-plus w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform group-hover:scale-110" />
+                  )}
+                </label>
+                {profile.avatar && !isUploading && (
+                  <button
+                    onClick={handleRemoveAvatar}
+                    className={classNames(
+                      'cursor-pointer pointer-events-auto',
+                      'bg-transparent border-0 p-0 m-0',
+                      'focus:outline-none',
+                    )}
+                    type="button"
+                    aria-label="Remove profile picture"
+                  >
+                    <div className="i-ph:trash w-6 h-6 text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform group-hover:scale-110" />
+                  </button>
                 )}
-              </label>
+              </div>
             </div>
 
             <div className="flex-1 pt-1">
