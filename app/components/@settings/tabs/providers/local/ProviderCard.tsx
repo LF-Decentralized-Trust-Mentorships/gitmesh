@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch } from '~/components/ui/Switch';
 import { Card, CardContent } from '~/components/ui/Card';
 import { Link, Server, Monitor, Globe } from 'lucide-react';
-import { classNames } from '~/utils/classNames';
 import type { IProviderConfig } from '~/types/model';
 import { PROVIDER_DESCRIPTIONS } from './types';
 

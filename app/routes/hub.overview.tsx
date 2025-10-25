@@ -531,7 +531,6 @@ export default function HubOverview() {
               {[
                 { to: '/hub/settings/profile', icon: 'i-ph:user', label: 'Profile' },
                 { to: '/hub/settings/general', icon: 'i-ph:gear', label: 'Settings' },
-                { to: '/hub/settings/notifications', icon: 'i-ph:bell', label: 'Notifications' },
                 { to: '/hub/settings/features', icon: 'i-ph:star', label: 'Features' },
                 { to: '/hub/settings/data', icon: 'i-ph:database', label: 'Data' },
                 { to: '/hub/settings/cloud-providers', icon: 'i-ph:cloud', label: 'Cloud' },

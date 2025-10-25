@@ -7,6 +7,7 @@ import BackgroundRays from '~/components/ui/BackgroundRays';
 import { isGitHubConnected } from '~/lib/stores/githubConnection';
 import { isGitLabConnected } from '~/lib/stores/gitlabConnection';
 import { ProfileButton } from './ProfileButton';
+import NotificationsTab from '~/components/@settings/tabs/notifications/NotificationsTab';
 
 interface HubLayoutProps {
   children: React.ReactNode;
@@ -71,6 +72,7 @@ export function HubLayout({ children }: HubLayoutProps) {
                   {item.label}
                 </NavLink>
               ))}
+              <NotificationsTab />
               <ProfileButton />
             </div>
           </div>
