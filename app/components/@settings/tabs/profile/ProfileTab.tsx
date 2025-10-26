@@ -34,27 +34,84 @@ export default function ProfileTab() {
 
       reader.onloadend = () => {
         const base64String = reader.result as string;
-        updateProfile({ avatar: base64String });
-        setIsUploading(false);
-        toast.success('Profile picture updated');
+        const currentProfile = profileStore.get(); // Get current profile to restore in case of error
+
+        try {
+          // Try to update profile
+          updateProfile({ avatar: base64String });
+          setIsUploading(false);
+          toast.success('Profile picture updated', { autoClose: 5000 });
+
+          // Reset input to allow re-uploading the same file later
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        } catch (err: any) {
+          // Restore the previous avatar if update fails
+          updateProfile({ avatar: currentProfile.avatar });
+          console.error('Failed to persist profile to storage:', err);
+          setIsUploading(false);
+
+          // For any storage error, show a simple message suggesting to use a smaller image
+          const isQuotaError =
+            (err instanceof DOMException &&
+              (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED')) ||
+            (typeof err?.message === 'string' && /quota/i.test(err.message));
+
+          if (isQuotaError) {
+            toast.error(
+              <div className="max-w-xs">
+                <div className="font-semibold mb-2">Could not save profile image</div>
+                <div className="text-sm">Please try again by uploading a image of smaller size</div>
+              </div>,
+              { autoClose: 8000, pauseOnHover: true },
+            );
+          } else {
+            toast.error(
+              <div className="max-w-xs">
+                <div className="font-semibold mb-2">Failed to save profile</div>
+                <div className="text-sm">Please try again with different image</div>
+              </div>,
+              { autoClose: 8000, pauseOnHover: true },
+            );
+          }
+
+          // Reset the input so user can retry
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
       };
 
       reader.onerror = () => {
         console.error('Error reading file:', reader.error);
         setIsUploading(false);
-        toast.error('Failed to update profile picture');
+        toast.error(
+          <div className="max-w-xs">
+            <div className="font-semibold mb-2">Could not read image</div>
+            <div className="text-sm">Please try uploading a different image</div>
+          </div>,
+          { autoClose: 8000, pauseOnHover: true },
+        );
       };
       reader.readAsDataURL(file);
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setIsUploading(false);
-      toast.error('Failed to update profile picture');
+      toast.error(
+        <div className="max-w-xs">
+          <div className="font-semibold mb-2">Upload failed</div>
+          <div className="text-sm">Please try again with a different image</div>
+        </div>,
+        { autoClose: 8000, pauseOnHover: true },
+      );
     }
   };
 
   const handleRemoveAvatar = () => {
     updateProfile({ avatar: '' });
     toast.success('Profile picture removed');
+
     // Reset input to allow re-uploading the same file
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -111,12 +168,7 @@ export default function ProfileTab() {
                   'pointer-events-none',
                 )}
               >
-                <label
-                  className={classNames(
-                    'cursor-pointer pointer-events-auto',
-                    isUploading ? 'cursor-wait' : '',
-                  )}
-                >
+                <label className={classNames('cursor-pointer pointer-events-auto', isUploading ? 'cursor-wait' : '')}>
                   <input
                     ref={fileInputRef}
                     type="file"
