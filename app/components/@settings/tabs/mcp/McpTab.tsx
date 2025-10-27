@@ -5,24 +5,411 @@ import { toast } from 'react-toastify';
 import { useMCPStore } from '~/lib/stores/mcp';
 import McpServerList from '~/components/@settings/tabs/mcp/McpServerList';
 
+const getUvxPath = () => {
+  if (process.platform === 'win32') {
+    const userProfile = process.env.USERPROFILE || process.env.HOME;
+    const localAppData = process.env.LOCALAPPDATA;
+
+    if (userProfile) {
+      return `${userProfile}\\.local\\bin;${localAppData}\\Programs\\uv\\bin;${process.env.PATH || ''}`;
+    }
+
+    return process.env.PATH || '';
+  } else {
+    return process.env.HOME ? `${process.env.HOME}/.local/bin:${process.env.PATH || ''}` : process.env.PATH || '';
+  }
+};
+
 const EXAMPLE_MCP_CONFIG: MCPConfig = {
   mcpServers: {
-    everything: {
+    sonarqube: {
       type: 'stdio',
-      command: 'npx',
-      args: ['-y', '@modelcontextprotocol/server-everything'],
-    },
-    deepwiki: {
-      type: 'streamable-http',
-      url: 'https://mcp.deepwiki.com/mcp',
-    },
-    'local-sse': {
-      type: 'sse',
-      url: 'http://localhost:8000/sse',
-      headers: {
-        Authorization: 'Bearer mytoken123',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', 'sonarqube-mcp-server@latest'],
+      env: {
+        SONARQUBE_URL: import.meta.env.VITE_SONAR_HOST_URL || 'https://sonarcloud.io',
+        SONARQUBE_TOKEN: import.meta.env.VITE_SONAR_TOKEN || '',
+        SONARQUBE_ORGANIZATION: import.meta.env.VITE_SONAR_ORG || '',
       },
     },
+
+    fetch: {
+      type: 'stdio',
+      command: 'uvx',
+      args: ['mcp-server-fetch'],
+      env: {
+        PATH: getUvxPath(),
+        HOME: process.env.HOME || process.env.USERPROFILE || '',
+      },
+    },
+
+    git: {
+      type: 'stdio',
+      command: 'uvx',
+      args: ['mcp-server-git'],
+      env: {
+        PATH: getUvxPath(),
+        HOME: process.env.HOME || process.env.USERPROFILE || '',
+      },
+    },
+
+    deepwiki: {
+      type: 'streamable-http',
+      url: import.meta.env.VITE_DEEPWIKI_URL || 'https://mcp.deepwiki.com/mcp',
+    },
+
+    sentry: {
+      type: 'stdio',
+      command: 'uvx',
+      args: ['mcp-server-sentry'],
+      env: {
+        PATH: getUvxPath(),
+        HOME: process.env.HOME || process.env.USERPROFILE || '',
+        SENTRY_TOKEN: import.meta.env.VITE_SENTRY_TOKEN || '',
+        SENTRY_ORG: import.meta.env.VITE_SENTRY_ORG || '',
+      },
+    },
+
+    docker: {
+      type: 'stdio',
+      command: 'uvx',
+      args: ['mcp-server-docker'],
+      env: {
+        DOCKER_HOST: import.meta.env.VITE_DOCKER_HOST || '',
+        PATH: getUvxPath(),
+        HOME: process.env.HOME || process.env.USERPROFILE || '',
+      },
+    },
+
+    atlassian: {
+      type: 'stdio',
+      command: 'docker',
+      args: [
+        'run',
+        '-i',
+        '--rm',
+        '-e',
+        'CONFLUENCE_URL',
+        '-e',
+        'CONFLUENCE_USERNAME',
+        '-e',
+        'CONFLUENCE_API_TOKEN',
+        '-e',
+        'JIRA_URL',
+        '-e',
+        'JIRA_USERNAME',
+        '-e',
+        'JIRA_API_TOKEN',
+        'ghcr.io/sooperset/mcp-atlassian:latest',
+      ],
+      env: {
+        CONFLUENCE_URL: import.meta.env.VITE_CONFLUENCE_URL || '',
+        CONFLUENCE_USERNAME: import.meta.env.VITE_CONFLUENCE_USERNAME || '',
+        CONFLUENCE_API_TOKEN: import.meta.env.VITE_CONFLUENCE_API_TOKEN || '',
+        JIRA_URL: import.meta.env.VITE_LOCAL_JIRA_BASE_URL || '',
+        JIRA_USERNAME: import.meta.env.VITE_LOCAL_JIRA_EMAIL || '',
+        JIRA_API_TOKEN: import.meta.env.VITE_LOCAL_JIRA_API_TOKEN || '',
+      },
+    },
+
+    reddit: {
+      type: 'stdio',
+      command: 'uvx',
+      args: ['--from', 'git+https://github.com/adhikasp/mcp-reddit.git', 'mcp-reddit'],
+      env: {
+        PATH: getUvxPath(),
+        HOME: process.env.HOME || process.env.USERPROFILE || '',
+      },
+    },
+
+    'brave-search': {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-brave-search'],
+      env: {
+        BRAVE_API_KEY: import.meta.env.VITE_BRAVE_API_KEY || '',
+      },
+    },
+
+    github: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-github'],
+      env: {
+        GITHUB_TOKEN: import.meta.env.VITE_GITHUB_ACCESS_TOKEN || '',
+      },
+    },
+
+    memory: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-memory'],
+    },
+
+    kubernetes: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', 'mcp-server-kubernetes'],
+    },
+
+    jira: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: [
+        '-y',
+        '-p',
+        '@orengrinker/jira-mcp-server',
+        'node',
+        'node_modules/@orengrinker/jira-mcp-server/dist/index.js',
+      ],
+      env: {
+        JIRA_BASE_URL: import.meta.env.VITE_LOCAL_JIRA_BASE_URL || '',
+        JIRA_EMAIL: import.meta.env.VITE_LOCAL_JIRA_EMAIL || '',
+        JIRA_API_TOKEN: import.meta.env.VITE_LOCAL_JIRA_API_TOKEN || '',
+        LOG_LEVEL: 'INFO',
+      },
+    },
+
+    gitbook: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', 'gitbook-mcp', '--organization-id=' + (import.meta.env.VITE_GITBOOK_ORG_ID || '')],
+      env: {
+        GITBOOK_API_TOKEN: import.meta.env.VITE_GITBOOK_API_TOKEN || '',
+      },
+    },
+
+    notion: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@notionhq/notion-mcp-server'],
+      env: {
+        NOTION_TOKEN: import.meta.env.VITE_NOTION_TOKEN || '',
+      },
+    },
+
+    slack: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-slack'],
+      env: {
+        SLACK_BOT_TOKEN: import.meta.env.VITE_SLACK_BOT_TOKEN || '',
+        SLACK_TEAM_ID: import.meta.env.VITE_SLACK_TEAM_ID || '',
+        SLACK_CHANNEL_IDS: import.meta.env.VITE_SLACK_CHANNEL_IDS || '',
+      },
+    },
+
+    'sequential-thinking': {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-sequential-thinking'],
+    },
+
+    linear: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', 'linear-mcp-server'],
+      env: {
+        LINEAR_API_KEY: import.meta.env.VITE_LINEAR_API_KEY || '',
+      },
+    },
+
+    puppeteer: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-puppeteer'],
+    },
+
+    'github-actions': {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-github'],
+      env: {
+        GITHUB_TOKEN: import.meta.env.VITE_GITHUB_ACCESS_TOKEN || '',
+      },
+    },
+
+    everything: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-everything'],
+    },
+
+    gitlab: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-gitlab'],
+      env: {
+        GITLAB_PERSONAL_ACCESS_TOKEN: import.meta.env.VITE_GITLAB_PERSONAL_ACCESS_TOKEN || '',
+        GITLAB_API_URL: import.meta.env.VITE_GITLAB_API_URL || 'https://gitlab.com/api/v4',
+      },
+    },
+
+    'gitlab-ci': {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-gitlab'],
+      env: {
+        GITLAB_PERSONAL_ACCESS_TOKEN: import.meta.env.VITE_GITLAB_PERSONAL_ACCESS_TOKEN || '',
+        GITLAB_API_URL: import.meta.env.VITE_GITLAB_API_URL || 'https://gitlab.com/api/v4',
+      },
+    },
+
+    circleci: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@circleci/mcp-server-circleci@latest'],
+      env: {
+        CIRCLECI_TOKEN: import.meta.env.VITE_CIRCLECI_TOKEN || '',
+        CIRCLECI_BASE_URL: import.meta.env.VITE_CIRCLECI_BASE_URL || 'https://circleci.com',
+      },
+    },
+
+    virustotal: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@burtthecoder/mcp-virustotal'],
+      env: {
+        VIRUSTOTAL_API_KEY: import.meta.env.VITE_VIRUSTOTAL_API_KEY || '',
+      },
+    },
+
+    'azure-devops': {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@azure/mcp@latest', 'server', 'start'],
+      env: {
+        AZURE_DEVOPS_ORG_URL: import.meta.env.VITE_AZURE_DEVOPS_ORG_URL || '',
+        AZURE_DEVOPS_PAT: import.meta.env.VITE_AZURE_DEVOPS_PAT || '',
+      },
+    },
+
+    azure: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@azure/mcp@latest', 'server', 'start'],
+      env: {
+        AZURE_MCP_COLLECT_TELEMETRY: import.meta.env.VITE_AZURE_MCP_COLLECT_TELEMETRY || 'false',
+      },
+    },
+
+    docs: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@arabold/docs-mcp-server@latest'],
+      env: {
+        OPENAI_API_KEY: import.meta.env.VITE_OPENAI_API_KEY || '',
+      },
+    },
+
+    postgres: {
+      type: 'stdio',
+      command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      args: ['-y', '@modelcontextprotocol/server-postgres', import.meta.env.VITE_POSTGRES_CONNECTION_STRING || ''],
+    },
+    /*
+     *the below mcp server is not yet working, it will be integerated soon
+     * // SQLite server
+     *sqlite: {
+     *  type: 'stdio',
+     *  command: 'uvx',
+     *  args: ['mcp-server-sqlite', '--db-path', import.meta.env.VITE_SQLITE_DB_PATH || './data.db'],
+     *  env: {
+     *    PATH: getUvxPath(),
+     *    HOME: process.env.HOME || process.env.USERPROFILE || '',
+     *  },
+     *},
+     *
+     *codecov: {
+     *  type: 'stdio',
+     *  command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+     *  args: ['-y', 'codecov-mcp-server'],
+     *  env: {
+     *    CODECOV_API_KEY: import.meta.env.VITE_CODECOV_API_KEY || '',
+     *    GIT_URL: import.meta.env.VITE_CODECOV_GIT_URL || 'https://github.com/user/repo',
+     *  },
+     *},
+     *
+     *readwise: {
+     *  type: 'stdio',
+     *  command: 'uvx',
+     *  args: ['--from', 'git+https://github.com/QuantGeekDev/readwise-reader-mcp.git', 'readwise-reader-mcp'],
+     *  env: {
+     *    PATH: getUvxPath(),
+     *    HOME: process.env.HOME || process.env.USERPROFILE || '',
+     *    READWISE_TOKEN: import.meta.env.VITE_READWISE_TOKEN || '',
+     *  },
+     *},
+     *
+     *snyk: {
+     *  type: 'stdio',
+     *  command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+     *  args: ['-y', '--package', 'snyk-mcp-server', 'snyk-mcp'],
+     *  env: {
+     *    SNYK_TOKEN: import.meta.env.VITE_SNYK_API_KEY || '',
+     *    SNYK_ORG_ID: import.meta.env.VITE_SNYK_ORG_ID || '',
+     *  },
+     *},
+     *
+     *gdrive: {
+     *  type: 'stdio',
+     *  command: process.platform === 'win32' ? 'npx.cmd' : 'npx',
+     *  args: ['-y', '@modelcontextprotocol/server-gdrive'],
+     *  env: {
+     *    GDRIVE_CREDENTIALS_PATH: import.meta.env.VITE_GDRIVE_CREDENTIALS_PATH || '',
+     *  },
+     *},
+     *
+     *discord: {
+     *  type: 'stdio',
+     *  command: 'docker',
+     *  args: [
+     *    'run',
+     *    '--rm',
+     *    '-i',
+     *    '--platform',
+     *    'linux/amd64',
+     *    '-e',
+     *    DISCORD_TOKEN=${import.meta.env.VITE_DISCORD_TOKEN || ''},
+     *    '-e',
+     *    DISCORD_GUILD_ID=${import.meta.env.VITE_DISCORD_GUILD_ID || ''},
+     *    'saseq/discord-mcp:latest',
+     *  ],
+     *},
+     *
+     *'github-dependabot': {
+     *  type: 'stdio',
+     *  command: 'uvx',
+     *  args: ['--from', 'git+https://github.com/github/dependabot-mcp-server.git', 'dependabot-mcp'],
+     *  env: {
+     *    PATH: getUvxPath(),
+     *    HOME: process.env.HOME || process.env.USERPROFILE || '',
+     *    GITHUB_TOKEN: import.meta.env.VITE_GITHUB_ACCESS_TOKEN || '',
+     *  },
+     *},
+     *
+     *markdownify: {
+     *  type: 'stdio',
+     *  command: 'node',
+     *  args: [import.meta.env.VITE_MARKDOWNIFY_PATH || ''],
+     *  env: {
+     *    UV_PATH: import.meta.env.VITE_UV_PATH || '',
+     *    MD_SHARE_DIR: import.meta.env.VITE_MD_SHARE_DIR || '',
+     *  },
+     *},
+     *
+     *x: {
+     *  type: 'stdio',
+     *  command: 'node',
+     *  args: [import.meta.env.VITE_X_SERVER_PATH || ''],
+     *  env: {
+     *    TWITTER_API_KEY: import.meta.env.VITE_TWITTER_API_KEY || '',
+     *    TWITTER_API_SECRET: import.meta.env.VITE_TWITTER_API_SECRET || '',
+     *    TWITTER_ACCESS_TOKEN: import.meta.env.VITE_TWITTER_ACCESS_TOKEN || '',
+     *    TWITTER_ACCESS_SECRET: import.meta.env.VITE_TWITTER_ACCESS_SECRET || '',
+     *  },
+     *},
+     */
   },
 };
 
