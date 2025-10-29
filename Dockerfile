@@ -30,34 +30,45 @@ RUN pnpm prune --prod --ignore-scripts
 
 
 # ---- runtime stage ----
-FROM node:22-bookworm-slim AS runtime
+FROM node:22-bookworm-slim AS gitmesh-ai-production
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOST=0.0.0.0
 
-# Install curl so Coolify’s healthcheck works inside the image
+# Install curl and wrangler dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends curl \
   && rm -rf /var/lib/apt/lists/*
+
+# Use pnpm
+RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 
 # Copy only what we need to run
 COPY --from=build /app/build /app/build
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/package.json /app/package.json
+COPY --from=build /app/bindings.sh /app/bindings.sh
+COPY --from=build /app/wrangler.toml /app/wrangler.toml
+COPY --from=build /app/functions /app/functions
 
-EXPOSE 3000
+# Make bindings.sh executable
+RUN chmod +x /app/bindings.sh
 
-# Healthcheck for Coolify
-HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=5 \
-  CMD curl -fsS http://localhost:3000/ || exit 1
+# Cloud Run provides PORT env var, default to 8080
+ENV PORT=8080
+ENV HOST=0.0.0.0
 
-# Start the Remix server
-CMD ["node", "build/server/index.js"]
+EXPOSE 8080
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -fsS http://localhost:${PORT}/ || exit 1
+
+# Start wrangler pages dev for production
+CMD bindings=$(./bindings.sh) && pnpm wrangler pages dev ./build/client $bindings --ip 0.0.0.0 --port ${PORT} --no-show-interactive-dev-session
 
 
 # ---- development stage ----
-FROM build AS development
+FROM build AS gitmesh-ai-development
 
 # Define environment variables for development
 ARG GROQ_API_KEY

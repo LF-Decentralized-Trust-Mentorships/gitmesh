@@ -21,6 +21,7 @@
     "start:windows": "wrangler pages dev ./build/client",
     "start:unix": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings",
     "start": "node -e \"const { spawn } = require('child_process'); const isWindows = process.platform === 'win32'; const cmd = isWindows ? 'npm run start:windows' : 'npm run start:unix'; const child = spawn(cmd, { shell: true, stdio: 'inherit' }); child.on('exit', code => process.exit(code));\"",
+    "start:prod": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings --port 5173",
     "dockerstart": "bindings=$(./bindings.sh) && wrangler pages dev ./build/client $bindings --ip 0.0.0.0 --port 5173 --no-show-interactive-dev-session",
     "dockerrun": "docker run -it -d --name gitmesh-ai-live -p 5173:5173 --env-file .env.local gitmesh-ai",
     "dockerbuild:prod": "docker build -t gitmesh-ai:production -t gitmesh-ai:latest --target gitmesh-ai-production .",
