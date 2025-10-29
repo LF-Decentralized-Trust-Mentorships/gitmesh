@@ -199,6 +199,67 @@ To get the latest changes from the repository:
    git stash pop
    ```
 
+#### Setup Using Docker
+
+This method is recommended for users who want to:
+* Run GitMesh in a containerized environment
+* Isolate dependencies from the host system
+* Deploy easily in production environments
+
+**Prerequisites**:
+- Docker must be installed on your system. [Download Docker](https://www.docker.com/get-started)
+
+**Building Docker Images**:
+
+1. **Build Production Image**:
+   ```bash
+   pnpm run dockerbuild:prod
+   ```
+   This creates a production-ready Docker image tagged as `gitmesh-ai:production` and `gitmesh-ai:latest`.
+
+2. **Build Development Image**:
+   ```bash
+   pnpm run dockerbuild
+   ```
+   This creates a development Docker image tagged as `gitmesh-ai:development` and `gitmesh-ai:latest`.
+
+**Running Docker Containers**:
+
+1. **Run the Production Container**:
+   ```bash
+   pnpm run dockerrun
+   ```
+   This runs the Docker container with:
+   - Container name: `gitmesh-ai-live`
+   - Port mapping: `5173:5173`
+   - Environment variables from `.env.local` file
+
+   **Note**: Make sure you have a `.env.local` file in your project root with the required environment variables before running this command.
+
+2. **Direct Docker Run Command** (Alternative):
+   ```bash
+   docker run -it -d --name gitmesh-ai-live -p 5173:5173 --env-file .env.local gitmesh-ai
+   ```
+
+**Building and Running in One Step**:
+
+For production:
+```bash
+pnpm run dockerbuild:prod && pnpm run dockerrun
+```
+
+For development:
+```bash
+pnpm run dockerbuild && docker run -it -d --name gitmesh-ai-dev -p 5173:5173 --env-file .env.local gitmesh-ai:development
+```
+
+**Important Notes**:
+- Ensure you have a `.env.local` file with all required environment variables
+- The container exposes the application on port `5173` by default
+- To stop the running container: `docker stop gitmesh-ai-live`
+- To remove the container: `docker rm gitmesh-ai-live`
+- To remove the image: `docker rmi gitmesh-ai`
+
 ### 👾 Troubleshooting
 
 #### Git Setup Issues
