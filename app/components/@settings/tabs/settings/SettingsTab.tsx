@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { classNames } from '~/utils/classNames';
@@ -38,8 +38,15 @@ export default function SettingsTab() {
     setCurrentTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
   }, []);
 
-  // Save settings automatically when they change
+  // Save settings automatically when they change, but skip the initial mount
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     try {
       // Get existing profile data
       const existingProfile = JSON.parse(localStorage.getItem('gitmesh_user_profile') || '{}');
