@@ -44,7 +44,7 @@ export const auth = {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/chat',
+        redirectTo: window.location.origin + '/',
       },
     });
 
