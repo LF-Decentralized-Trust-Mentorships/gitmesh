@@ -215,7 +215,7 @@ export function NotificationsTab() {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
               )}
             >
-              <span className={classNames(opt.icon, 'text-sm')} />
+              <span className={classNames(opt.icon, 'text-sm')} style={{ color: opt.color }} />
               {opt.label}
             </button>
           );
