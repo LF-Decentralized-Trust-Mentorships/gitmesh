@@ -170,10 +170,9 @@ export default function LandingPage({}: LandingPageProps) {
                     .
                   </label>
                 </div>
-
                 <Button
                   onClick={handleGuestContinue}
-                  className="w-full h-11 bg-gitmesh-elements-button-primary-background hover:bg-gitmesh-elements-button-primary-backgroundHover text-white font-medium"
+                  className="w-full h-11 bg-gitmesh-elements-button-primary-background dark:bg-gitmesh-elements-button-primary-background hover:bg-gitmesh-elements-button-primary-backgroundHover text-white font-medium"
                   disabled={authLoading || !acceptedTerms}
                 >
                   Continue as Guest
