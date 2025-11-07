@@ -6,6 +6,7 @@ interface CreateRepoRequestBody {
   repoName?: string;
   description?: string;
   isPrivate?: boolean;
+  autoInit?: boolean;
 }
 
 // Define a basic shape for a potential GitHub API error
@@ -35,7 +36,7 @@ async function createRepoAction({ request, context: _context }: ActionFunctionAr
       return json({ error: 'GitHub token not found in cookies' }, { status: 401 });
     }
 
-    const { repoName, description, isPrivate } = (await request.json()) as CreateRepoRequestBody;
+    const { repoName, description, isPrivate, autoInit } = (await request.json()) as CreateRepoRequestBody;
 
     if (!repoName) {
       return json({ error: 'Repository name is required' }, { status: 400 });
@@ -53,6 +54,7 @@ async function createRepoAction({ request, context: _context }: ActionFunctionAr
         name: repoName,
         description,
         private: isPrivate,
+        auto_init: autoInit,
       }),
     });
 
