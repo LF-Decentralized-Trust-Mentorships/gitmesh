@@ -58,7 +58,7 @@ function ChatWithCloneInner() {
   useEffect(() => {
     const processClone = async () => {
       // Only auto-clone if we have a clone URL and we're coming from the hub
-      if (!cloneUrl || hasProcessedClone || !gitReady || !historyReady || isCloning || !fromHub) {
+      if (!cloneUrl || hasProcessedClone || !gitReady || !historyReady || !fromHub) {
         return;
       }
 
@@ -199,7 +199,13 @@ ${escapegitmeshTags(typeof file.content === 'string' ? file.content : '')}
     };
 
     processClone();
-  }, [cloneUrl, fromHub, gitReady, historyReady, hasProcessedClone, isCloning, gitClone, addClonedMessages]);
+  }, [cloneUrl, fromHub, gitReady, historyReady, hasProcessedClone, gitClone, addClonedMessages]);
+
+  const shouldBeCloning = cloneUrl && fromHub && !hasProcessedClone;
+
+  if (shouldBeCloning || isCloning) {
+    return <LoadingOverlay message="Cloning repository..." />;
+  }
 
   return (
     <>
@@ -214,7 +220,6 @@ ${escapegitmeshTags(typeof file.content === 'string' ? file.content : '')}
       >
         {() => <Chat />}
       </ClientOnly>
-      {isCloning && <LoadingOverlay message="Cloning repository..." />}
     </>
   );
 }

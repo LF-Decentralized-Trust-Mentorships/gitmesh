@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from '@remix-run/react';
-import { motion } from 'framer-motion';
 import { Button } from '~/components/ui/Button';
 import { GitHubRepositoryCard } from '~/components/@settings/tabs/github/components/GitHubRepositoryCard';
 import { RepositoryCard } from '~/components/@settings/tabs/gitlab/components/RepositoryCard';
@@ -10,7 +9,6 @@ import { useGitHubConnection, useGitHubStats, useGitLabConnection } from '~/lib/
 import { classNames } from '~/utils/classNames';
 import { Search, RefreshCw, GitBranch, Calendar, Filter, Settings, Plus } from 'lucide-react';
 import { CreateNewProjectDialog } from '~/components/hub/CreateNewProjectDialog';
-import { LoadingOverlay } from '~/components/ui/LoadingOverlay';
 
 type Repository = (GitHubRepoInfo & { provider: 'github' }) | (GitLabProjectInfo & { provider: 'gitlab' });
 type SortOption = 'updated' | 'stars' | 'name' | 'created';
@@ -39,7 +37,7 @@ export function HubProjectsView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [cloning, setCloning] = useState<{ repoUrl: string; provider: string } | null>(null);
+
   const [publicGithubRepositories, setPublicGithubRepositories] = useState<GitHubRepoInfo[]>([]);
   const [publicGitlabProjects, setPublicGitlabProjects] = useState<GitLabProjectInfo[]>([]);
 
@@ -266,12 +264,10 @@ export function HubProjectsView() {
     }
   };
 
-  const handleCloneRepository = async (repo: Repository) => {
+  const handleCloneRepository = (repo: Repository) => {
     const repoUrl = repo.provider === 'github' ? `${repo.html_url}.git` : repo.http_url_to_repo;
 
     const fullName = repo.provider === 'github' ? repo.full_name : repo.path_with_namespace;
-
-    setCloning({ repoUrl, provider: repo.provider });
 
     /*
      * Force a hard navigation to ensure clean state
@@ -358,12 +354,7 @@ export function HubProjectsView() {
   }
 
   return (
-    <motion.div
-      className="space-y-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="space-y-6">
       <CreateNewProjectDialog isOpen={isCreateProjectDialogOpen} onClose={() => setCreateProjectDialogOpen(false)} />
       {/* Header with stats */}
       <div className="flex items-center justify-between">
@@ -505,8 +496,6 @@ export function HubProjectsView() {
           <p className="text-gitmesh-elements-textSecondary">No repositories found matching your search criteria.</p>
         </div>
       )}
-
-      {cloning && <LoadingOverlay message={`Cloning repository from ${cloning.provider}...`} />}
-    </motion.div>
+    </div>
   );
 }
