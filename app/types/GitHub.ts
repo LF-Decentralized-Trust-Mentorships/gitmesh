@@ -181,3 +181,155 @@ export interface RepositoryStats {
   hasPackageJson: boolean;
   hasDependencies: boolean;
 }
+
+export interface GitHubPullRequest {
+  id: number;
+  number: number;
+  title: string;
+  body: string;
+  state: 'open' | 'closed' | 'merged';
+  user: {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  };
+  created_at: string;
+  updated_at: string;
+  merged_at: string | null;
+  closed_at: string | null;
+  head: {
+    ref: string;
+    sha: string;
+    repo: {
+      full_name: string;
+    };
+  };
+  base: {
+    ref: string;
+    sha: string;
+    repo: {
+      full_name: string;
+    };
+  };
+  html_url: string;
+  mergeable: boolean | null;
+  mergeable_state: string;
+  draft: boolean;
+  labels: Array<{
+    id: number;
+    name: string;
+    color: string;
+    description: string | null;
+  }>;
+  assignees: Array<{
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  }>;
+  requested_reviewers: Array<{
+    login: string;
+    avatar_url: string;
+  }>;
+  reviews?: number;
+  comments?: number;
+  commits?: number;
+  additions?: number;
+  deletions?: number;
+  changed_files?: number;
+}
+
+export interface GitHubIssue {
+  id: number;
+  number: number;
+  title: string;
+  body: string;
+  state: 'open' | 'closed';
+  user: {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  };
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  html_url: string;
+  labels: Array<{
+    id: number;
+    name: string;
+    color: string;
+    description: string | null;
+  }>;
+  assignees: Array<{
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  }>;
+  comments: number;
+  milestone: {
+    id: number;
+    title: string;
+    state: string;
+  } | null;
+  pull_request?: {
+    url: string;
+    html_url: string;
+    diff_url: string;
+    patch_url: string;
+  };
+}
+
+export interface GitHubContributor {
+  login: string;
+  id: number;
+  avatar_url: string;
+  contributions: number;
+  html_url: string;
+  type: string;
+  site_admin: boolean;
+}
+
+export interface GitHubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    };
+    committer: {
+      name: string;
+      email: string;
+      date: string;
+    };
+  };
+  author: {
+    login: string;
+    id: number;
+    avatar_url: string;
+    html_url: string;
+  } | null;
+  committer: {
+    login: string;
+    id: number;
+    avatar_url: string;
+    html_url: string;
+  } | null;
+  html_url: string;
+  stats: {
+    additions: number;
+    deletions: number;
+    total: number;
+  } | null;
+  files: Array<{
+    filename: string;
+    additions: number;
+    deletions: number;
+    changes: number;
+    status: string;
+  }> | null;
+  parents: Array<{
+    sha: string;
+    html_url: string;
+  }>;
+}

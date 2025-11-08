@@ -102,3 +102,114 @@ export interface GitLabCommitRequest {
   commit_message: string;
   actions: GitLabCommitAction[];
 }
+
+export interface GitLabMergeRequest {
+  id: number;
+  iid: number;
+  title: string;
+  description: string;
+  state: 'opened' | 'closed' | 'locked' | 'merged';
+  created_at: string;
+  updated_at: string;
+  merged_at: string | null;
+  closed_at: string | null;
+  author: {
+    id: number;
+    username: string;
+    name: string;
+    avatar_url: string;
+    web_url: string;
+  };
+  source_branch: string;
+  target_branch: string;
+  source_project_id: number;
+  target_project_id: number;
+  web_url: string;
+  merge_status: 'can_be_merged' | 'cannot_be_merged' | 'unchecked';
+  draft: boolean;
+  work_in_progress: boolean;
+  labels: string[];
+  assignees: Array<{
+    id: number;
+    username: string;
+    name: string;
+    avatar_url: string;
+    web_url: string;
+  }>;
+  reviewers: Array<{
+    id: number;
+    username: string;
+    name: string;
+    avatar_url: string;
+    web_url: string;
+  }>;
+  changes_count?: string;
+  user_notes_count?: number;
+  upvotes?: number;
+  downvotes?: number;
+}
+
+export interface GitLabIssue {
+  id: number;
+  iid: number;
+  title: string;
+  description: string;
+  state: 'opened' | 'closed';
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  author: {
+    id: number;
+    username: string;
+    name: string;
+    avatar_url: string;
+    web_url: string;
+  };
+  web_url: string;
+  labels: string[];
+  assignees: Array<{
+    id: number;
+    username: string;
+    name: string;
+    avatar_url: string;
+    web_url: string;
+  }>;
+  user_notes_count: number;
+  upvotes: number;
+  downvotes: number;
+  milestone: {
+    id: number;
+    title: string;
+    state: string;
+    web_url: string;
+  } | null;
+}
+
+export interface GitLabContributor {
+  name: string;
+  email: string;
+  commits: number;
+  additions: number;
+  deletions: number;
+}
+
+export interface GitLabCommit {
+  id: string;
+  short_id: string;
+  title: string;
+  message: string;
+  author_name: string;
+  author_email: string;
+  authored_date: string;
+  committer_name: string;
+  committer_email: string;
+  committed_date: string;
+  created_at: string;
+  parent_ids: string[];
+  web_url: string;
+  stats: {
+    additions: number;
+    deletions: number;
+    total: number;
+  } | null;
+}
