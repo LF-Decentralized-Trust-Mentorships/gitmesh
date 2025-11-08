@@ -2,6 +2,7 @@ import { Dialog, DialogClose, DialogRoot, DialogTitle, DialogDescription } from 
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
+import { Switch } from '~/components/ui/Switch';
 import { useState } from 'react';
 import { classNames } from '~/utils/classNames';
 import { toast } from 'react-toastify';
@@ -26,6 +27,7 @@ export function CreateNewProjectDialog({ isOpen, onClose }: CreateNewProjectDial
   const [repoName, setRepoName] = useState('');
   const [description, setDescription] = useState('');
   const [isPrivate, setIsPrivate] = useState(false);
+  const [includeReadme, setIncludeReadme] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,6 +45,7 @@ export function CreateNewProjectDialog({ isOpen, onClose }: CreateNewProjectDial
           repoName,
           description,
           isPrivate,
+          autoInit: includeReadme, // Send readme preference to API
         }),
       });
 
@@ -150,6 +153,15 @@ export function CreateNewProjectDialog({ isOpen, onClose }: CreateNewProjectDial
                 </div>
               </div>
             </div>
+          </div>
+          <div className="flex items-center justify-between pt-2">
+            <div>
+              <Label htmlFor="include-readme" className="text-gitmesh-elements-textPrimary font-medium">
+                Add README
+              </Label>
+              <p className="text-sm text-gitmesh-elements-textSecondary">READMEs can be used as longer descriptions.</p>
+            </div>
+            <Switch checked={includeReadme} onCheckedChange={setIncludeReadme} />
           </div>
           {error && (
             <div className="p-3 rounded-lg bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-700">
