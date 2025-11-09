@@ -122,9 +122,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 import { logStore } from './lib/stores/logs';
+import { useShortcuts } from './lib/hooks';
 
 export default function App() {
   const theme = useStore(themeStore);
+
+  // Register global keyboard shortcuts so they work across the entire app
+  useShortcuts();
 
   useEffect(() => {
     logStore.logSystem('Application initialized', {
