@@ -293,7 +293,7 @@ Remember to always commit your local changes or stash them before pulling update
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-[![Complete Roadmap](https://img.shields.io/badge/View%20our-Roadmap-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LF-Decentralized-Trust-labs/gitmesh/blob/main/ROADMAP.md)
+[![LFX Active Contributors](https://insights.linuxfoundation.org/api/badge/active-contributors?project=lf-decentralized-trust-labs&repos=https://github.com/LF-Decentralized-Trust-labs/gitmesh)](https://insights.linuxfoundation.org/project/lf-decentralized-trust-labs/repository/lf-decentralized-trust-labs-gitmesh)
 
 ### 👾 Quick Contributing Steps:
 1. Fork the repository
@@ -305,6 +305,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 4. Sign Commit your changes (`git commit -s -m 'Add some amazing feature'`)
 5. Push to the branch (`git push origin type/branch-name`)
 6. Submit a signed pull request
+
+[![Complete Roadmap](https://img.shields.io/badge/View%20our-Roadmap-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LF-Decentralized-Trust-labs/gitmesh/blob/main/ROADMAP.md)
 
 Mesh & Meshy are excited to see what amazing contributions you'll bring to the GitMesh community!
 
