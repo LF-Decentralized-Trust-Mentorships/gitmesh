@@ -31,3 +31,20 @@ export function getProviderSettingsFromCookie(cookieHeader: string | null): Reco
   const cookies = parseCookies(cookieHeader);
   return cookies.providers ? JSON.parse(cookies.providers) : {};
 }
+
+export function getGitHubTokenFromCookie(cookieHeader: string | null, context?: any): string {
+  const cookies = parseCookies(cookieHeader);
+  const apiKeys = getApiKeysFromCookie(cookieHeader);
+
+  // Try to get GitHub token from various sources
+  return (
+    cookies.githubToken ||
+    apiKeys.GITHUB_API_KEY ||
+    apiKeys.VITE_GITHUB_ACCESS_TOKEN ||
+    context?.cloudflare?.env?.GITHUB_TOKEN ||
+    context?.cloudflare?.env?.VITE_GITHUB_ACCESS_TOKEN ||
+    process.env.GITHUB_TOKEN ||
+    process.env.VITE_GITHUB_ACCESS_TOKEN ||
+    ''
+  );
+}

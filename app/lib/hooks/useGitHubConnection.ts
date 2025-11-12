@@ -150,6 +150,13 @@ export function useGitHubConnection(): UseGitHubConnectionReturn {
         }),
         { path: '/' },
       );
+
+      // Also store in apiKeys cookie for API routes
+      const apiKeysStr = document.cookie.split(';').find((row) => row.trim().startsWith('apiKeys='));
+      const currentApiKeys = apiKeysStr ? JSON.parse(decodeURIComponent(apiKeysStr.split('=')[1])) : {};
+      const newApiKeys = { ...currentApiKeys, GITHUB_API_KEY: token, VITE_GITHUB_ACCESS_TOKEN: token };
+      Cookies.set('apiKeys', JSON.stringify(newApiKeys), { path: '/', maxAge: 31536000 });
+
       console.log('Cookies have been set.');
 
       // Update the store

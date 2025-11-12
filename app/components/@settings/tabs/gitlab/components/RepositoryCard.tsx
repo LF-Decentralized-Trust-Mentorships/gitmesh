@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from '@remix-run/react';
 import type { GitLabProjectInfo } from '~/types/GitLab';
 
 interface RepositoryCardProps {
@@ -7,6 +8,14 @@ interface RepositoryCardProps {
 }
 
 export function RepositoryCard({ repo, onClone }: RepositoryCardProps) {
+  const navigate = useNavigate();
+
+  const handleManage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/hub/manage/gitlab/${repo.id}`);
+  };
+
   return (
     <a
       key={repo.name}
@@ -84,21 +93,31 @@ export function RepositoryCard({ repo, onClone }: RepositoryCardProps) {
           </span>
         )}
 
-        {/* Bottom section with Clone button */}
-        <div className="flex items-center justify-between pt-3 mt-auto">
+        {/* Bottom section with Clone and Manage buttons */}
+        <div className="flex items-center gap-2 pt-3 mt-auto">
           {onClone ? (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onClone(repo);
-              }}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-colors flex-1 justify-center"
-              title="Clone repository"
-            >
-              <div className="i-ph:git-branch w-4 h-4" />
-              Open in GitMesh
-            </button>
+            <>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClone(repo);
+                }}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-colors flex-1 justify-center"
+                title="Clone repository"
+              >
+                <div className="i-ph:git-branch w-4 h-4" />
+                Open in GitMesh
+              </button>
+              <button
+                onClick={handleManage}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-gitmesh-elements-background-depth-2 hover:bg-gitmesh-elements-background-depth-3 text-gitmesh-elements-textPrimary border border-gitmesh-elements-borderColor transition-colors"
+                title="Manage repository"
+              >
+                <div className="i-ph:gear w-4 h-4" />
+                Manage
+              </button>
+            </>
           ) : (
             <span className="flex items-center gap-1 text-xs text-gitmesh-elements-textSecondary group-hover:text-blue-500 transition-colors">
               <div className="i-ph:arrow-square-out w-3.5 h-3.5" />
