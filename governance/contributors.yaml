@@ -1,0 +1,40 @@
+# Governance contributors registry (example)
+# Replace placeholder usernames with real GitHub usernames.
+# Fields:
+# - username: GitHub handle
+# - role: Newbie | Active | Core | Principal | Maintainer | EE (CEO/CTO/Co-Founder/Engineer)
+# - assigned_by: username or role that assigned
+# - assigned_at: IST date
+# - last_commit: IST date (last PR/review/comment)
+# - status: active | inactive | suspended
+# - notes: optional notes
+
+contributors:
+  - username: "parvm1102"
+    role: "Maintainer"
+    assigned_by: "rawx18"
+    assigned_at: "2025-12-01T00:01:00"
+    last_commit: "2025-11-25T07:00:00Z"
+    status: "active"
+    notes: "First PR merged; retains Newbie tag permanently."
+
+ee_team:
+  - username: "rawx18"
+    role: "CEO"
+    assigned_by: "EE-board"
+    assigned_at: "2025-12-01T00:01:00"
+    last_commit: "2025-11-25T07:00:00Z"
+    status: "active"
+    notes: "Final authority on enterprise decisions."
+
+  - username: "ronit-raj9"
+    role: "CTO"
+    assigned_by: "EE-board"
+    assigned_at: "2025-12-01T00:01:00"
+    last_commit: "2025-11-29T09:00:00Z"
+    status: "active"
+    notes: "Technical owner. Must approve CE changes that affect EE."
+
+# Notes:
+# - Keep this file small and authoritative. All edits must reference a governance issue in GitMesh repo.
+# - Use IST timestamps. Record assignment events and rationale in the governance tracker.

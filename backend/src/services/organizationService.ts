@@ -1,0 +1,855 @@
+import { isEqual } from 'lodash'
+import { Error400, websiteNormalizer } from '@gitmesh/common'
+import { LoggerBase } from '@gitmesh/logging'
+import {
+  IOrganization,
+  IOrganizationIdentity,
+  ISearchSyncOptions,
+  OrganizationMergeSuggestionType,
+  SyncMode,
+} from '@gitmesh/types'
+import { IRepositoryOptions } from '@/database/repositories/IRepositoryOptions'
+import getObjectWithoutKey from '@/utils/getObjectWithoutKey'
+import MemberRepository from '../database/repositories/memberRepository'
+import {
+  MergeActionState,
+  MergeActionType,
+  MergeActionsRepository,
+} from '../database/repositories/mergeActionsRepository'
+import organizationCacheRepository from '../database/repositories/organizationCacheRepository'
+import OrganizationRepository from '../database/repositories/organizationRepository'
+import SequelizeRepository from '../database/repositories/sequelizeRepository'
+import telemetryTrack from '../segment/telemetryTrack'
+import { sendOrgMergeMessage } from '../serverless/utils/nodeWorkerSQS'
+import { IServiceOptions } from './IServiceOptions'
+import merge from './helpers/merge'
+import {
+  keepPrimary,
+  keepPrimaryIfExists,
+  mergeUniqueStringArrayItems,
+} from './helpers/mergeFunctions'
+import SearchSyncService from './searchSyncService'
+
+export default class OrganizationService extends LoggerBase {
+  options: IServiceOptions
+
+  constructor(options: IServiceOptions) {
+    super(options.log)
+    this.options = options
+  }
+
+  async mergeAsync(originalId, toMergeId) {
+    const tenantId = this.options.currentTenant.id
+
+    await MergeActionsRepository.add(MergeActionType.ORG, originalId, toMergeId, this.options)
+
+    await sendOrgMergeMessage(tenantId, originalId, toMergeId)
+  }
+
+  async mergeSync(originalId, toMergeId) {
+    this.options.log.info({ originalId, toMergeId }, 'Merging organizations!')
+
+    const removeExtraFields = (organization: IOrganization): IOrganization =>
+      getObjectWithoutKey(organization, [
+        'activityCount',
+        'memberCount',
+        'activeOn',
+        'segments',
+        'lastActive',
+        'joinedAt',
+      ])
+
+    let tx
+
+    try {
+      let original = await OrganizationRepository.findById(originalId, this.options)
+      let toMerge = await OrganizationRepository.findById(toMergeId, this.options)
+
+      if (original.id === toMerge.id) {
+        return {
+          status: 203,
+          mergedId: originalId,
+        }
+      }
+
+      const mergeStatusChanged = await MergeActionsRepository.setState(
+        MergeActionType.ORG,
+        originalId,
+        toMergeId,
+        MergeActionState.IN_PROGRESS,
+        // not using transaction here on purpose,
+        // so this change is visible until we finish
+        this.options,
+      )
+      if (!mergeStatusChanged) {
+        this.log.info('[Merge Organizations] - Merging already in progress!')
+        return {
+          status: 203,
+          mergedId: originalId,
+        }
+      }
+
+      const repoOptions: IRepositoryOptions =
+        await SequelizeRepository.createTransactionalRepositoryOptions(this.options)
+      tx = repoOptions.transaction
+
+      const allIdentities = await OrganizationRepository.getIdentities(
+        [originalId, toMergeId],
+        repoOptions,
+      )
+
+      const originalIdentities = allIdentities.filter((i) => i.organizationId === originalId)
+      const toMergeIdentities = allIdentities.filter((i) => i.organizationId === toMergeId)
+      const identitiesToMove = []
+      for (const identity of toMergeIdentities) {
+        if (
+          !originalIdentities.find(
+            (i) => i.platform === identity.platform && i.name === identity.name,
+          )
+        ) {
+          identitiesToMove.push(identity)
+        }
+      }
+
+      await OrganizationRepository.moveIdentitiesBetweenOrganizations(
+        toMergeId,
+        originalId,
+        identitiesToMove,
+        repoOptions,
+      )
+
+      // if toMerge has website - also add it as an identity to the original org
+      // for identifying further organizations, and website information of toMerge is not lost
+      if (toMerge.website) {
+        await OrganizationRepository.addIdentity(
+          originalId,
+          {
+            name: toMerge.website,
+            platform: 'email',
+            integrationId: null,
+          },
+          repoOptions,
+        )
+      }
+
+      // remove aggregate fields and relationships
+      original = removeExtraFields(original)
+      toMerge = removeExtraFields(toMerge)
+
+      // Performs a merge and returns the fields that were changed so we can update
+      const toUpdate: any = await OrganizationService.organizationsMerge(original, toMerge)
+
+      const txService = new OrganizationService(repoOptions as IServiceOptions)
+
+      // check if website is being updated, if yes we need to set toMerge.website to null before doing the update
+      // because of website unique constraint
+      if (toUpdate.website && toUpdate.website === toMerge.website) {
+        await txService.update(toMergeId, { website: null }, false, false)
+      }
+
+      // Update original organization
+      await txService.update(originalId, toUpdate, false, false)
+
+      // update members that belong to source organization to destination org
+      await OrganizationRepository.moveMembersBetweenOrganizations(
+        toMergeId,
+        originalId,
+        repoOptions,
+      )
+
+      // update activities that belong to source org to destination org
+      await OrganizationRepository.moveActivitiesBetweenOrganizations(
+        toMergeId,
+        originalId,
+        repoOptions,
+      )
+
+      const secondMemberSegments = await OrganizationRepository.getOrganizationSegments(
+        toMergeId,
+        repoOptions,
+      )
+
+      if (secondMemberSegments.length > 0) {
+        await OrganizationRepository.includeOrganizationToSegments(originalId, {
+          ...repoOptions,
+          currentSegments: secondMemberSegments,
+        })
+      }
+
+      // Delete toMerge organization
+      await OrganizationRepository.destroy(toMergeId, repoOptions, true, false)
+
+      await SequelizeRepository.commitTransaction(tx)
+
+      await MergeActionsRepository.setState(
+        MergeActionType.ORG,
+        originalId,
+        toMergeId,
+        MergeActionState.DONE,
+        this.options,
+      )
+
+      const searchSyncService = new SearchSyncService(this.options)
+
+      await searchSyncService.triggerOrganizationSync(this.options.currentTenant.id, originalId)
+      await searchSyncService.triggerRemoveOrganization(this.options.currentTenant.id, toMergeId)
+
+      // sync organization members
+      await searchSyncService.triggerOrganizationMembersSync(originalId)
+
+      // sync organization activities
+      await searchSyncService.triggerOrganizationActivitiesSync(originalId)
+
+      this.options.log.info({ originalId, toMergeId }, 'Organizations merged!')
+      return { status: 200, mergedId: originalId }
+    } catch (err) {
+      this.options.log.error(err, 'Error while merging organizations!', {
+        originalId,
+        toMergeId,
+      })
+
+      await MergeActionsRepository.setState(
+        MergeActionType.ORG,
+        originalId,
+        toMergeId,
+        MergeActionState.ERROR,
+        this.options,
+      )
+
+      if (tx) {
+        await SequelizeRepository.rollbackTransaction(tx)
+      }
+
+      throw err
+    }
+  }
+
+  static organizationsMerge(originalObject, toMergeObject) {
+    return merge(originalObject, toMergeObject, {
+      description: keepPrimaryIfExists,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      emails: mergeUniqueStringArrayItems,
+      phoneNumbers: mergeUniqueStringArrayItems,
+      logo: keepPrimaryIfExists,
+      tags: mergeUniqueStringArrayItems,
+      twitter: keepPrimaryIfExists,
+      linkedin: keepPrimaryIfExists,
+      crunchbase: keepPrimaryIfExists,
+      employees: keepPrimaryIfExists,
+      revenueRange: keepPrimaryIfExists,
+      importHash: keepPrimary,
+      createdAt: keepPrimary,
+      updatedAt: keepPrimary,
+      deletedAt: keepPrimary,
+      tenantId: keepPrimary,
+      createdById: keepPrimary,
+      updatedById: keepPrimary,
+      location: keepPrimaryIfExists,
+      github: keepPrimaryIfExists,
+      website: keepPrimaryIfExists,
+      isTeamOrganization: keepPrimaryIfExists,
+      lastEnrichedAt: keepPrimary,
+      employeeCounByCountry: keepPrimaryIfExists,
+      type: keepPrimaryIfExists,
+      geoLocation: keepPrimaryIfExists,
+      size: keepPrimaryIfExists,
+      ticker: keepPrimaryIfExists,
+      headline: keepPrimaryIfExists,
+      profiles: mergeUniqueStringArrayItems,
+      naics: keepPrimaryIfExists,
+      address: keepPrimaryIfExists,
+      industry: keepPrimaryIfExists,
+      founded: keepPrimaryIfExists,
+      displayName: keepPrimary,
+      attributes: keepPrimary,
+      searchSyncedAt: keepPrimary,
+      affiliatedProfiles: mergeUniqueStringArrayItems,
+      allSubsidiaries: mergeUniqueStringArrayItems,
+      alternativeDomains: mergeUniqueStringArrayItems,
+      alternativeNames: mergeUniqueStringArrayItems,
+      averageEmployeeTenure: keepPrimaryIfExists,
+      averageTenureByLevel: keepPrimaryIfExists,
+      averageTenureByRole: keepPrimaryIfExists,
+      directSubsidiaries: mergeUniqueStringArrayItems,
+      employeeChurnRate: keepPrimaryIfExists,
+      employeeCountByMonth: keepPrimaryIfExists,
+      employeeGrowthRate: keepPrimaryIfExists,
+      employeeCountByMonthByLevel: keepPrimaryIfExists,
+      employeeCountByMonthByRole: keepPrimaryIfExists,
+      gicsSector: keepPrimaryIfExists,
+      grossAdditionsByMonth: keepPrimaryIfExists,
+      grossDeparturesByMonth: keepPrimaryIfExists,
+      ultimateParent: keepPrimaryIfExists,
+      immediateParent: keepPrimaryIfExists,
+      manuallyCreated: keepPrimary,
+      weakIdentities: (
+        weakIdentitiesPrimary: IOrganizationIdentity[],
+        weakIdentitiesSecondary: IOrganizationIdentity[],
+      ): IOrganizationIdentity[] => {
+        const uniqueMap: { [key: string]: IOrganizationIdentity } = {}
+
+        const createKey = (identity: IOrganizationIdentity) =>
+          `${identity.platform}_${identity.name}`
+
+        ;[...weakIdentitiesPrimary, ...weakIdentitiesSecondary].forEach((identity) => {
+          const key = createKey(identity)
+
+          if (!uniqueMap[key]) {
+            uniqueMap[key] = identity
+          }
+        })
+
+        return Object.values(uniqueMap)
+      },
+    })
+  }
+
+  async generateMergeSuggestions(type: OrganizationMergeSuggestionType): Promise<void> {
+    this.log.trace(`Generating merge suggestions for: ${this.options.currentTenant.id}`)
+    const transaction = await SequelizeRepository.createTransaction(this.options)
+
+    try {
+      if (type === OrganizationMergeSuggestionType.BY_IDENTITY) {
+        let mergeSuggestions
+        let hasSuggestions = false
+
+        const generator = OrganizationRepository.getMergeSuggestions({
+          ...this.options,
+          transaction,
+        })
+        do {
+          mergeSuggestions = await generator.next()
+
+          if (mergeSuggestions.value) {
+            this.log.info(
+              `[Organization Merge Suggestions] tenant: ${this.options.currentTenant.id}, adding ${mergeSuggestions.value.length} organizations to suggestions!`,
+            )
+            hasSuggestions = true
+          } else if (!hasSuggestions) {
+            this.log.info(
+              `[Organization Merge Suggestions] tenant: ${this.options.currentTenant.id} doesn't have any merge suggestions`,
+            )
+          } else {
+            this.log.info(
+              `[Organization Merge Suggestions] tenant: ${this.options.currentTenant.id} Finished going tru all suggestions!`,
+            )
+          }
+
+          if (mergeSuggestions.value && mergeSuggestions.value.length > 0) {
+            await OrganizationRepository.addToMerge(mergeSuggestions.value, this.options)
+          }
+        } while (!mergeSuggestions.done)
+      }
+      await SequelizeRepository.commitTransaction(transaction)
+    } catch (error) {
+      await SequelizeRepository.rollbackTransaction(transaction)
+      this.log.error(error)
+      throw error
+    }
+  }
+
+  async addToNoMerge(organizationId: string, noMergeId: string): Promise<void> {
+    const transaction = await SequelizeRepository.createTransaction(this.options)
+    const searchSyncService = new SearchSyncService(this.options)
+
+    try {
+      await OrganizationRepository.addNoMerge(organizationId, noMergeId, {
+        ...this.options,
+        transaction,
+      })
+      await OrganizationRepository.removeToMerge(organizationId, noMergeId, {
+        ...this.options,
+        transaction,
+      })
+
+      await SequelizeRepository.commitTransaction(transaction)
+
+      await searchSyncService.triggerOrganizationSync(this.options.currentTenant.id, organizationId)
+      await searchSyncService.triggerOrganizationSync(this.options.currentTenant.id, noMergeId)
+    } catch (error) {
+      await SequelizeRepository.rollbackTransaction(transaction)
+
+      throw error
+    }
+  }
+
+  async createOrUpdate(
+    data: IOrganization,
+    syncOptions: ISearchSyncOptions = { doSync: true, mode: SyncMode.USE_FEATURE_FLAG },
+  ) {
+    const transaction = await SequelizeRepository.createTransaction(this.options)
+
+    if ((data as any).name && (!data.identities || data.identities.length === 0)) {
+      data.identities = [
+        {
+          name: (data as any).name,
+          platform: 'custom',
+        },
+      ]
+      delete (data as any).name
+    }
+
+    if (
+      !data.identities ||
+      data.identities.length === 0 ||
+      !data.identities[0].name ||
+      !data.identities[0].platform
+    ) {
+      const message = `Missing organization identity while creating/updating organization!`
+      this.log.error(data, message)
+      throw new Error(message)
+    }
+
+    let record: any
+
+    try {
+      const primaryIdentity = data.identities[0]
+      const nameToCheckInCache = (data as any).name || primaryIdentity.name
+
+      // check cache existing by name
+      let cache = await organizationCacheRepository.findByName(nameToCheckInCache, {
+        ...this.options,
+        transaction,
+      })
+
+      // Normalize the website URL if it exists
+      if (data.website) {
+        data.website = websiteNormalizer(data.website)
+      }
+
+      // if cache exists, merge current data with cache data
+      // if it doesn't exist, create it from incoming data
+      if (cache) {
+        // if exists in cache update it
+        const updateData: Partial<IOrganization> = {}
+        const fields = [
+          'url',
+          'description',
+          'emails',
+          'logo',
+          'tags',
+          'github',
+          'twitter',
+          'linkedin',
+          'crunchbase',
+          'employees',
+          'location',
+          'website',
+          'type',
+          'size',
+          'headline',
+          'industry',
+          'founded',
+        ]
+        fields.forEach((field) => {
+          if (data[field] && !isEqual(data[field], cache[field])) {
+            updateData[field] = data[field]
+          }
+        })
+        if (Object.keys(updateData).length > 0) {
+          await organizationCacheRepository.update(cache.id, updateData, {
+            ...this.options,
+            transaction,
+          })
+
+          cache = { ...cache, ...updateData } // Update the cached data with the new data
+        }
+      } else {
+        // save it to cache
+        cache = await organizationCacheRepository.create(
+          {
+            ...data,
+            name: primaryIdentity.name,
+          },
+          {
+            ...this.options,
+            transaction,
+          },
+        )
+      }
+
+      if (data.members) {
+        cache.members = await MemberRepository.filterIdsInTenant(data.members, {
+          ...this.options,
+          transaction,
+        })
+      }
+
+      let existing
+
+      // check if organization already exists using website or primary identity
+      if (cache.website) {
+        existing = await OrganizationRepository.findByDomain(cache.website, this.options)
+
+        // also check domain in identities
+        if (!existing) {
+          existing = await OrganizationRepository.findByIdentity(
+            {
+              name: websiteNormalizer(cache.website),
+              platform: 'email',
+            },
+            this.options,
+          )
+        }
+      }
+
+      if (!existing) {
+        existing = await OrganizationRepository.findByIdentity(primaryIdentity, this.options)
+      }
+
+      if (existing) {
+        await OrganizationRepository.checkIdentities(data, this.options, existing.id)
+
+        // Set displayName if it doesn't exist
+        if (!existing.displayName) {
+          data.displayName = cache.name
+        }
+
+        // if it does exists update it
+        const updateData: Partial<IOrganization> = {}
+        const fields = [
+          'displayName',
+          'description',
+          'emails',
+          'logo',
+          'tags',
+          'github',
+          'twitter',
+          'linkedin',
+          'crunchbase',
+          'employees',
+          'location',
+          'website',
+          'type',
+          'size',
+          'headline',
+          'industry',
+          'founded',
+          'attributes',
+          'weakIdentities',
+        ]
+        fields.forEach((field) => {
+          if (field === 'website' && !existing.website && cache.website) {
+            updateData[field] = cache[field]
+          } else if (
+            field !== 'website' &&
+            cache[field] &&
+            !isEqual(cache[field], existing[field])
+          ) {
+            updateData[field] = cache[field]
+          }
+        })
+
+        record = await OrganizationRepository.update(existing.id, updateData, {
+          ...this.options,
+          transaction,
+        })
+      } else {
+        await OrganizationRepository.checkIdentities(data, this.options)
+
+        const organization = {
+          ...data, // to keep uncacheable data (like identities, weakIdentities)
+          ...cache,
+          displayName: cache.name,
+        }
+
+        record = await OrganizationRepository.create(organization, {
+          ...this.options,
+          transaction,
+        })
+        telemetryTrack(
+          'Organization created',
+          {
+            id: record.id,
+            createdAt: record.createdAt,
+          },
+          this.options,
+        )
+      }
+
+      const identities = await OrganizationRepository.getIdentities(record.id, {
+        ...this.options,
+        transaction,
+      })
+
+      if (data.identities && data.identities.length > 0) {
+        for (const identity of data.identities) {
+          const identityExists = identities.find(
+            (i) => i.name === identity.name && i.platform === identity.platform,
+          )
+
+          if (!identityExists) {
+            // add the identity
+            await OrganizationRepository.addIdentity(record.id, identity, {
+              ...this.options,
+              transaction,
+            })
+          }
+        }
+      }
+
+      await SequelizeRepository.commitTransaction(transaction)
+    } catch (error) {
+      await SequelizeRepository.rollbackTransaction(transaction)
+
+      SequelizeRepository.handleUniqueFieldError(error, this.options.language, 'organization')
+
+      throw error
+    }
+
+    // Execute post-commit operations (not part of the transaction)
+    if (syncOptions.doSync) {
+      try {
+        const searchSyncService = new SearchSyncService(this.options, syncOptions.mode)
+        await searchSyncService.triggerOrganizationSync(this.options.currentTenant.id, record.id)
+      } catch (syncError) {
+        // Log sync error but don't fail the organization creation
+        this.log.warn(syncError, 'Search sync failed (organization still created)')
+      }
+    }
+
+    return await this.findById(record.id)
+  }
+
+  async findOrganizationsWithMergeSuggestions(args) {
+    return OrganizationRepository.findOrganizationsWithMergeSuggestions(args, this.options)
+  }
+
+  async update(id, data, overrideIdentities = false, syncToOpensearch = true) {
+    let tx
+
+    try {
+      const repoOptions = await SequelizeRepository.createTransactionalRepositoryOptions(
+        this.options,
+      )
+      tx = repoOptions.transaction
+
+      if (data.members) {
+        data.members = await MemberRepository.filterIdsInTenant(data.members, repoOptions)
+      }
+
+      // Normalize the website URL if it exists
+      if (data.website) {
+        data.website = websiteNormalizer(data.website)
+      }
+
+      if (data.identities) {
+        const originalIdentities = data.identities
+
+        // check identities
+        await OrganizationRepository.checkIdentities(data, repoOptions, id)
+
+        // if we found any strong identities sent already existing in another organization
+        // instead of making it a weak identity we throw an error here, because this function
+        // is mainly used for doing manual updates through UI and possibly
+        // we don't wanna do an auto-merge here or make strong identities sent by user as weak
+        if (originalIdentities.length !== data.identities.length) {
+          const alreadyExistingStrongIdentities = originalIdentities.filter(
+            (oi) =>
+              !data.identities.some((di) => di.platform === oi.platform && di.name === oi.name),
+          )
+
+          throw new Error(
+            `Organization identities ${JSON.stringify(
+              alreadyExistingStrongIdentities,
+            )} already exist in another organization!`,
+          )
+        }
+      }
+
+      const record = await OrganizationRepository.update(id, data, repoOptions, overrideIdentities)
+
+      await SequelizeRepository.commitTransaction(tx)
+
+      if (syncToOpensearch) {
+        try {
+          const searchSyncService = new SearchSyncService(this.options)
+
+          await searchSyncService.triggerOrganizationSync(this.options.currentTenant.id, record.id)
+        } catch (emitErr) {
+          this.log.error(
+            emitErr,
+            { tenantId: this.options.currentTenant.id, organizationId: record.id },
+            'Error while emitting organization sync!',
+          )
+        }
+      }
+
+      return record
+    } catch (error) {
+      if (tx) {
+        await SequelizeRepository.rollbackTransaction(tx)
+      }
+
+      SequelizeRepository.handleUniqueFieldError(error, this.options.language, 'organization')
+
+      throw error
+    }
+  }
+
+  async destroyAll(ids) {
+    const transaction = await SequelizeRepository.createTransaction(this.options)
+
+    try {
+      for (const id of ids) {
+        await OrganizationRepository.destroy(
+          id,
+          {
+            ...this.options,
+            transaction,
+          },
+          true,
+        )
+      }
+
+      await SequelizeRepository.commitTransaction(transaction)
+
+      const searchSyncService = new SearchSyncService(this.options)
+
+      for (const id of ids) {
+        await searchSyncService.triggerRemoveOrganization(this.options.currentTenant.id, id)
+      }
+    } catch (error) {
+      await SequelizeRepository.rollbackTransaction(transaction)
+      throw error
+    }
+  }
+
+  async findById(id: string, segmentId?: string) {
+    return OrganizationRepository.findById(id, this.options, segmentId)
+  }
+
+  async findAllAutocomplete(search, limit) {
+    return OrganizationRepository.findAllAutocomplete(search, limit, this.options)
+  }
+
+  async findAndCountAll(args) {
+    return OrganizationRepository.findAndCountAll(args, this.options)
+  }
+
+  async findByUrl(url) {
+    return OrganizationRepository.findByUrl(url, this.options)
+  }
+
+  async findOrCreateByDomain(domain) {
+    return OrganizationRepository.findOrCreateByDomain(domain, this.options)
+  }
+
+  async query(data) {
+    const advancedFilter = data.filter
+    const orderBy = data.orderBy
+    const limit = data.limit
+    const offset = data.offset
+
+    // PERMANENT FIX: Always check for manually created organizations first
+    const manualOrgsCheck = await this.options.database.sequelize.query(
+      `SELECT COUNT(*) as count FROM organizations 
+       WHERE "tenantId" = :tenantId 
+       AND "deletedAt" IS NULL 
+       AND "manuallyCreated" = true`,
+      {
+        replacements: { tenantId: this.options.currentTenant.id },
+        type: this.options.database.Sequelize.QueryTypes.SELECT,
+      }
+    )
+    
+    // ALWAYS use database query when manual organizations exist - ensures instant visibility
+    const hasManualOrganizations = manualOrgsCheck[0]?.count > 0
+    
+    if (hasManualOrganizations) {
+      this.log.info(
+        { manualOrganizationsCount: manualOrgsCheck[0].count }, 
+        'Manual organizations detected - using database query for guaranteed visibility'
+      )
+    }
+    
+    // Try OpenSearch only if no manual organizations exist
+    if (!hasManualOrganizations) {
+      try {
+        const result = await OrganizationRepository.findAndCountAllOpensearch(
+          { filter: advancedFilter, orderBy, limit, offset, segments: data.segments },
+          this.options,
+        )
+        
+        return result
+      } catch (searchError) {
+        this.log.warn(searchError, 'OpenSearch query failed, falling back to database query')
+      }
+    }
+    
+    // PERMANENT DATABASE FALLBACK with proper count handling
+    this.log.info({ filter: advancedFilter, limit, offset }, 'Using database query')
+    
+    const result = await OrganizationRepository.findAndCountAll(
+      { filter: advancedFilter, orderBy, limit, offset },
+      this.options,
+    )
+    
+    this.log.info({ count: result.count, rowsLength: result.rows.length }, 'Database query result')
+    
+    // PERMANENT FIX for count mismatch - ensure count matches actual rows
+    if (result.count !== result.rows.length) {
+      this.log.warn(
+        { originalCount: result.count, actualRows: result.rows.length }, 
+        'Count mismatch detected - correcting to match actual data'
+      )
+      result.count = result.rows.length
+    }
+    
+    return result
+  }
+
+  async destroyBulk(ids) {
+    const transaction = await SequelizeRepository.createTransaction(this.options)
+
+    try {
+      await OrganizationRepository.destroyBulk(
+        ids,
+        {
+          ...this.options,
+          transaction,
+        },
+        true,
+      )
+
+      await SequelizeRepository.commitTransaction(transaction)
+
+      const searchSyncService = new SearchSyncService(this.options)
+
+      for (const id of ids) {
+        await searchSyncService.triggerRemoveOrganization(this.options.currentTenant.id, id)
+      }
+    } catch (error) {
+      await SequelizeRepository.rollbackTransaction(transaction)
+      throw error
+    }
+  }
+
+  async import(data, importHash) {
+    if (!importHash) {
+      throw new Error400(this.options.language, 'importer.errors.importHashRequired')
+    }
+
+    if (await this._isImportHashExistent(importHash)) {
+      throw new Error400(this.options.language, 'importer.errors.importHashExistent')
+    }
+
+    const dataToCreate = {
+      ...data,
+      importHash,
+    }
+
+    return this.createOrUpdate(dataToCreate)
+  }
+
+  async _isImportHashExistent(importHash) {
+    const count = await OrganizationRepository.count(
+      {
+        importHash,
+      },
+      this.options,
+    )
+
+    return count > 0
+  }
+}

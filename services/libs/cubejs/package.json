@@ -1,0 +1,32 @@
+{
+  "name": "@gitmesh/cubejs",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/cubejs/src/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --ext .ts src --max-warnings=0",
+    "format": "./node_modules/.bin/prettier --write \"src/**/*.ts\"",
+    "format-check": "./node_modules/.bin/prettier --check .",
+    "tsc-check": "./node_modules/.bin/tsc --noEmit"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.28.4",
+    "@cubejs-backend/server-core": "^1.5.10",
+    "@cubejs-client/core": "^1.5.10",
+    "@gitmesh/common": "file:../common",
+    "@gitmesh/logging": "file:../logging",
+    "jsonwebtoken": "~9.0.2",
+    "moment": "~2.29.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "typescript": "^5.3.3"
+  }
+}

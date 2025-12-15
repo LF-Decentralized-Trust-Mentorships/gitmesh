@@ -1,0 +1,33 @@
+/* TailwindCSS initialization */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You can add global styles to this file, and also import other style files */
+@import 'layout';
+@import 'typography';
+@import 'filter';
+@import 'table';
+@import 'buttons';
+@import 'tags';
+@import 'dialogs';
+@import 'panel';
+@import 'toast';
+@import 'tabs';
+@import 'drawer';
+@import 'animations';
+@import 'confirm-dialog';
+@import 'timeline';
+@import 'badge';
+@import 'content';
+@import 'popover';
+@import 'tooltip';
+@import 'html';
+@import 'form/date-picker';
+@import 'form/radio';
+@import 'form/form';
+@import 'form/dropdown';
+@import 'form/select';
+@import 'form/input';
+@import 'form/checkbox';
+@import 'form/switch';

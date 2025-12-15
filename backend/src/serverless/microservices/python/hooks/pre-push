@@ -1,0 +1,26 @@
+#!/bin/bash
+
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    MSYS_NT*)   machine=Windows;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+
+
+case "$machine" in
+    Windows)
+      source venv-gitmesh/Scripts/activate
+      ;;
+    MinGw)
+      source venv-gitmesh/Scripts/activate
+      ;;
+    *)
+      source venv-gitmesh/bin/activate
+      ;;
+esac
+
+pytest

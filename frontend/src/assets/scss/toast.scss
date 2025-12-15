@@ -1,0 +1,104 @@
+.el-notification {
+  @apply border-0 px-4 w-120 min-h-11;
+  border: 0;
+  border-radius: 0;
+  box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.1),
+    0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &.robotic-notification {
+    @apply bg-black border-2;
+    border-radius: 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    backdrop-filter: none;
+    font-family: 'Courier New', 'Consolas', monospace;
+  }
+
+  &.error {
+    &.robotic-notification {
+      @apply bg-black border-red-500/50;
+      border-width: 2px;
+      border-style: solid;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4),
+        inset 0 0 30px rgba(239, 68, 68, 0.05);
+    }
+  }
+
+  &.success {
+    &.robotic-notification {
+      @apply bg-black border-green-500/50;
+      border-width: 2px;
+      border-style: solid;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4),
+        inset 0 0 30px rgba(16, 185, 129, 0.05);
+    }
+  }
+
+  &.info {
+    &.robotic-notification {
+      @apply bg-black border-blue-500/50;
+      border-width: 2px;
+      border-style: solid;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4),
+        inset 0 0 30px rgba(59, 130, 246, 0.05);
+    }
+  }
+}
+
+.notification-content {
+  @apply flex flex-col gap-2;
+}
+
+.notification-header {
+  @apply flex items-center gap-3;
+}
+
+.typewriter-text {
+  @apply text-sm font-mono text-zinc-100;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  min-height: 1.4em;
+  
+  &::after {
+    content: '▋';
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    color: currentColor;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.el-notification__title {
+  @apply hidden;
+}
+
+.el-notification__content {
+  @apply m-0 p-0;
+}
+
+.el-notification__group {
+  @apply m-0;
+}
+
+.el-notification__closeBtn {
+  @apply text-zinc-500 hover:text-zinc-300 transition-colors;
+  top: 12px;
+  right: 12px;
+  
+  svg {
+    @apply stroke-zinc-500 transition-colors;
+    stroke-width: 48px;
+    &:hover {
+      @apply stroke-zinc-300;
+    }
+  }
+}

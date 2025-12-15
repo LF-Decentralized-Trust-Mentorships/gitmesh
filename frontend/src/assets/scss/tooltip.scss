@@ -1,0 +1,22 @@
+[data-tooltip]{
+  position:relative;
+
+  &:before{
+    content: attr(data-tooltip);
+    position:absolute;
+
+    bottom: calc(100% + 0.75rem);
+    left:50%;
+    transform:translateX(-50%);
+
+    width: max-content;
+    max-width: 20rem;
+    display: block;
+    padding: 5px 6px;
+    @apply bg-gray-900 text-white rounded-md text-2xs leading-5 opacity-0 transition invisible;
+  }
+
+  &:hover:before {
+    @apply opacity-100 visible;
+  }
+}

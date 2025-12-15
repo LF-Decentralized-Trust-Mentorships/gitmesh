@@ -1,0 +1,89 @@
+<template>
+  <article
+    class="border-gray-200  flex items-center"
+    :class="{
+      'border-t first:border-none py-2.5': !module,
+      'first:border-t': module === 'reports',
+    }"
+  >
+    <div
+      :class="{
+        'w-5/12': !module && platform,
+        'w-4/12': module === 'reports',
+      }"
+    >
+      <div
+        v-if="platform"
+        class="flex items-center"
+      >
+        <img
+          v-if="platformDetails"
+          :src="platformDetails.image"
+          :alt="platformDetails.name"
+          class="w-4 h-4 mr-2"
+        />
+        <i
+          v-else
+          class="ri-apps-2-line text-base text-gray-400 mr-2"
+        />
+        <p
+          class="text-sm leading-5"
+          :class="{
+            'py-2': !module,
+            'text-black font-medium': module === 'reports',
+          }"
+        >
+          <span v-if="platformDetails">{{
+            platformDetails.name
+          }}</span>
+          <span v-else>{{ platform }}</span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="flex-grow flex justify-between items-center"
+      :class="{
+        'h-12': module === 'reports',
+        'border-b border-gray-200 ': !isLastActivity && module === 'reports',
+      }"
+    >
+      <p class="text-sm leading-5">
+        {{ label }}
+      </p>
+      <slot name="after" />
+    </div>
+  </article>
+</template>
+
+<script setup>
+import { computed, defineProps } from 'vue';
+import { GitmeshIntegrations } from '@/integrations/integrations-config';
+
+const props = defineProps({
+  platform: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  label: {
+    type: String,
+    required: true,
+  },
+  module: {
+    type: String,
+    default: null,
+  },
+  isLastActivity: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const platformDetails = computed(() => GitmeshIntegrations.getConfig(props.platform));
+</script>
+
+<script>
+export default {
+  name: 'AppActivityTypeListItem',
+};
+</script>

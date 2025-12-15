@@ -1,125 +1,57 @@
-## PR Title Convention
+## PR Title
 
-Use the following prefixes in your PR title:
+<!-- Use one of: feat, fix, docs, refactor, perf, test, build, breaking, chore -->
+<!-- Example: feat: add ranked backlog generation -->
 
-- `feat:` - New feature (non-breaking change which adds functionality)
-- `fix:` - Bug fix (non-breaking change which fixes an issue)
-- `docs:` - Documentation update
-- `refactor:` - Code refactoring (no functional changes)
-- `perf:` - Performance improvement
-- `test:` - Test addition or update
-- `build:` - CI/CD or build configuration change
-- `breaking:` - Breaking change (affects existing functionality)
-- `chore:` - Other changes (dependencies, tooling, etc.)
 
-**Example**: `feat: add user authentication module` or `fix: resolve memory leak in data processor`
+## Summary
 
----
-
-Copy below template
-```markdown
-## Description
-
-<!-- Provide a clear and concise description of what this PR does -->
-
+<!-- What does this PR do in 2–3 sentences? -->
 
 
 ## Related Issue
 
-<!-- Use "Fixes", "Resolves", or "Closes" to automatically close the issue when PR is merged -->
+<!-- One of: Fixes / Resolves / Closes -->
+Fixes #___
 
-Fixes #(issue_number)
-<!-- OR -->
-Resolves #(issue_number)
-<!-- OR -->
-Closes #(issue_number)
 
 ## Type of Change
 
-<!-- Mark the relevant option with an "x" -->
-
-- [ ] `feat:` New feature
-- [ ] `fix:` Bug fix
-- [ ] `docs:` Documentation update
-- [ ] `refactor:` Code refactoring
-- [ ] `perf:` Performance improvement
-- [ ] `test:` Test addition or update
-- [ ] `build:` CI/CD or build configuration
-- [ ] `breaking:` Breaking change
-- [ ] `chore:` Other changes
-
-## How I Solved the Issue
-
-<!-- Explain your approach and the solution you implemented -->
+- [ ] feat
+- [ ] fix
+- [ ] docs
+- [ ] refactor
+- [ ] perf
+- [ ] test
+- [ ] build
+- [ ] breaking
+- [ ] chore
 
 
+## How Was This Tested?
 
-## How I Tested It (if appropriate)
+- [ ] Local run
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Not tested (explain why)
 
-<!-- Describe the testing process you followed -->
-
-- [ ] Tested locally
-- [ ] Added unit tests
-- [ ] Added integration tests
-- [ ] Tested in development environment
-- [ ] Tested edge cases
-
-**Testing Details**:
+Notes:
 
 
 
-## Screenshots (if appropriate)
+## CE & Security Check
 
-<!-- Add screenshots or GIFs to demonstrate the changes -->
-
-
-
-## Documentation Changes (if appropriate)
-
-<!-- Specify which area of documentation was updated -->
-
-- [ ] README
-- [ ] Documentation Website
-- [ ] Contributing Guide
-- [ ] Roadmap Guide
-- [ ] Changelog
-- [ ] Other: _____
-
-**Documentation Area**: 
+- [ ] Targets **GitMesh CE** only (no EE code)
+- [ ] No secrets or credentials committed
 
 
+## Screenshots / Demos (if UI or UX)
 
-## Breaking Changes (if appropriate)
+<!-- Optional: add screenshot, GIF, or short note -->
 
-<!-- If this PR introduces breaking changes, list them here with migration instructions -->
-
-
-
-## Additional Notes (if appropriate)
-
-<!-- Add any additional information that reviewers should know -->
-
-
-
-## Requests to Maintainers (if appropriate)
-
-<!-- Any specific requests for the maintainers -->
-
-- [ ] Please add `hacktoberfest-accepted` label
-- [ ] Please add `good-first-issue` label
-- [ ] Please consider for next release
-- [ ] Other: _____
-
----
 
 ## Checklist
 
-- [ ] My code follows the project's code style
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code where necessary
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix/feature works
-- [ ] All tests pass locally
-- [ ] I have checked for any typos or grammatical errors
-- [ ] I have previously contributed to this repository (not mandatory)
-```
+- [ ] Code follows project style
+- [ ] Self-reviewed
+- [ ] Tests updated/added where needed

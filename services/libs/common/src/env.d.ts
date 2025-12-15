@@ -1,0 +1,10 @@
+import { Edition } from '@gitmesh/types';
+export declare const IS_TEST_ENV: boolean;
+export declare const IS_DEV_ENV: boolean;
+export declare const IS_PROD_ENV: boolean;
+export declare const IS_STAGING_ENV: boolean;
+export declare const LOG_LEVEL: string;
+export declare const IS_CLOUD_ENV: boolean;
+export declare const SERVICE: string;
+export declare const EDITION: Edition;
+export declare function getEnv(): "staging" | "prod" | "local";

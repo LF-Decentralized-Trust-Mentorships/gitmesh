@@ -1,0 +1,171 @@
+version: '3.1'
+
+services:
+  cubejs:
+    image: cubejs/cube
+    restart: always
+    ports:
+      - '4000:4000'
+      - '3001:3000'
+    volumes:
+      - '../services/libs/cubejs:/cube/conf'
+    environment:
+      - CUBEJS_DEV_MODE=true
+      - CUBEJS_DB_HOST=db
+      - CUBEJS_DB_PORT=5432
+      - CUBEJS_DB_NAME=gitmesh-web
+      - CUBEJS_DB_USER=postgres
+      - CUBEJS_DB_PASS=example
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_API_SECRET=137ea167812145c6d77452a58d7dd29b
+      - CUBEJS_EXTERNAL_DEFAULT=true
+      - CUBEJS_SCHEDULED_REFRESH_DEFAULT=true
+    networks:
+      - gitmesh-bridge
+
+  db:
+    image: postgres:13.6-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=gitmesh-web
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata-dev:/var/lib/postgresql/data
+    shm_size: 1gb
+    networks:
+      - gitmesh-bridge
+
+  open-search:
+    image: opensearchproject/opensearch:2.7.0
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - 'DISABLE_INSTALL_DEMO_CONFIG=true'
+      - 'DISABLE_SECURITY_PLUGIN=true'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - 9200:9200
+      - 9600:9600
+    volumes:
+      - opensearch-dev:/usr/share/opensearch/data
+    networks:
+      - gitmesh-bridge
+
+  # uncomment to enable dashboard
+  # open-search-dashboard:
+  #   image: opensearchproject/opensearch-dashboards:2.7.0
+  #   restart: always
+  #   environment:
+  #     - 'OPENSEARCH_HOSTS=["http://open-search:9200"]'
+  #     - 'DISABLE_SECURITY_DASHBOARDS_PLUGIN=true'
+  #   ports:
+  #     - 5601:5601
+  #   networks:
+  #     - gitmesh-bridge
+
+  # s3:
+  #   image: scireum/s3-ninja:8.0.0
+  #   ports:
+  #     - 9000:9000
+  #   volumes:
+  #     - s3-dev:/home/sirius/data
+  #   networks:
+  #     - gitmesh-bridge
+
+  sqs:
+    build:
+      context: scaffold/sqs
+    restart: always
+    ports:
+      - 9324:9324
+      - 9325:9325
+    networks:
+      - gitmesh-bridge
+
+  nginx:
+    image: nginx:1.24-alpine
+    restart: always
+    volumes:
+      - ./scaffold/nginx/templates:/etc/nginx/templates
+      - ./scaffold/nginx/ssl:/etc/nginx/ssl
+    ports:
+      - '443:443'
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=443
+    networks:
+      - gitmesh-bridge
+
+  redis:
+    build:
+      context: scaffold/redis
+    command: 'redis-server /redis.conf --requirepass gitmeshtest'
+    restart: always
+    volumes:
+      - redis-dev:/data
+    ports:
+      - 6379:6379
+    networks:
+      - gitmesh-bridge
+
+  nango:
+    image: nangohq/nango-server:0.9.0
+    restart: always
+    environment:
+      - NANGO_DB_HOST=db
+      - NANGO_DB_PORT=5432
+      - NANGO_DB_NAME=gitmesh-web
+      - NANGO_DB_USER=postgres
+      - NANGO_DB_PASSWORD=example
+      - NANGO_SECRET_KEY=424242
+      - NANGO_CALLBACK_URL=http://localhost:3003/oauth/callback
+      - NANGO_SERVER_URL=http://localhost:3003
+      - SERVER_PORT=3003
+    ports:
+      - '3003:3003'
+    networks:
+      - gitmesh-bridge
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    restart: always
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - '9092:9092'
+    networks:
+      - gitmesh-bridge
+
+  temporal:
+    build:
+      context: scaffold/temporal
+    restart: always
+    ports:
+      - '7233:7233'
+      - '8233:8233'
+    networks:
+      - gitmesh-bridge
+
+networks:
+  gitmesh-bridge:
+    external: true
+
+volumes:
+  pgdata-dev:
+  opensearch-dev:
+  s3-dev:
+  redis-dev:

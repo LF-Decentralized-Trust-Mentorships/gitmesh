@@ -1,0 +1,35 @@
+{
+  "service": {
+    "edition": "EDITION"
+  },
+  "db": {
+    "host": "DB_WRITE_HOST",
+    "port": "DB_PORT",
+    "database": "DB_DATABASE",
+    "user": "DB_USERNAME",
+    "password": "DB_PASSWORD"
+  },
+  "sqs": {
+    "region": "SQS_AWS_REGION",
+    "host": "SQS_HOST",
+    "port": "SQS_PORT",
+    "accessKeyId": "SQS_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "SQS_AWS_SECRET_ACCESS_KEY"
+  },
+  "redis": {
+    "username": "REDIS_USERNAME",
+    "password": "REDIS_PASSWORD",
+    "host": "REDIS_HOST",
+    "port": "REDIS_PORT"
+  },
+  "opensearch": {
+    "node": "OPENSEARCH_NODE",
+    "region": "OPENSEARCH_AWS_REGION",
+    "accessKeyId": "OPENSEARCH_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "OPENSEARCH_AWS_SECRET_ACCESS_KEY"
+  },
+  "nango": {
+    "url": "NANGO_URL",
+    "secretKey": "NANGO_SECRET_KEY"
+  }
+}

@@ -1,0 +1,70 @@
+version: '3.1'
+
+x-env-args: &env-args
+  DOCKER_BUILDKIT: 1
+  NODE_ENV: docker
+
+services:
+  frontend:
+    image: alveoli-app/frontend:1666904549.59dad54
+    env_file:
+      - frontend.env
+    environment:
+      <<: *env-args
+    ports:
+      - '8081:8081'
+    restart: always
+    networks:
+      - gitmesh-bridge
+
+  api:
+    image: alveoli-app/backend:1666904557.59dad54
+    command: 'npm run start:api'
+    env_file:
+      - backend.env
+    environment:
+      <<: *env-args
+      SERVICE: api
+    ports:
+      - '8080:8080'
+    restart: always
+    networks:
+      - gitmesh-bridge
+
+  job-generator:
+    image: alveoli-app/backend:1666904557.59dad54
+    command: 'npm run start:job-generator'
+    env_file:
+      - backend.env
+    environment:
+      <<: *env-args
+      SERVICE: job-generator
+    restart: always
+    networks:
+      - gitmesh-bridge
+
+  nodejs-worker:
+    image: alveoli-app/backend:1666904557.59dad54
+    command: 'npm run start:nodejs-worker'
+    env_file:
+      - backend.env
+    environment:
+      <<: *env-args
+      SERVICE: nodejs-worker
+    restart: always
+    networks:
+      - gitmesh-bridge
+
+  python-worker:
+    image: alveoli-app/python-worker:1666904597.59dad54
+    env_file:
+      - backend.env
+    environment:
+      <<: *env-args
+      SERVICE: python-worker
+    restart: always
+    networks:
+      - gitmesh-bridge
+
+networks:
+  gitmesh-bridge:

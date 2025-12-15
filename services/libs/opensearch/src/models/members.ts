@@ -1,0 +1,100 @@
+import { OpensearchField } from '@gitmesh/types'
+import { OpensearchFieldType } from '@gitmesh/types'
+import OpensearchModelBase from './base'
+
+export class MembersOpensearch extends OpensearchModelBase {
+  fields: Record<string, OpensearchField> = {
+    id: {
+      type: OpensearchFieldType.UUID,
+      customTranslation: {
+        toOpensearch: 'uuid_memberId',
+        fromOpensearch: 'uuid_memberId',
+      },
+    },
+    tenantId: {
+      type: OpensearchFieldType.UUID,
+    },
+    segmentId: {
+      type: OpensearchFieldType.UUID,
+    },
+    displayName: {
+      type: OpensearchFieldType.STRING,
+    },
+    emails: {
+      type: OpensearchFieldType.STRING_ARR,
+    },
+    score: {
+      type: OpensearchFieldType.INT,
+    },
+    lastEnriched: {
+      type: OpensearchFieldType.DATE,
+    },
+    joinedAt: {
+      type: OpensearchFieldType.DATE,
+    },
+    createdAt: {
+      type: OpensearchFieldType.DATE,
+    },
+    manuallyCreated: {
+      type: OpensearchFieldType.BOOL,
+    },
+    reach: {
+      type: OpensearchFieldType.INT,
+      customTranslation: {
+        toOpensearch: 'int_totalReach',
+        fromOpensearch: 'int_totalReach',
+      },
+    },
+    numberOfOpenSourceContributions: {
+      type: OpensearchFieldType.INT,
+    },
+    activeOn: {
+      type: OpensearchFieldType.STRING_ARR,
+    },
+    activityCount: {
+      type: OpensearchFieldType.INT,
+    },
+    activityTypes: {
+      type: OpensearchFieldType.STRING_ARR,
+    },
+    activeDaysCount: {
+      type: OpensearchFieldType.INT,
+    },
+    lastActive: {
+      type: OpensearchFieldType.DATE,
+    },
+    averageSentiment: {
+      type: OpensearchFieldType.FLOAT,
+    },
+    identities: {
+      type: OpensearchFieldType.NESTED,
+      customTranslation: {
+        toOpensearch: 'nested_identities.string_platform',
+        fromOpensearch: 'nested_identities',
+      },
+    },
+    attributes: {
+      type: OpensearchFieldType.OBJECT,
+    },
+    toMergeIds: {
+      type: OpensearchFieldType.UUID_ARR,
+    },
+    noMergeIds: {
+      type: OpensearchFieldType.UUID_ARR,
+    },
+    tags: {
+      type: OpensearchFieldType.NESTED,
+      customTranslation: {
+        toOpensearch: 'nested_tags.uuid_id',
+        fromOpensearch: 'nested_tags',
+      },
+    },
+    organizations: {
+      type: OpensearchFieldType.NESTED,
+      customTranslation: {
+        toOpensearch: 'nested_organizations.uuid_id',
+        fromOpensearch: 'nested_organizations',
+      },
+    },
+  }
+}

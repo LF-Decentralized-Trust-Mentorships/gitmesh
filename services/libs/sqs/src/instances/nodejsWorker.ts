@@ -1,0 +1,44 @@
+import { Logger } from '@gitmesh/logging'
+import { NODEJS_WORKER_QUEUE_SETTINGS } from '../config'
+import { SqsQueueEmitter } from '../queue'
+import { SqsClient } from '../types'
+import {
+  IQueueMessage,
+  NewActivityAutomationQueueMessage,
+  NewMemberAutomationQueueMessage,
+} from '@gitmesh/types'
+import { Tracer } from '@gitmesh/tracing'
+
+export class NodejsWorkerEmitter extends SqsQueueEmitter {
+  constructor(client: SqsClient, tracer: Tracer, parentLog: Logger) {
+    super(client, NODEJS_WORKER_QUEUE_SETTINGS, tracer, parentLog)
+  }
+
+  public override sendMessage(
+    groupId: string,
+    message: IQueueMessage,
+    deduplicationId: string,
+  ): Promise<void> {
+    return super.sendMessage(groupId, message, deduplicationId)
+  }
+
+  public async processAutomationForNewActivity(
+    tenantId: string,
+    activityId: string,
+    segmentId: string,
+  ): Promise<void> {
+    await this.sendMessage(
+      `${activityId}--${segmentId}`,
+      new NewActivityAutomationQueueMessage(tenantId, activityId, segmentId),
+      `${activityId}--${segmentId}`,
+    )
+  }
+
+  public async processAutomationForNewMember(tenantId: string, memberId: string): Promise<void> {
+    await this.sendMessage(
+      memberId,
+      new NewMemberAutomationQueueMessage(tenantId, memberId),
+      memberId,
+    )
+  }
+}

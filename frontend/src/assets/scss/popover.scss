@@ -1,0 +1,20 @@
+.el-popover.el-popper {
+  --el-box-shadow-light: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  --el-popover-bg-color: #000000;
+  --el-popover-border-color: #3f3f46;
+  --el-popover-title-text-color: #ffffff;
+  --el-text-color-regular: #ffffff;
+}
+
+.el-popper.is-dark, .el-popper.is-light {
+  @apply min-h-6 h-auto bg-black border border-zinc-700 text-white;
+}
+
+.el-popper.is-light {
+  @apply border-zinc-700;
+}
+
+.el-popper__arrow::before {
+  background: #000000 !important;
+  border-color: #3f3f46 !important;
+}

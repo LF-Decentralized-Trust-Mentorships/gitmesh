@@ -1,0 +1,32 @@
+<template>
+  <div class="flex items-center justify-center">
+    <div
+      v-if="props.pngnClass"
+      class="text-3xl text-gray-300 mr-4 h-10 flex items-center"
+      :class="props.pngnClass"
+    />
+    <p
+      class="text-xs leading-5 text-center italic text-gray-400"
+    >
+      <slot />
+    </p>
+  </div>
+</template>
+
+<script setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  iconClass: {
+    type: String,
+    required: false,
+    default: '',
+  },
+});
+</script>
+
+<script>
+export default {
+  name: 'AppDashboardEmptyState',
+};
+</script>

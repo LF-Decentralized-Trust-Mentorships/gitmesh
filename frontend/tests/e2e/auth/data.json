@@ -1,0 +1,18 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@gitmesh.dev",
+  "password": "correctPassword",
+  "wrong": {
+    "email": "john@gitmesh.dev",
+    "password": "wrongPassword"
+  },
+  "tenant": {
+    "name": "Gitmesh community",
+    "platforms": ["GitHub", "X/Twitter"],
+    "size": "5,000 - 25,000",
+    "integration": {
+      "dev": "alveoli-app"
+    }
+  }
+}

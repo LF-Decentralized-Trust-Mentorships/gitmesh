@@ -1,9 +1,0 @@
-.actions .shiki {
-  background-color: var(--gitmesh-elements-actions-code-background) !important;
-}
-
-.shiki {
-  &:not(:has(.actions), .actions *, .mcp-tool-invocation-code *) {
-    background-color: var(--gitmesh-elements-messages-code-background) !important;
-  }
-}
