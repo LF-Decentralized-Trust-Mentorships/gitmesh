@@ -1,0 +1,43 @@
+{
+  "db": {
+    "host": "DB_WRITE_HOST",
+    "port": "DB_PORT",
+    "database": "DB_DATABASE",
+    "user": "DB_USERNAME",
+    "password": "DB_PASSWORD"
+  },
+  "sqs": {
+    "region": "SQS_AWS_REGION",
+    "host": "SQS_HOST",
+    "port": "SQS_PORT",
+    "accessKeyId": "SQS_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "SQS_AWS_SECRET_ACCESS_KEY"
+  },
+  "sentiment": {
+    "region": "COMPREHEND_AWS_REGION",
+    "accessKeyId": "COMPREHEND_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "COMPREHEND_AWS_SECRET_ACCESS_KEY"
+  },
+  "slackAlerting": {
+    "url": "SLACK_ALERTING_URL"
+  },
+  "redis": {
+    "username": "REDIS_USERNAME",
+    "password": "REDIS_PASSWORD",
+    "host": "REDIS_HOST",
+    "port": "REDIS_PORT"
+  },
+  "unleash": {
+    "url": "UNLEASH_URL",
+    "apiKey": "UNLEASH_BACKEND_API_KEY"
+  },
+  "temporal": {
+    "serverUrl": "TEMPORAL_SERVER_URL",
+    "namespace": "TEMPORAL_NAMESPACE",
+    "certificate": "TEMPORAL_CERTIFICATE",
+    "privateKey": "TEMPORAL_PRIVATE_KEY"
+  },
+  "searchSyncApi": {
+    "baseUrl": "SEARCH_SYNC_API_URL"
+  }
+}
