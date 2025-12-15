@@ -1,0 +1,141 @@
+<template>
+  <div v-if="form" class="px-4 pt-3">
+    <el-select
+      v-model="form"
+      multiple
+      filterable
+      remote
+      :reserve-keyword="false"
+      placeholder="Select options"
+      :remote-method="searchOptions"
+      :teleported="false"
+      class="filter-multiselect"
+      popper-class="filter-multiselect-popper"
+      no-data-text="No results"
+    >
+      <template v-for="(group, gi) of filteredOptions" :key="gi">
+        <div
+          v-if="group.label && group.options.length > 0"
+          class="text-2xs text-zinc-200 font-semibold tracking-wide leading-6 uppercase px-3 my-1"
+        >
+          {{ group.label }}
+        </div>
+        <el-option
+          v-for="option of group.options"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value"
+          data-qa="filter-select-option"
+          :data-qa-value="option.value"
+        >
+          <div
+            class="el-checkbox filter-checkbox h-4"
+            :class="{ 'is-checked': form.includes(option.value) }"
+          >
+            <span class="el-checkbox__input" :class="{ 'is-checked': form.includes(option.value) }">
+              <span class="el-checkbox__inner" />
+            </span>
+          </div>
+          {{ option.label }}
+        </el-option>
+      </template>
+    </el-select>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
+import {
+  MultiSelectFilterOptions,
+  MultiSelectFilterConfig, MultiSelectFilterOptionGroup,
+} from '@/shared/modules/filters/types/filterTypes/MultiSelectFilterConfig';
+
+const props = defineProps<{
+  modelValue: string[],
+  config: MultiSelectFilterConfig
+} & MultiSelectFilterOptions>();
+
+const emit = defineEmits<{(e: 'update:modelValue', value: string[]): void}>();
+
+const form = computed<string[]>({
+  get: () => props.modelValue,
+  set: (value: string[]) => emit('update:modelValue', value),
+});
+
+const filteredOptions = ref<MultiSelectFilterOptionGroup[]>(props.options);
+
+const searchOptions = (query: string) => {
+  filteredOptions.value = props.options.map((g) => ({
+    ...g,
+    options: g.options.filter((o) => o.label.toLowerCase().includes(query.toLowerCase())),
+  }));
+};
+
+onMounted(() => {
+  searchOptions('');
+});
+</script>
+
+<script lang="ts">
+export default {
+  name: 'CrMultiSelectTagsFilter',
+};
+</script>
+
+<style lang="scss">
+.filter-multiselect {
+  @apply w-full relative;
+
+  .el-select__tags{
+    @apply top-1.5 transform-none;
+  }
+
+  .el-select-dropdown__item {
+    @apply px-3 #{!important};
+
+    &.selected{
+      @apply bg-brand-900 font-normal px-3 #{!important};
+    }
+
+    &:after{
+      @apply hidden;
+    }
+  }
+
+  .el-input__wrapper,
+  .el-input__wrapper.is-focus,
+  .el-input__wrapper:hover {
+    @apply bg-zinc-800 shadow-none rounded-md border border-zinc-700 transition #{!important};
+
+    input {
+      &,
+      &:hover,
+      &:focus {
+        border: none !important;
+        @apply bg-zinc-800 shadow-none outline-none h-full min-h-8 text-zinc-100;
+      }
+    }
+  }
+
+  .el-tag{
+    @apply bg-zinc-900 border-zinc-700 text-zinc-100 #{!important};
+    .el-tag__close {
+      @apply text-zinc-400;
+      &:hover {
+        @apply bg-zinc-800 text-zinc-200;
+      }
+    }
+  }
+}
+.filter-multiselect-popper {
+  @apply relative inset-0 block shadow-none h-auto opacity-100 transform-none #{!important};
+
+  .el-select-dropdown{
+    @apply -mx-4 p-0 mt-3 border-t border-zinc-700 bg-zinc-900;
+
+    .el-scrollbar__view{
+      @apply py-3 px-3;
+    }
+  }
+}
+</style>

@@ -1,0 +1,194 @@
+.filter form {
+  padding: 16px;
+}
+
+.filter-with-operator-and-input {
+  @apply px-2 pb-4 pt-2;
+
+  .el-input__wrapper,
+  .el-input__wrapper.is-focus,
+  .el-input__wrapper:hover {
+    border: none !important;
+    @apply h-8 bg-zinc-900 shadow-none rounded-md;
+
+    input {
+      &,
+      &:hover,
+      &:focus {
+        border: none !important;
+        @apply bg-zinc-900 shadow-none outline-none h-full min-h-8 text-white;
+      }
+    }
+  }
+
+  .inline-select-input-prefix,
+  .inline-select-input-value {
+    @apply text-2xs text-zinc-400;
+  }
+}
+
+.filter-dropdown {
+  &-search .el-input__wrapper {
+    border: none !important;
+    @apply shadow-none bg-zinc-900;
+    &.is-focus,
+    &:hover {
+      @apply shadow-none;
+    }
+    input {
+      @apply text-white;
+    }
+  }
+
+  &-trigger.el-button,
+  &-trigger.el-button:focus:not(.is-expanded),
+  .el-input-group__append &-trigger.el-button,
+  .el-input-group__append
+    &-trigger.el-button:focus:not(.is-expanded) {
+    @apply h-10 flex justify-center items-center py-0 px-4 bg-black border border-l-0 rounded-l-none border-zinc-600 outline-none text-zinc-300;
+    transition: all 0.2s ease;
+
+    &.is-expanded,
+    &:hover,
+    &:active {
+      @apply bg-zinc-900 outline-none text-white border-zinc-500;
+    }
+  }
+}
+
+.filter-list-operator {
+  @apply text-xs mb-4;
+
+  &-btn.el-button {
+    @apply h-8 flex items-center p-2 bg-black border border-zinc-600 outline-none text-zinc-300 text-xs;
+    transition: all 0.2s ease;
+
+    &.is-expanded,
+    &:hover,
+    &:active,
+    &:focus,
+    &:visited {
+      @apply bg-zinc-900 outline-none text-white border-zinc-500;
+    }
+  }
+
+  &-option {
+    @apply px-3 py-2.5 text-white hover:bg-zinc-800 cursor-pointer;
+  }
+}
+
+.filter-list {
+  @apply flex items-center -mx-2 mb-2 flex-wrap;
+}
+
+.filter-type-keywords {
+  @apply mb-3;
+  .el-keywords-input-wrapper {
+    @apply h-8 min-h-8;
+    &,
+    &:hover,
+    &.is-focus {
+      @apply bg-zinc-900 shadow-none border-none;
+    }
+    input {
+      @apply text-white;
+    }
+  }
+}
+
+.filter-type-number {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+}
+
+.filter-type-select-async {
+  @apply -m-2;
+  &-input {
+    @apply border-b border-zinc-700 p-2;
+  }
+  .input-wrapper {
+    @apply min-h-8 bg-zinc-900 shadow-none border-none rounded-md max-h-12 overflow-auto;
+    .el-tag {
+      margin: 4px 0 4px 4px;
+      @apply bg-zinc-800 border-zinc-600 text-white;
+    }
+    input {
+      &,
+      &:hover,
+      &:focus {
+        @apply bg-zinc-900 shadow-none border-none outline-none h-full px-2 min-h-8 text-white;
+      }
+    }
+  }
+}
+
+.filter-type-select {
+  &-input {
+    @apply border-b border-zinc-700 px-2 pb-2 -ml-2 -mr-2 mb-2;
+  }
+  .input-wrapper {
+    @apply min-h-8 bg-zinc-900 shadow-none border-none rounded-md max-h-12 overflow-auto;
+    .el-tag {
+      margin: 4px 0 4px 4px;
+      @apply bg-zinc-800 border-zinc-600 text-white;
+    }
+    input {
+      &,
+      &:hover,
+      &:focus {
+        @apply bg-zinc-900 shadow-none border-none outline-none h-full px-2 min-h-8 text-white;
+      }
+    }
+  }
+  &-option.group {
+    @apply justify-between;
+
+    &.is-selected,
+    &:focus.is-selected {
+      i {
+        @apply mr-0;
+      }
+    }
+  }
+}
+
+.filter-type-select {
+  &-option {
+    @apply flex items-center text-white px-4 py-3 text-xs cursor-pointer relative;
+    border-radius: 4px;
+
+    &:not(:last-of-type) {
+      @apply mb-1;
+    }
+
+    i {
+      @apply mr-2;
+    }
+
+    i:not(.ri-delete-bin-line) {
+      @apply text-zinc-200;
+    }
+
+    &:focus,
+    &:not(.is-disabled):hover,
+    &:not(.is-disabled):focus {
+      @apply text-white bg-zinc-800;
+    }
+
+    &.is-disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+
+    &.is-selected,
+    &:focus.is-selected {
+      @apply relative bg-orange-500/10;
+      i {
+        @apply mr-3 text-orange-500;
+      }
+    }
+  }
+}

@@ -1,0 +1,369 @@
+.btn {
+  @apply rounded-md font-medium inline-flex items-center justify-center h-auto box-border;
+  transition: all 0.2s;
+
+  // Button Sizes
+  &--xs {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    @apply px-2 text-2xs;
+  }
+
+  &--sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  &--md {
+    @apply px-3 h-10 text-sm;
+  }
+
+  &--lg {
+    @apply px-4 py-3 text-base leading-6;
+  }
+
+  // Icon buttons
+  &--icon--sm {
+    @apply p-1.5 text-xs;
+  }
+
+  // Default buttons' variations
+  &--primary {
+    @apply bg-orange-500 text-black border-none font-bold;
+
+    &:hover,
+    &:hover:is(a):not(.disabled) {
+      @apply cursor-pointer bg-orange-600 text-black;
+    }
+    &:focus {
+      @apply outline outline-1 outline-orange-500 outline-offset-2 bg-orange-500 text-black;
+    }
+    &:active {
+      @apply bg-orange-600 text-black;
+    }
+    &[disabled],
+    &.disabled {
+      @apply cursor-not-allowed bg-orange-300 text-black opacity-50;
+    }
+  }
+
+  &--secondary {
+    @apply bg-zinc-900 text-white border border-zinc-700;
+
+    &:hover {
+      @apply cursor-pointer bg-zinc-800 text-white border-zinc-600;
+    }
+    &:focus {
+      @apply outline outline-1 outline-orange-500 outline-offset-2 bg-zinc-900 text-white;
+    }
+    &:active {
+      @apply bg-zinc-800 text-white;
+    }
+    &[disabled] {
+      @apply cursor-not-allowed bg-zinc-900 text-zinc-200;
+    }
+  }
+
+  &--bordered {
+    @apply bg-black text-white border-2 border-zinc-700 border-solid;
+
+    &:hover {
+      @apply cursor-pointer bg-zinc-900 text-white border-2 border-zinc-600 border-solid;
+    }
+    &:focus {
+      @apply bg-black text-white border-2 border-zinc-700 border-solid outline outline-offset-2 outline-1 outline-orange-500;
+    }
+    &:active {
+      @apply bg-zinc-900 text-white border-2 border-zinc-600 border-solid;
+    }
+    &[disabled] {
+      @apply cursor-not-allowed bg-black text-zinc-600 border-2 border-zinc-700 border-solid;
+    }
+
+    &.btn{
+      &--lg {
+        @apply py-2.5;
+      }
+    }
+  }
+
+  &--transparent {
+    @apply bg-transparent text-white border-2 border-transparent;
+
+    &:hover,
+    &:hover:is(a) {
+      @apply cursor-pointer bg-zinc-900 text-white;
+    }
+    &:focus {
+      @apply bg-transparent text-white border-2 border-zinc-700 border-solid;
+    }
+    &:active {
+      @apply bg-zinc-900 text-white border-2 border-zinc-700 border-solid;
+    }
+    &[disabled],
+    &.disabled {
+      @apply cursor-not-allowed bg-transparent text-zinc-600 border-2 border-transparent;
+    }
+  }
+
+  // Brand buttons' variations
+  &-brand {
+    &--primary {
+      @apply bg-orange-500 text-black border-none font-bold;
+
+      &:hover {
+        @apply cursor-pointer bg-orange-600;
+        color: black !important;
+      }
+      &:focus {
+        @apply outline outline-1 outline-orange-500 outline-offset-2 bg-orange-500 text-black;
+      }
+      &:active {
+        @apply bg-orange-600 text-black;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed bg-orange-300 text-black opacity-50;
+      }
+    }
+
+    &--secondary {
+      @apply bg-orange-500/10 text-orange-500 border-none;
+
+      &:hover {
+        @apply cursor-pointer bg-orange-500/20 text-orange-500;
+      }
+      &:focus {
+        @apply outline outline-1 outline-orange-500 outline-offset-2 bg-orange-500/10 text-orange-500;
+      }
+      &:active {
+        @apply bg-orange-500/20 text-orange-500;
+      }
+      &[disabled],
+      &.disabled {
+        @apply cursor-not-allowed bg-orange-500/5 text-orange-300;
+      }
+    }
+
+    &--bordered {
+      @apply bg-black text-orange-500 border-2 border-orange-500/50 border-solid;
+
+      &:hover {
+        @apply cursor-pointer bg-orange-500/10 text-orange-500 border-2 border-orange-500 border-solid;
+      }
+      &:focus {
+        @apply bg-black text-orange-500 border-2 border-orange-500/50 border-solid outline outline-1 outline-orange-500 outline-offset-2;
+      }
+      &:active {
+        @apply bg-orange-500/10 text-orange-500 border-2 border-orange-500 border-solid;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed bg-black text-orange-300 border-2 border-orange-500/20 border-solid;
+      }
+    }
+
+    &--transparent {
+      @apply bg-transparent text-orange-500 border-none;
+
+      &:hover {
+        @apply cursor-pointer bg-orange-500/10 text-orange-500;
+      }
+      &:focus {
+        @apply bg-transparent text-orange-500 outline outline-1 outline-orange-500 outline-offset-2;
+      }
+      &:active {
+        @apply bg-orange-500/20 text-orange-500;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed bg-transparent text-orange-300;
+      }
+    }
+  }
+
+  // Link buttons
+  &-link {
+    @apply bg-transparent border-0 p-0 rounded-none shadow-none;
+
+    // Size
+    &--sm {
+      @apply text-2xs;
+    }
+    &--md {
+      @apply text-sm;
+    }
+    &--lg {
+      @apply text-base;
+    }
+
+    // Link buttons' variations
+    &--primary {
+      @apply text-orange-500;
+
+      &:hover,
+      &:active,
+      &:focus {
+        @apply cursor-pointer text-orange-600 bg-transparent;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed text-orange-300 bg-transparent;
+      }
+    }
+    &--secondary {
+      @apply text-white;
+
+      &:hover,
+      &:active,
+      &:focus {
+        @apply cursor-pointer text-orange-500 bg-transparent;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed text-zinc-600 bg-transparent;
+      }
+    }
+    &--success {
+      @apply text-green-500;
+
+      &:hover,
+      &:active,
+      &:focus {
+        @apply cursor-pointer text-green-600 bg-transparent;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed text-green-300 bg-transparent;
+      }
+    }
+    &--danger {
+      @apply text-red-500;
+
+      &:hover,
+      &:active,
+      &:focus {
+        @apply cursor-pointer text-red-600 bg-transparent;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed text-red-300 bg-transparent;
+      }
+    }
+    &--warning {
+      @apply text-yellow-500;
+
+      &:hover,
+      &:active,
+      &:focus {
+        @apply cursor-pointer text-yellow-600 bg-transparent;
+      }
+      &[disabled] {
+        @apply cursor-not-allowed text-yellow-300 bg-transparent;
+      }
+    }
+
+    // Decoration {
+    &--underline {
+      @apply underline;
+    }
+  }
+
+  &--link {
+    @apply bg-transparent border-0 p-0 rounded-none text-blue-500 shadow-none;
+    &:hover,
+    &:active,
+    &:focus {
+      @apply bg-transparent text-blue-500 opacity-80;
+    }
+  }
+
+  &--text {
+    @apply bg-transparent border-0 shadow-none text-brand-500;
+    &:hover,
+    &:focus {
+      @apply text-brand-500;
+      background: #fdedea;
+    }
+  }
+
+  &--full {
+    @apply w-full;
+  }
+
+  &--circle {
+    @apply rounded-full h-9 w-9;
+  }
+
+  &[disabled] {
+    opacity: 0.75;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  i:first-child:not(:only-child) {
+    @apply mr-2;
+  }
+
+  &.el-button + &.el-button {
+    @apply ml-0;
+  }
+}
+
+.btn-group {
+  @apply flex items-center flex-nowrap;
+}
+
+.btn-group > .btn:not(:last-child) {
+  @apply -mr-0.5;
+}
+
+// Identities
+.btn {
+  &--twitter,
+  &--twitter:hover {
+    background-color: rgba(29, 155, 240, 0.15);
+    color: #1d9bf0;
+  }
+
+  &--discord,
+  &--discord:hover {
+    background-color: rgba(88, 101, 242, 0.15);
+  }
+
+  &--crunchbase,
+  &--crunchbase:hover {
+    background: rgba(20, 106, 255, 0.15);
+  }
+
+  &--hackernews,
+  &--hackernews:hover {
+    background-color: rgba(255, 102, 0, 0.15);
+    color: #ff6600;
+  }
+
+  &--email,
+  &--email:hover,
+  &--phone,
+  &--phone:hover,
+  &--custom-platform,
+  &--custom-platform:hover,
+  &--facebook,
+  &--facebook:hover {
+    @apply leading-none cursor-pointer bg-zinc-900 text-zinc-400 border border-zinc-700;
+  }
+
+  &--github,
+  &--github:hover,
+  &--devto,
+  &--devto:hover {
+    @apply bg-zinc-800 border border-zinc-700;
+  }
+
+  &--slack,
+  &--slack:hover,
+  &--linkedin,
+  &--linkedin:hover,
+  &--stackoverflow,
+  &--stackoverflow:hover,
+  &--git,
+  &--git:hover {
+    @apply bg-zinc-900 border border-zinc-700;
+  }
+}
+
+.el-button {
+  --el-button-outline-color: transparent !important;
+}

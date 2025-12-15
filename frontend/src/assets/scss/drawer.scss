@@ -1,0 +1,39 @@
+.el-drawer {
+  @apply opacity-100 bg-black;
+  --el-drawer-padding-primary: 24px;
+  --el-drawer-bg-color: #000000;
+  box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.5);
+
+  &__header {
+    @apply mb-4;
+  }
+
+  &__title {
+    @apply text-lg text-white font-semibold;
+  }
+
+  &__footer {
+    @apply p-6 bg-zinc-900 border-t border-zinc-700;
+  }
+
+  &__close-btn {
+    i {
+      transition: color 0.2s ease;
+      @apply text-zinc-200;
+    }
+
+    &:hover i,
+    &:focus i {
+      @apply text-white;
+    }
+  }
+
+  &.bordered {
+    .el-drawer__header {
+      @apply mb-6;
+    }
+    .el-drawer__body {
+      @apply border-t border-zinc-700;
+    }
+  }
+}

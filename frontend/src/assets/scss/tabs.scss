@@ -1,0 +1,24 @@
+.el-tabs {
+  &__header {
+    @apply m-0 border-none #{!important};
+  }
+  &__active-bar {
+    @apply bg-orange-500 #{!important};
+  }
+  &__content {
+    @apply overflow-visible;
+  }
+  &__item {
+    @apply font-normal text-zinc-400 px-4 font-mono;
+    transition: all 0.2s ease;
+    &.is-active {
+      @apply font-medium text-white #{!important};
+    }
+    &:hover {
+      @apply text-orange-500 #{!important};
+    }
+    &:focus.is-active.is-focus:not(:active) {
+      box-shadow: none;
+    }
+  }
+}

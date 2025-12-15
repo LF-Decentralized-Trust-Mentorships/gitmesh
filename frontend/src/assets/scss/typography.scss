@@ -1,0 +1,49 @@
+html body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  @apply bg-black text-white;
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: "Inter var", sans-serif;
+  }
+}
+
+// Headings
+
+h1 {
+  @apply text-4xl font-semibold leading-normal text-white;
+}
+
+h2 {
+  @apply text-3xl font-semibold leading-normal text-white;
+}
+
+h3 {
+  @apply text-2xl font-semibold leading-normal text-white;
+}
+
+h4 {
+  @apply text-xl font-semibold leading-normal text-white;
+}
+
+h5 {
+  @apply text-lg font-semibold leading-normal text-white;
+}
+
+h6 {
+  @apply text-base font-semibold leading-normal text-white;
+}
+
+a {
+  @apply no-underline text-orange-500;
+  transition: color 0.2s ease;
+  &[href]:hover {
+    @apply text-orange-600;
+  }
+}

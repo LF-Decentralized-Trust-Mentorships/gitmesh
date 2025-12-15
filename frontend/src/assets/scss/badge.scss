@@ -1,0 +1,63 @@
+.badge {
+  @apply bg-gray-200 text-gray-200 px-2.5 text-xs py-1 rounded-md  font-medium h-fit;
+
+  &--sm {
+    @apply px-1.5 py-0.5;
+  }
+
+  &--xs {
+    @apply text-3xs leading-5 py-0.5 px-1;
+  }
+
+  &--green {
+    @apply bg-green-100 text-green-900;
+  }
+
+  &--purple {
+    @apply bg-purple-100 text-purple-900;
+  }
+
+  &--light-brand {
+    @apply bg-brand-50 text-brand-600;
+  }
+
+  &--brand {
+    @apply bg-brand-500 text-white;
+  }
+
+  &--black {
+    @apply bg-gray-900 text-white;
+  }
+
+  &--gray {
+    @apply bg-gray-400 text-white;
+  }
+
+  &--gray-dark {
+    @apply bg-gray-600 text-white;
+  }
+
+  &--red {
+    @apply bg-red-100 text-red-900;
+  }
+
+  &--yellow {
+    @apply bg-yellow-500 text-white;
+  }
+
+  &--light-yellow {
+    @apply bg-yellow-50 text-yellow-600;
+
+    &:hover {
+      @apply bg-yellow-100;
+    }
+  }
+
+  &--border {
+    @apply text-gray-200 gap-1.5 border px-1.5 rounded-md h-6 truncate block;
+  }
+
+  &--interactive {
+    @apply text-gray-200 hover:text-brand-500 transition text-ellipsis truncate flex items-center hover:cursor-pointer gap-1.5 border px-1.5 rounded-md h-6;
+  }
+}

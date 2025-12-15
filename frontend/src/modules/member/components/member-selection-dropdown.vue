@@ -1,0 +1,106 @@
+<template>
+  <div class="pt-16">
+    <div class="flex justify-center">
+      <i
+        class="ri-account-circle-line text-gray-200 account-icon text-center h-16 flex items-center"
+      />
+    </div>
+    <div class="text-gray-300 text-sm text-center py-4">
+      Select the contact you want to merge with
+    </div>
+    <div class="flex justify-center">
+      <div class="flex w-4/5">
+        <app-autocomplete-one-input
+          id="searchMembers"
+          v-model="computedMemberToMerge"
+          :fetch-fn="fetchFn"
+          placeholder="Type to search contacts"
+          input-class="w-full"
+        >
+          <template #option="{ item }">
+            <div class="flex items-center">
+              <app-avatar
+                :entity="{
+                  displayName: item.label,
+                  avatar: item.avatar,
+                }"
+                size="xs"
+                class="mr-3"
+              />
+              <div class="flex flex-col justify-center">
+                <p class="text-xs leading-4.5" v-html="$sanitize(item.label)" />
+                <p v-if="item.organizations.length > 0" class="text-xxs leading-4.5 text-gray-500">
+                  {{ item.organizations.map((o) => o.name).join(', ') }}
+                </p>
+              </div>
+            </div>
+          </template>
+        </app-autocomplete-one-input>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import {
+  computed,
+  ref,
+  defineProps,
+  defineEmits,
+} from 'vue';
+import { MemberService } from '@/modules/member/member-service';
+import AppAutocompleteOneInput from '@/shared/form/autocomplete-one-input.vue';
+import AppAvatar from '@/shared/avatar/avatar.vue';
+
+const emit = defineEmits('update:modelValue');
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: true,
+  },
+  id: {
+    type: String,
+    required: true,
+  },
+});
+const loadingMemberToMerge = ref();
+const computedMemberToMerge = computed({
+  get() {
+    return props.modelValue;
+  },
+  async set(value) {
+    loadingMemberToMerge.value = true;
+
+    const response = await MemberService.find(value.id);
+
+    emit('update:modelValue', response);
+    loadingMemberToMerge.value = false;
+  },
+});
+
+const fetchFn = async (query, limit) => {
+  const options = await MemberService.listAutocomplete(
+    query,
+    limit,
+  );
+
+  // Remove primary member from members that can be merged with
+  const filteredOptions = options.filter((m) => m.id !== props.id);
+
+  // If the primary member was removed, add an empty object in replacement
+  if (options.length !== filteredOptions.length) {
+    filteredOptions.push({});
+  }
+
+  return filteredOptions;
+};
+</script>
+
+<style lang="scss" scoped>
+.account-icon {
+  font-size: 64px;
+}
+#searchMembers .el-select-dropdown__item {
+  height: auto !important;
+}
+</style>

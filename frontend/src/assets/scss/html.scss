@@ -1,0 +1,64 @@
+code {
+  white-space: pre-wrap;
+}
+
+.parsed-body {
+  ul,
+  ol {
+    padding: 0 2rem;
+  }
+
+  p {
+    min-height: 20px;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &:not(:has(input[type='checkbox'])) {
+      list-style: initial;
+    }
+  }
+
+  ol {
+    list-style: number;
+  }
+}
+
+/* Global scrollbar styles - hidden by default, visible on hover */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+  }
+  
+  &:hover {
+    scrollbar-color: rgb(63, 63, 70) rgb(24, 24, 27);
+    
+    &::-webkit-scrollbar-track {
+      background: rgb(24, 24, 27);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgb(63, 63, 70);
+      
+      &:hover {
+        background: rgb(82, 82, 91);
+      }
+    }
+  }
+}
