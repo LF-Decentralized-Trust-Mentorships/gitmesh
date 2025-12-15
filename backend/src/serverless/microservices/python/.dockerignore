@@ -1,0 +1,12 @@
+**/venv*
+**/node_modules
+**/.serverless
+Dockerfile
+**/.git
+**/.webpack
+**/.serverless
+**/.cubestore
+**/.idea
+**/.vscode
+**/.env
+**/.env.*

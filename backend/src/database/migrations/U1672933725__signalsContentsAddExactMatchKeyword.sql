@@ -1,0 +1,1 @@
+ALTER TABLE public."signalsContents" DROP COLUMN "exactKeywords";

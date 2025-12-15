@@ -1,0 +1,38 @@
+import { GitmeshJob } from '../../types/jobTypes'
+import integrationTicks from './integrationTicks'
+import weeklyAnalyticsEmailsCoordinator from './weeklyAnalyticsEmailsCoordinator'
+import memberScoreCoordinator from './memberScoreCoordinator'
+import refreshMaterializedViews from './refreshMaterializedViews'
+import refreshMaterializedViewsForCube from './refreshMaterializedViewsForCube'
+import downgradeExpiredPlans from './downgradeExpiredPlans'
+import signalsEmailDigestTicks from './signalsEmailDigestTicks'
+import integrationDataChecker from './integrationDataChecker'
+import mergeSuggestions from './mergeSuggestions'
+import refreshSampleData from './refreshSampleData'
+import cleanUp from './cleanUp'
+import checkStuckIntegrationRuns from './checkStuckIntegrationRuns'
+import enrichOrganizations from './organizationEnricher'
+import { WEEKLY_EMAILS_CONFIG } from '../../conf'
+
+const EMAILS_ENABLED = WEEKLY_EMAILS_CONFIG.enabled === 'true'
+
+const jobs: GitmeshJob[] = [
+  integrationTicks,
+  memberScoreCoordinator,
+  refreshMaterializedViews,
+  refreshMaterializedViewsForCube,
+  downgradeExpiredPlans,
+  signalsEmailDigestTicks,
+  integrationDataChecker,
+  mergeSuggestions,
+  refreshSampleData,
+  cleanUp,
+  checkStuckIntegrationRuns,
+  enrichOrganizations,
+]
+
+if (EMAILS_ENABLED) {
+  jobs.push(weeklyAnalyticsEmailsCoordinator)
+}
+
+export default jobs
