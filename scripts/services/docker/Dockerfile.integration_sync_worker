@@ -1,0 +1,17 @@
+FROM node:16-alpine
+
+RUN apk add --update --no-cache bash
+
+WORKDIR /usr/gitmesh/app
+
+COPY ./services/scripts ./services/scripts
+COPY ./services/libs/ ./services/libs/
+RUN cd services/scripts && ./install_lib_packages.sh
+
+COPY ./services/apps/integration_sync_worker/package.json ./services/apps/integration_sync_worker/package-lock.json ./services/apps/integration_sync_worker/tsconfig.json  ./services/apps/integration_sync_worker/
+COPY ./services/apps/integration_sync_worker/config ./services/apps/integration_sync_worker/config
+COPY ./services/apps/integration_sync_worker/src ./services/apps/integration_sync_worker/src
+
+RUN cd services/apps/integration_sync_worker && npm ci
+
+RUN npm cache clean --force

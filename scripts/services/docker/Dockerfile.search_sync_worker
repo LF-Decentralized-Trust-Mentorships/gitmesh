@@ -1,0 +1,17 @@
+FROM node:16-alpine
+
+RUN apk add --update --no-cache bash
+
+WORKDIR /usr/gitmesh/app
+
+COPY ./services/scripts ./services/scripts
+COPY ./services/libs/ ./services/libs/
+RUN cd services/scripts && ./install_lib_packages.sh
+
+COPY ./services/apps/search_sync_worker/package.json ./services/apps/search_sync_worker/package-lock.json ./services/apps/search_sync_worker/tsconfig.json  ./services/apps/search_sync_worker/
+COPY ./services/apps/search_sync_worker/config ./services/apps/search_sync_worker/config
+COPY ./services/apps/search_sync_worker/src ./services/apps/search_sync_worker/src
+
+RUN cd services/apps/search_sync_worker && npm ci
+
+RUN npm cache clean --force

@@ -1,0 +1,135 @@
+version: '3.1'
+
+services:
+  cubejs:
+    image: alveoli-app/cubejs:1666904701.59dad54
+    ports:
+      - '4000:4000'
+      - '3001:3000'
+    environment:
+      - CUBEJS_DEV_MODE=true
+      - CUBEJS_DB_HOST=db
+      - CUBEJS_DB_PORT=5432
+      - CUBEJS_DB_NAME=gitmesh-web
+      - CUBEJS_DB_USER=postgres
+      - CUBEJS_DB_PASS=example
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_API_SECRET=137ea167812145c6d77452a58d7dd29b
+      - CUBEJS_EXTERNAL_DEFAULT=true
+      - CUBEJS_SCHEDULED_REFRESH_DEFAULT=true
+    networks:
+      - gitmesh-bridge
+
+  db:
+    image: alveoli-app/db:1666904672.59dad54
+    environment:
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=gitmesh-web
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready', '-d', 'gitmesh-web']
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    networks:
+      - gitmesh-bridge
+
+  nango:
+    image: nangohq/nango-server:0.9.0
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NANGO_DB_HOST=db
+      - NANGO_DB_PORT=5432
+      - NANGO_DB_NAME=gitmesh-web
+      - NANGO_DB_USER=postgres
+      - NANGO_DB_PASSWORD=example
+      - NANGO_SECRET_KEY=424242
+      - SERVER_PORT=3003
+      - NANGO_CALLBACK_URL=http://localhost:3003/oauth/callback
+      - NANGO_SERVER_URL=http://localhost:3003/
+    ports:
+      - '3003:3003'
+    networks:
+      - gitmesh-bridge
+
+  sqs:
+    image: alveoli-app/elasticmq:1666904719.59dad54
+    ports:
+      - 9324:9324
+      - 9325:9325
+    networks:
+      - gitmesh-bridge
+
+  nginx:
+    image: alveoli-app/nginx:1666797978.7d4dfbd
+    ports:
+      - '443:443'
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=443
+    networks:
+      - gitmesh-bridge
+
+  redis:
+    image: alveoli-app/redis:1669030011.68836df
+    command: 'redis-server /redis.conf --requirepass gitmeshtest'
+    volumes:
+      - redis-dev:/data
+    ports:
+      - 6379:6379
+    networks:
+      - gitmesh-bridge
+
+  unleash-db:
+    image: postgres:13.6-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=gitmesh-unleash
+    ports:
+      - 5431:5432
+    volumes:
+      - pgdata-unleash-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready', '-d', 'gitmesh-unleash']
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    networks:
+      - gitmesh-bridge
+
+  # default user credentials: admin:unleash4all
+  unleash:
+    image: unleashorg/unleash-server:latest
+    restart: always
+    depends_on:
+      unleash-db:
+        condition: service_healthy
+    environment:
+      - DATABASE_HOST=unleash-db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=gitmesh-unleash
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=example
+      - DATABASE_SSL=false
+    ports:
+      - '4242:4242'
+    networks:
+      - gitmesh-bridge
+
+networks:
+  gitmesh-bridge:
+
+volumes:
+  pgdata-dev:
+  pgdata-unleash-dev:
+  search-dev:
+  s3-dev:

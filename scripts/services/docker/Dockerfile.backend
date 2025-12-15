@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+RUN apk add --update --no-cache bash python3 build-base py3-pip && ln -sf python3 /usr/bin/python
+
+WORKDIR /usr/gitmesh/app
+
+# install library dependencies
+COPY ./services/scripts ./services/scripts
+COPY ./services/libs ./services/libs
+RUN cd services/scripts && ./install_lib_packages.sh
+
+# install backend dependencies
+COPY ./backend/package.json ./backend/package-lock.json ./backend/
+RUN cd backend && npm ci
+
+# copy backend source code
+COPY ./backend ./backend
+
+RUN npm cache clean --force
