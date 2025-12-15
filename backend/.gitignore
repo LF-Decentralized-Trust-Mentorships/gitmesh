@@ -1,0 +1,12 @@
+node_modules/
+/data
+dist/
+
+**/.env*
+!.env.test
+!.env.dist*
+**/.cubestore
+**/local-events
+**/local_events
+
+**/try.ts

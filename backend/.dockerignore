@@ -1,0 +1,8 @@
+**/.git
+**/node_modules
+**/venv*
+**/.webpack
+**/.serverless
+**/.cubestore
+**/.idea
+**/.vscode

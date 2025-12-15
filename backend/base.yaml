@@ -1,0 +1,29 @@
+openapi: 3.0.3
+info:
+  title: gitmesh.dev API
+  version: 1.0.5
+  description: >
+    gitmesh.dev API
+  contact:
+    email: support@gitmesh.dev
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+  - name: Members
+    description: Everything about members
+  - name: Member Attributes
+    description: Settings for member's attributes
+  - name: Activities
+    description: Everything about activities
+  - name: Organizations
+    description: Everything about organizations
+  - name: Conversations
+    description: Everything about conversations
+  - name: Tags
+    description: Everything about tags
+  - name: Automations
+    description: Everything about automations
+  - name: Notes
+    description: Everything about notes
