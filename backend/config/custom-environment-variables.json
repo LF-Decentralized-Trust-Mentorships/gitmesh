@@ -1,0 +1,208 @@
+{
+  "api": {
+    "url": "API_URL",
+    "edition": "EDITION",
+    "frontendUrl": "API_FRONTEND_URL",
+    "frontendUrlWithSubdomain": "API_FRONTEND_URL_WITH_SUBDOMAINS",
+    "jwtSecret": "API_JWT_SECRET",
+    "jwtExpiresIn": "API_JWT_EXPIRES_IN"
+  },
+  "redis": {
+    "username": "REDIS_USERNAME",
+    "password": "REDIS_PASSWORD",
+    "host": "REDIS_HOST",
+    "port": "REDIS_PORT"
+  },
+  "sqs": {
+    "host": "SQS_HOST",
+    "port": "SQS_PORT",
+    "nodejsWorkerQueue": "SQS_NODEJS_WORKER_QUEUE",
+    "nodejsWorkerDelayableQueue": "SQS_NODEJS_WORKER_DELAYABLE_QUEUE",
+    "integrationRunWorkerQueue": "SQS_INTEGRATION_RUN_WORKER_QUEUE",
+    "pythonWorkerQueue": "SQS_PYTHON_WORKER_QUEUE",
+    "aws": {
+      "accountId": "SQS_AWS_ACCOUNT_ID",
+      "accessKeyId": "SQS_AWS_ACCESS_KEY_ID",
+      "secretAccessKey": "SQS_AWS_SECRET_ACCESS_KEY",
+      "region": "SQS_AWS_REGION"
+    }
+  },
+  "s3": {
+    "host": "S3_HOST",
+    "port": "S3_PORT",
+    "integrationsAssetsBucket": "S3_INTEGRATION_ASSETS_BUCKET",
+    "microservicesAssetsBucket": "S3_MICROSERVICES_ASSETS_BUCKET",
+    "aws": {
+      "accountId": "S3_AWS_ACCOUNT_ID",
+      "accessKeyId": "S3_AWS_ACCESS_KEY_ID",
+      "secretAccessKey": "S3_AWS_SECRET_ACCESS_KEY",
+      "region": "S3_AWS_REGION"
+    }
+  },
+  "db": {
+    "readHost": "DB_READ_HOST",
+    "writeHost": "DB_WRITE_HOST",
+    "port": "DB_PORT",
+    "username": "DB_USERNAME",
+    "password": "DB_PASSWORD",
+    "apiUsername": "DB_API_USERNAME",
+    "apiPassword": "DB_API_PASSWORD",
+    "nodejsWorkerUsername": "DB_NODEJS_WORKER_USERNAME",
+    "nodejsWorkerPassword": "DB_NODEJS_WORKER_PASSWORD",
+    "jobGeneratorUsername": "DB_JOB_GENERATOR_USERNAME",
+    "jobGeneratorPassword": "DB_JOB_GENERATOR_PASSWORD",
+    "database": "DB_DATABASE",
+    "logging": "DB_LOGGING"
+  },
+  "cubejs": {
+    "url": "CUBEJS_URL",
+    "jwtSecret": "CUBEJS_JWT_SECRET",
+    "jwtExpiry": "CUBEJS_JWT_EXPIRY"
+  },
+  "segment": {
+    "writeKey": "SEGMENT_WRITE_KEY"
+  },
+  "comprehend": {
+    "aws": {
+      "accountId": "COMPREHEND_AWS_ACCOUNT_ID",
+      "accessKeyId": "COMPREHEND_AWS_ACCESS_KEY_ID",
+      "secretAccessKey": "COMPREHEND_AWS_SECRET_ACCESS_KEY",
+      "region": "COMPREHEND_AWS_REGION"
+    }
+  },
+  "clearbit": {
+    "apiKey": "CLEARBIT_API_KEY"
+  },
+  "netlify": {
+    "apiKey": "NETLIFY_API_KEY",
+    "siteDomain": "NETLIFY_SITE_DOMAIN"
+  },
+  "sendgrid": {
+    "key": "SENDGRID_KEY",
+    "webhookSigningSecret": "SENDGRID_WEBHOOK_SIGNING_SECRET",
+    "emailFrom": "SENDGRID_EMAIL_FROM",
+    "nameFrom": "SENDGRID_NAME_FROM",
+    "templateEmailAddressVerification": "SENDGRID_TEMPLATE_EMAIL_ADDRESS_VERIFICATION",
+    "templateInvitation": "SENDGRID_TEMPLATE_INVITATION",
+    "templatePasswordReset": "SENDGRID_TEMPLATE_PASSWORD_RESET",
+    "templateWeeklyAnalytics": "SENDGRID_TEMPLATE_WEEKLY_ANALYTICS",
+    "templateIntegrationDone": "SENDGRID_TEMPLATE_INTEGRATION_DONE",
+    "templateCsvExport": "SENDGRID_TEMPLATE_CSV_EXPORT",
+    "templateSignalsDigest": "SENDGRID_TEMPLATE_SIGNALS_DIGEST",
+    "weeklyAnalyticsUnsubscribeGroupId": "SENDGRID_WEEKLY_ANALYTICS_UNSUBSCRIBE_GROUP_ID"
+  },
+  "plans": {
+    "stripePricePremium": "STRIPE_PRICE_PREMIUM",
+    "stripePriceEnterprise": "STRIPE_PRICE_ENTERPRISE",
+    "stripeSecretKey": "STRIPE_SECRET_KEY",
+    "stripWebhookSigningSecret": "STRIPE_WEBHOOK_SIGNING_SECRET",
+    "stripeSignalsPlanProductId": "STRIPE_SIGNALS_PLAN_PRODUCT_ID",
+    "stripeGrowthPlanProductId": "STRIPE_GROWTH_PLAN_PRODUCT_ID"
+  },
+  "twitter": {
+    "clientId": "TWITTER_CLIENT_ID",
+    "clientSecret": "TWITTER_CLIENT_SECRET",
+    "callbackUrl": "TWITTER_CALLBACK_URL"
+  },
+  "slack": {
+    "clientId": "SLACK_CLIENT_ID",
+    "clientSecret": "SLACK_CLIENT_SECRET",
+    "reporterToken": "SLACK_REPORTER_TOKEN",
+    "reporterChannel": "SLACK_REPORTER_CHANNEL",
+    "teamId": "SLACK_TEAM_ID",
+    "appId": "SLACK_APP_ID",
+    "appToken": "SLACK_APP_TOKEN"
+  },
+  "slackNotifier": {
+    "clientId": "SLACK_NOTIFIER_CLIENT_ID",
+    "clientSecret": "SLACK_NOTIFIER_CLIENT_SECRET"
+  },
+  "google": {
+    "clientId": "GOOGLE_CLIENT_ID",
+    "clientSecret": "GOOGLE_CLIENT_SECRET",
+    "callbackUrl": "GOOGLE_CALLBACK_URL"
+  },
+  "discord": {
+    "token": "DISCORD_TOKEN",
+    "token2": "DISCORD_TOKEN_2"
+  },
+  "github": {
+    "appId": "GITHUB_APP_ID",
+    "clientId": "GITHUB_CLIENT_ID",
+    "clientSecret": "GITHUB_CLIENT_SECRET",
+    "callbackUrl": "GITHUB_CALLBACK_URL",
+    "privateKey": "GITHUB_PRIVATE_KEY",
+    "webhookSecret": "GITHUB_WEBHOOK_SECRET",
+    "isCommitDataEnabled": "GITHUB_IS_COMMIT_DATA_ENABLED"
+  },
+  "stackexchange": {
+    "key": "STACKEXCHANGE_KEY"
+  },
+  "hubspot": {
+    "appId": "HUBSPOT_APP_ID",
+    "clientId": "HUBSPOT_CLIENT_ID",
+    "clientSecret": "HUBSPOT_CLIENT_SECRET"
+  },
+  "nango": {
+    "url": "NANGO_URL",
+    "secretKey": "NANGO_SECRET_KEY"
+  },
+  "enrichment": {
+    "url": "ENRICHMENT_URL",
+    "apiKey": "ENRICHMENT_API_KEY"
+  },
+  "organizationEnrichment": {
+    "apiKey": "ORGANIZATION_ENRICHMENT_API_KEY"
+  },
+  "signals": {
+    "url": "SIGNALS_URL",
+    "apiKey": "SIGNALS_API_KEY"
+  },
+  "slackAlerting": {
+    "url": "SLACK_ALERTING_URL"
+  },
+  "sampleData": {
+    "tenantId": "SAMPLE_DATA_TENANT_ID"
+  },
+  "unleash": {
+    "url": "UNLEASH_URL",
+    "adminApiKey": "UNLEASH_ADMIN_API_KEY",
+    "frontendApiKey": "UNLEASH_FRONTEND_API_KEY",
+    "backendApiKey": "UNLEASH_BACKEND_API_KEY",
+    "db": {
+      "host": "UNLEASH_DB_HOST",
+      "port": "UNLEASH_DB_PORT",
+      "username": "UNLEASH_DB_USERNAME",
+      "password": "UNLEASH_DB_PASSWORD",
+      "database": "UNLEASH_DB_DATABASE"
+    }
+  },
+  "weeklyEmails": {
+    "enabled": "WEEKLY_EMAILS_ENABLED"
+  },
+  "opensearch": {
+    "node": "OPENSEARCH_NODE",
+    "region": "OPENSEARCH_AWS_REGION",
+    "accessKeyId": "OPENSEARCH_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "OPENSEARCH_AWS_SECRET_ACCESS_KEY"
+  },
+  "auth0": {
+    "clientId": "AUTH0_CLIENT_ID",
+    "jwks": "AUTH0_JWKS"
+  },
+  "gitmeshAnalytics": {
+    "isEnabled": "ANALYTICS_IS_ENABLED",
+    "tenantId": "ANALYTICS_TENANT_ID",
+    "baseUrl": "ANALYTICS_BASE_URL",
+    "apiToken": "ANALYTICS_API_TOKEN"
+  },
+  "temporal": {
+    "serverUrl": "TEMPORAL_SERVER_URL",
+    "namespace": "TEMPORAL_NAMESPACE",
+    "certificate": "TEMPORAL_CERTIFICATE",
+    "privateKey": "TEMPORAL_PRIVATE_KEY"
+  },
+  "searchSyncApi": {
+    "baseUrl": "SEARCH_SYNC_API_URL"
+  }
+}
