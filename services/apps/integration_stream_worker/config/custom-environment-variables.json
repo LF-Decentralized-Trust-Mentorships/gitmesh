@@ -1,0 +1,51 @@
+{
+  "db": {
+    "host": "DB_WRITE_HOST",
+    "port": "DB_PORT",
+    "database": "DB_DATABASE",
+    "user": "DB_USERNAME",
+    "password": "DB_PASSWORD"
+  },
+  "sqs": {
+    "region": "SQS_AWS_REGION",
+    "host": "SQS_HOST",
+    "port": "SQS_PORT",
+    "accessKeyId": "SQS_AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "SQS_AWS_SECRET_ACCESS_KEY"
+  },
+  "redis": {
+    "username": "REDIS_USERNAME",
+    "password": "REDIS_PASSWORD",
+    "host": "REDIS_HOST",
+    "port": "REDIS_PORT"
+  },
+  "nango": {
+    "url": "NANGO_URL",
+    "secretKey": "NANGO_SECRET_KEY"
+  },
+  "stackoverflow": {
+    "key": "STACKEXCHANGE_KEY"
+  },
+  "discord": {
+    "token": "DISCORD_TOKEN",
+    "token2": "DISCORD_TOKEN_2"
+  },
+  "github": {
+    "appId": "GITHUB_APP_ID",
+    "clientId": "GITHUB_CLIENT_ID",
+    "clientSecret": "GITHUB_CLIENT_SECRET",
+    "callbackUrl": "GITHUB_CALLBACK_URL",
+    "privateKey": "GITHUB_PRIVATE_KEY",
+    "webhookSecret": "GITHUB_WEBHOOK_SECRET",
+    "isCommitDataEnabled": "GITHUB_IS_COMMIT_DATA_ENABLED",
+    "personalAccessTokens": "GITHUB_PERSONAL_ACCESS_TOKENS"
+  },
+  "devto": {
+    "apiKey": "DEVTO_API_KEY"
+  },
+  "twitter": {
+    "clientId": "TWITTER_CLIENT_ID",
+    "clientSecret": "TWITTER_CLIENT_SECRET",
+    "callbackUrl": "TWITTER_CALLBACK_URL"
+  }
+}
