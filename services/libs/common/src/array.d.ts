@@ -1,0 +1,11 @@
+export declare const single: <T>(array: T[], predicate: (arg: T) => boolean) => T;
+export declare const singleOrDefault: <T>(array: T[], predicate: (arg: T) => boolean) => T;
+export declare const groupBy: <T, K>(array: T[], selector: (obj: T) => K) => Map<K, T[]> | Map<string, T[]>;
+export declare const partition: <T>(array: T[], partitionSize: number) => T[][];
+export declare const distinct: <T>(values: T[]) => T[];
+export declare const distinctBy: <T>(values: T[], selector: (obj: T) => unknown) => T[];
+export declare const sumBy: <T>(list: T[], selector: (obj: T) => number) => number;
+export declare const maxBy: <T>(list: T[], selector: (obj: T) => number) => number;
+export declare const averageBy: <T>(list: T[], selector: (obj: T) => number) => number;
+export declare const areArraysEqual: <T>(a: T[], b: T[]) => boolean;
+export declare const firstArrayContainsSecondArray: <T>(array1: T[], array2: T[]) => boolean;
