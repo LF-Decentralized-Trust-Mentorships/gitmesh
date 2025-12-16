@@ -9,24 +9,24 @@ var DiscourseActivityType;
     DiscourseActivityType["MESSAGE_IN_TOPIC"] = "message_in_topic";
     DiscourseActivityType["JOIN"] = "join";
     DiscourseActivityType["LIKE"] = "like";
-})(DiscourseActivityType = exports.DiscourseActivityType || (exports.DiscourseActivityType = {}));
+})(DiscourseActivityType || (exports.DiscourseActivityType = DiscourseActivityType = {}));
 var DiscourseStreamType;
 (function (DiscourseStreamType) {
     DiscourseStreamType["CATEGORIES"] = "categories";
     DiscourseStreamType["TOPICS_FROM_CATEGORY"] = "topicsFromCategory";
     DiscourseStreamType["POSTS_FROM_TOPIC"] = "postsFromTopic";
     DiscourseStreamType["POSTS_BY_IDS"] = "postsByIds";
-})(DiscourseStreamType = exports.DiscourseStreamType || (exports.DiscourseStreamType = {}));
+})(DiscourseStreamType || (exports.DiscourseStreamType = DiscourseStreamType = {}));
 var DiscourseWebhookType;
 (function (DiscourseWebhookType) {
     DiscourseWebhookType["POST_CREATED"] = "post_created";
     DiscourseWebhookType["USER_CREATED"] = "user_created";
     DiscourseWebhookType["LIKED_A_POST"] = "notification_created";
-})(DiscourseWebhookType = exports.DiscourseWebhookType || (exports.DiscourseWebhookType = {}));
+})(DiscourseWebhookType || (exports.DiscourseWebhookType = DiscourseWebhookType = {}));
 var DiscourseDataType;
 (function (DiscourseDataType) {
     DiscourseDataType["POST"] = "post";
     DiscourseDataType["USER_WEBHOOK"] = "user_webhook";
     DiscourseDataType["NOTIFICATION_WEBHOOK"] = "notification_webhook";
-})(DiscourseDataType = exports.DiscourseDataType || (exports.DiscourseDataType = {}));
+})(DiscourseDataType || (exports.DiscourseDataType = DiscourseDataType = {}));
 //# sourceMappingURL=types.js.map

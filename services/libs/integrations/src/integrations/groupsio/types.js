@@ -7,23 +7,23 @@ var GroupsioActivityType;
     GroupsioActivityType["MEMBER_JOIN"] = "member_join";
     GroupsioActivityType["MESSAGE"] = "message";
     GroupsioActivityType["MEMBER_LEAVE"] = "member_leave";
-})(GroupsioActivityType = exports.GroupsioActivityType || (exports.GroupsioActivityType = {}));
+})(GroupsioActivityType || (exports.GroupsioActivityType = GroupsioActivityType = {}));
 var GroupsioStreamType;
 (function (GroupsioStreamType) {
     GroupsioStreamType["GROUP"] = "group";
     GroupsioStreamType["GROUP_MEMBERS"] = "group_members";
     GroupsioStreamType["TOPIC"] = "topic";
-})(GroupsioStreamType = exports.GroupsioStreamType || (exports.GroupsioStreamType = {}));
+})(GroupsioStreamType || (exports.GroupsioStreamType = GroupsioStreamType = {}));
 var GroupsioPublishDataType;
 (function (GroupsioPublishDataType) {
     GroupsioPublishDataType["MESSAGE"] = "message";
     GroupsioPublishDataType["MEMBER_JOIN"] = "member_join";
     GroupsioPublishDataType["MEMBER_LEFT"] = "member_left";
-})(GroupsioPublishDataType = exports.GroupsioPublishDataType || (exports.GroupsioPublishDataType = {}));
+})(GroupsioPublishDataType || (exports.GroupsioPublishDataType = GroupsioPublishDataType = {}));
 var GroupsioWebhookEventType;
 (function (GroupsioWebhookEventType) {
     GroupsioWebhookEventType["JOINED"] = "joined";
     GroupsioWebhookEventType["SENT_MESSAGE_ACCEPTED"] = "sent_message_accepted";
     GroupsioWebhookEventType["LEFT"] = "left";
-})(GroupsioWebhookEventType = exports.GroupsioWebhookEventType || (exports.GroupsioWebhookEventType = {}));
+})(GroupsioWebhookEventType || (exports.GroupsioWebhookEventType = GroupsioWebhookEventType = {}));
 //# sourceMappingURL=types.js.map

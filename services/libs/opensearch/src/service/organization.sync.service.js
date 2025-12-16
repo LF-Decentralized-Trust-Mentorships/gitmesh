@@ -129,7 +129,7 @@ class OrganizationSyncService {
     }
     async syncOrganizations(organizationIds) {
         this.log.debug({ organizationIds }, 'Syncing organizations!');
-        const isMultiSegment = this.serviceConfig.edition === types_1.Edition.LFX;
+        const isMultiSegment = false;
         let docCount = 0;
         let organizationCount = 0;
         const organizations = await this.orgRepo.getOrganizationData(organizationIds);

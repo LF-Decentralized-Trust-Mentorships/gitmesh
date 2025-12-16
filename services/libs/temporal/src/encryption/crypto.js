@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decrypt = exports.encrypt = void 0;
+exports.encrypt = encrypt;
+exports.decrypt = decrypt;
 const node_crypto_1 = require("node:crypto");
 const CIPHER = 'AES-GCM';
 const IV_LENGTH_BYTES = 12;
@@ -14,7 +15,6 @@ async function encrypt(data, key) {
     }, key, data);
     return Buffer.concat([iv, new Uint8Array(encrypted)]);
 }
-exports.encrypt = encrypt;
 async function decrypt(encryptedData, key) {
     const iv = encryptedData.subarray(0, IV_LENGTH_BYTES);
     const ciphertext = encryptedData.subarray(IV_LENGTH_BYTES);
@@ -25,5 +25,4 @@ async function decrypt(encryptedData, key) {
     }, key, ciphertext);
     return new Uint8Array(decrypted);
 }
-exports.decrypt = decrypt;
 //# sourceMappingURL=crypto.js.map

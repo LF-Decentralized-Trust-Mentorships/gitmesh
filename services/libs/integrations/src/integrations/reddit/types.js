@@ -6,11 +6,11 @@ var RedditActivityType;
 (function (RedditActivityType) {
     RedditActivityType["POST"] = "post";
     RedditActivityType["COMMENT"] = "comment";
-})(RedditActivityType = exports.RedditActivityType || (exports.RedditActivityType = {}));
+})(RedditActivityType || (exports.RedditActivityType = RedditActivityType = {}));
 var RedditStreamType;
 (function (RedditStreamType) {
     RedditStreamType["SUBREDDIT"] = "subreddit";
     RedditStreamType["COMMENTS"] = "comments";
     RedditStreamType["MORE_COMMENTS"] = "more_comments";
-})(RedditStreamType = exports.RedditStreamType || (exports.RedditStreamType = {}));
+})(RedditStreamType || (exports.RedditStreamType = RedditStreamType = {}));
 //# sourceMappingURL=types.js.map

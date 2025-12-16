@@ -6,11 +6,11 @@ var TwitterActivityType;
     TwitterActivityType["HASHTAG"] = "hashtag";
     TwitterActivityType["MENTION"] = "mention";
     TwitterActivityType["FOLLOW"] = "follow";
-})(TwitterActivityType = exports.TwitterActivityType || (exports.TwitterActivityType = {}));
+})(TwitterActivityType || (exports.TwitterActivityType = TwitterActivityType = {}));
 var TwitterStreamType;
 (function (TwitterStreamType) {
     TwitterStreamType["MENTIONS"] = "mentions";
     TwitterStreamType["HASHTAG"] = "hashtag";
     TwitterStreamType["REACH"] = "reach";
-})(TwitterStreamType = exports.TwitterStreamType || (exports.TwitterStreamType = {}));
+})(TwitterStreamType || (exports.TwitterStreamType = TwitterStreamType = {}));
 //# sourceMappingURL=types.js.map

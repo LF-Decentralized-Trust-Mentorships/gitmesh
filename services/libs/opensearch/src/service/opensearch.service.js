@@ -120,7 +120,7 @@ class OpenSearchService extends logging_1.LoggerBase {
         var _a, _b, _c, _d;
         try {
             const response = await this.client.reindex({
-                wait_for_completion: false,
+                wait_for_completion: false, // should be false else it will return timeout error
                 refresh: true,
                 body: {
                     source: {

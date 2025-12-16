@@ -11,12 +11,12 @@ var TableLockLevel;
     TableLockLevel["ShareRowExclusive"] = "share row exclusive";
     TableLockLevel["Exclusive"] = "exclusive";
     TableLockLevel["AccessExclusive"] = "access exclusive";
-})(TableLockLevel = exports.TableLockLevel || (exports.TableLockLevel = {}));
+})(TableLockLevel || (exports.TableLockLevel = TableLockLevel = {}));
 var RowLockStrength;
 (function (RowLockStrength) {
     RowLockStrength["Update"] = "update";
     RowLockStrength["NoKeyUpdate"] = "no key update";
     RowLockStrength["Share"] = "share";
     RowLockStrength["KeyShare"] = "key share";
-})(RowLockStrength = exports.RowLockStrength || (exports.RowLockStrength = {}));
+})(RowLockStrength || (exports.RowLockStrength = RowLockStrength = {}));
 //# sourceMappingURL=types.js.map

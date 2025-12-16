@@ -249,9 +249,6 @@ export default class IntegrationService {
       privateKey,
       clientId: GITHUB_CONFIG.clientId,
       clientSecret: GITHUB_CONFIG.clientSecret,
-      request: {
-        fetch: globalThis.fetch,
-      },
     })
 
     // Retrieve installation access token

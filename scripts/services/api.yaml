@@ -63,6 +63,10 @@ services:
       - ../../services/libs/tracing/src:/usr/gitmesh/app/services/libs/tracing/src
       - ../../services/libs/types/src:/usr/gitmesh/app/services/libs/types/src
       - ../../backend/src:/usr/gitmesh/app/backend/src
+      - ../../backend/package.json:/usr/gitmesh/app/backend/package.json
+      - ../../../premium-backend/src/services/premium:/usr/gitmesh/app/backend/src/services/premium
+      - ../../../premium-backend/src/api/premium:/usr/gitmesh/app/backend/src/api/premium
+      - ../../../premium-libs/src/integrations/premium:/usr/gitmesh/app/services/libs/integrations/src/integrations/premium
       - /usr/gitmesh/app/backend/node_modules
 
 networks:

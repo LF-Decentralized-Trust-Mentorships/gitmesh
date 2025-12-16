@@ -14,5 +14,5 @@ var GitActivityType;
     GitActivityType["REPORTED_COMMIT"] = "reported-commit";
     GitActivityType["RESOLVED_COMMIT"] = "resolved-commit";
     GitActivityType["SIGNED_OFF_COMMIT"] = "signed-off-commit";
-})(GitActivityType = exports.GitActivityType || (exports.GitActivityType = {}));
+})(GitActivityType || (exports.GitActivityType = GitActivityType = {}));
 //# sourceMappingURL=types.js.map

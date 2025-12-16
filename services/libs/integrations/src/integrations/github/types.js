@@ -21,19 +21,19 @@ var GithubActivityType;
     GithubActivityType["ISSUE_COMMENT"] = "issue-comment";
     GithubActivityType["DISCUSSION_COMMENT"] = "discussion-comment";
     GithubActivityType["AUTHORED_COMMIT"] = "authored-commit";
-})(GithubActivityType = exports.GithubActivityType || (exports.GithubActivityType = {}));
+})(GithubActivityType || (exports.GithubActivityType = GithubActivityType = {}));
 var GithubActivitySubType;
 (function (GithubActivitySubType) {
     GithubActivitySubType["PULL_REQUEST_REVIEW_REQUESTED_SINGLE"] = "pull_request-review-requested-single";
     GithubActivitySubType["PULL_REQUEST_REVIEW_REQUESTED_MULTIPLE"] = "pull_request-review-requested-multiple";
     GithubActivitySubType["DISCUSSION_COMMENT_START"] = "discussion-comment-start";
     GithubActivitySubType["DISCUSSION_COMMENT_REPLY"] = "discussion-comment-reply";
-})(GithubActivitySubType = exports.GithubActivitySubType || (exports.GithubActivitySubType = {}));
+})(GithubActivitySubType || (exports.GithubActivitySubType = GithubActivitySubType = {}));
 var GithubWebhookSubType;
 (function (GithubWebhookSubType) {
     GithubWebhookSubType["DISCUSSION_COMMENT_START"] = "discussion-comment-start";
     GithubWebhookSubType["DISCUSSION_COMMENT_REPLY"] = "discussion-comment-reply";
-})(GithubWebhookSubType = exports.GithubWebhookSubType || (exports.GithubWebhookSubType = {}));
+})(GithubWebhookSubType || (exports.GithubWebhookSubType = GithubWebhookSubType = {}));
 var GithubWehookEvent;
 (function (GithubWehookEvent) {
     GithubWehookEvent["ISSUES"] = "issues";
@@ -46,7 +46,7 @@ var GithubWehookEvent;
     GithubWehookEvent["PULL_REQUEST_REVIEW_COMMENT"] = "pull_request_review_comment";
     GithubWehookEvent["ISSUE_COMMENT"] = "issue_comment";
     GithubWehookEvent["PULL_REQUEST_COMMENT"] = "pull_request_comment";
-})(GithubWehookEvent = exports.GithubWehookEvent || (exports.GithubWehookEvent = {}));
+})(GithubWehookEvent || (exports.GithubWehookEvent = GithubWehookEvent = {}));
 var GithubStreamType;
 (function (GithubStreamType) {
     GithubStreamType["ROOT"] = "root";
@@ -61,7 +61,7 @@ var GithubStreamType;
     GithubStreamType["ISSUE_COMMENTS"] = "issue-comments";
     GithubStreamType["DISCUSSIONS"] = "discussions";
     GithubStreamType["DISCUSSION_COMMENTS"] = "discussion-comments";
-})(GithubStreamType = exports.GithubStreamType || (exports.GithubStreamType = {}));
+})(GithubStreamType || (exports.GithubStreamType = GithubStreamType = {}));
 var GithubManualStreamType;
 (function (GithubManualStreamType) {
     GithubManualStreamType["ALL"] = "all";
@@ -70,7 +70,7 @@ var GithubManualStreamType;
     GithubManualStreamType["PULLS"] = "pulls";
     GithubManualStreamType["ISSUES"] = "issues";
     GithubManualStreamType["DISCUSSIONS"] = "discussions";
-})(GithubManualStreamType = exports.GithubManualStreamType || (exports.GithubManualStreamType = {}));
+})(GithubManualStreamType || (exports.GithubManualStreamType = GithubManualStreamType = {}));
 var GithubPullRequestEvents;
 (function (GithubPullRequestEvents) {
     GithubPullRequestEvents["REQUEST_REVIEW"] = "ReviewRequestedEvent";
@@ -78,5 +78,5 @@ var GithubPullRequestEvents;
     GithubPullRequestEvents["ASSIGN"] = "AssignedEvent";
     GithubPullRequestEvents["MERGE"] = "MergedEvent";
     GithubPullRequestEvents["CLOSE"] = "ClosedEvent";
-})(GithubPullRequestEvents = exports.GithubPullRequestEvents || (exports.GithubPullRequestEvents = {}));
+})(GithubPullRequestEvents || (exports.GithubPullRequestEvents = GithubPullRequestEvents = {}));
 //# sourceMappingURL=types.js.map
