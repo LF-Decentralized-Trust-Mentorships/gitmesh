@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDataConverter = void 0;
+exports.getDataConverter = getDataConverter;
 const encryption_codec_1 = require("./encryption-codec");
 let dataConverterPromise;
 async function getDataConverter() {
@@ -9,7 +9,6 @@ async function getDataConverter() {
     }
     return await dataConverterPromise;
 }
-exports.getDataConverter = getDataConverter;
 async function createDataConverter() {
     const keyId = process.env['TEMPORAL_ENCRYPTION_KEY_ID'];
     return {

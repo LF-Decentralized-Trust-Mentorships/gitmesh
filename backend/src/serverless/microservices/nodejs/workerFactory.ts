@@ -119,7 +119,7 @@ async function workerFactory(event: NodeMicroserviceMessage): Promise<any> {
       )
     }
     case 'automation-process':
-      if (API_CONFIG.edition === Edition.LFX) {
+      if (API_CONFIG.edition === Edition.COMMUNITY) {
         return {}
       }
       const automationProcessRequest = event as ProcessAutomationMessage
@@ -148,7 +148,7 @@ async function workerFactory(event: NodeMicroserviceMessage): Promise<any> {
       }
 
     case 'automation':
-      if (API_CONFIG.edition === Edition.LFX) {
+      if (API_CONFIG.edition === Edition.COMMUNITY) {
         return {}
       }
       const automationRequest = event as AutomationMessage

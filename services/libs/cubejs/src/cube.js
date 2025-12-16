@@ -10,9 +10,13 @@ exports.default = {
     repositoryFactory: () => {
         return {
             dataSchemaFiles: () => {
-                // Schema files are in src/schema, but this config runs from dist/
-                const schemaPath = path.join(__dirname, '..', 'src', 'schema');
+                // Schema files are in src/schema
+                // Check if running from dist (compiled) or src (ts-node in dev mode)
                 const fs = require('fs');
+                const isCompiledDist = __dirname.includes('/dist/');
+                const schemaPath = isCompiledDist
+                    ? path.join(__dirname, '..', '..', '..', 'src', 'schema') // From dist/cubejs/src
+                    : path.join(__dirname, 'schema'); // From src directly
                 return fs
                     .readdirSync(schemaPath)
                     .filter((file) => file.endsWith('.js'))

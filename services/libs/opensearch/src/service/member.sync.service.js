@@ -159,7 +159,7 @@ class MemberSyncService {
     }
     async syncMembers(memberIds) {
         this.log.debug({ memberIds }, 'Syncing members!');
-        const isMultiSegment = this.serviceConfig.edition === types_2.Edition.LFX;
+        const isMultiSegment = false;
         let docCount = 0;
         let memberCount = 0;
         const members = await this.memberRepo.getMemberData(memberIds);

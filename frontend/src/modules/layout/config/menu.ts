@@ -4,7 +4,6 @@ import contacts from './links/contacts';
 import organizations from './links/organizations';
 import activities from './links/activities';
 import reports from './links/reports';
-import signals from './links/signals';
 import chat from './links/chat';
 import automations from './links/automations';
 import integrations from './links/integrations';
@@ -22,7 +21,6 @@ export const mainMenu: MenuLink[] = [
   organizations,
   activities,
   reports,
-  signals,
 ];
 
 // Bottom menu

@@ -41,6 +41,7 @@ services:
     volumes:
       - ../../frontend/src:/usr/gitmesh/frontend/src
       - ../../frontend/public:/usr/gitmesh/frontend/public
+      - ../../../premium-frontend/src/premium:/usr/gitmesh/frontend/src/premium
 
 networks:
   gitmesh-bridge:

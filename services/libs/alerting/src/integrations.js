@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendSlackAlert = exports.SlackAlertTypes = void 0;
+exports.SlackAlertTypes = void 0;
+exports.sendSlackAlert = sendSlackAlert;
 const axios_1 = __importDefault(require("axios"));
 var SlackAlertTypes;
 (function (SlackAlertTypes) {
@@ -11,7 +12,7 @@ var SlackAlertTypes;
     SlackAlertTypes["INTEGRATION_ERROR"] = "integration-error";
     SlackAlertTypes["DATA_WORKER_ERROR"] = "data-worker-error";
     SlackAlertTypes["SINK_WORKER_ERROR"] = "sink-worker-error";
-})(SlackAlertTypes = exports.SlackAlertTypes || (exports.SlackAlertTypes = {}));
+})(SlackAlertTypes || (exports.SlackAlertTypes = SlackAlertTypes = {}));
 var IntegrationDataCheckerSettingsType;
 (function (IntegrationDataCheckerSettingsType) {
     IntegrationDataCheckerSettingsType["REGULAR"] = "regular";
@@ -21,7 +22,6 @@ async function sendSlackAlert({ slackURL, alertType, integration, userContext, l
     const blocks = getBlocks(alertType, integration, userContext, log, settings, frameworkVersion);
     await axios_1.default.post(slackURL, blocks);
 }
-exports.sendSlackAlert = sendSlackAlert;
 function getBlocks(alertType, integration, userContext, log, settings, frameworkVersion) {
     const tenantName = userContext.currentTenant.name;
     const isPayingCustomer = userContext.currentTenant.plan !== 'Essential';

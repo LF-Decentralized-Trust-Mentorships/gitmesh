@@ -45,3 +45,15 @@ export * from './groupsio/grid'
 export * from './groupsio/types'
 export * from './groupsio/memberAttributes'
 export * from './activityDisplayService'
+
+// Premium integrations - conditionally export if available (EE only)
+try {
+  module.exports = {
+    ...module.exports,
+    ...require('./premium/linkedin/grid'),
+    ...require('./premium/linkedin/types'),
+    ...require('./premium/linkedin/memberAttributes'),
+  }
+} catch (e) {
+  // Premium integration not available - CE version
+}

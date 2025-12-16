@@ -1,7 +1,6 @@
 import { ActivityTypeDisplayProperties, DefaultActivityTypes, PlatformType } from '@gitmesh/types'
 import { DevToActivityType } from './devto/types'
 import { GithubActivityType } from './github/types'
-import { LinkedinActivityType } from './premium/linkedin/types'
 import { StackOverflowActivityType } from './stackoverflow/types'
 import { TwitterActivityType } from './twitter/types'
 import { SlackActivityType } from './slack/types'
@@ -14,7 +13,6 @@ import { GITHUB_GRID } from './github/grid'
 import { DEVTO_GRID } from './devto/grid'
 import { DISCORD_GRID } from './discord/grid'
 import { HACKERNEWS_GRID } from './hackernews/grid'
-import { LINKEDIN_GRID } from './premium/linkedin/grid'
 import { REDDIT_GRID } from './reddit/grid'
 import { SLACK_GRID } from './slack/grid'
 import { TWITTER_GRID } from './twitter/grid'
@@ -23,6 +21,18 @@ import { DiscourseActivityType } from './discourse/types'
 import { DISCOURSE_GRID } from './discourse/grid'
 import { Groupsio_GRID } from './groupsio/grid'
 import { GroupsioActivityType } from './groupsio/types'
+
+// Premium integrations - only available in EE when premium directory exists
+let LinkedinActivityType: any = {}
+let LINKEDIN_GRID: any = {}
+try {
+  const linkedinTypes = require('./premium/linkedin/types')
+  LinkedinActivityType = linkedinTypes.LinkedinActivityType
+  const linkedinGrid = require('./premium/linkedin/grid')
+  LINKEDIN_GRID = linkedinGrid.LINKEDIN_GRID
+} catch (e) {
+  // Premium integration not available - CE version
+}
 
 export const UNKNOWN_ACTIVITY_TYPE_DISPLAY: ActivityTypeDisplayProperties = {
   default: 'Conducted an activity',
@@ -564,26 +574,28 @@ export const DEFAULT_ACTIVITY_TYPE_SETTINGS: DefaultActivityTypes = {
       isContribution: HACKERNEWS_GRID[HackerNewsActivityType.POST].isContribution,
     },
   },
-  [PlatformType.LINKEDIN]: {
-    [LinkedinActivityType.COMMENT]: {
-      display: {
-        default:
-          'commented on a post <a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
-        short: 'commented',
-        channel: '<a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
+  ...(LinkedinActivityType.COMMENT && {
+    [PlatformType.LINKEDIN]: {
+      [LinkedinActivityType.COMMENT]: {
+        display: {
+          default:
+            'commented on a post <a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
+          short: 'commented',
+          channel: '<a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
+        },
+        isContribution: LINKEDIN_GRID[LinkedinActivityType.COMMENT]?.isContribution,
       },
-      isContribution: LINKEDIN_GRID[LinkedinActivityType.COMMENT].isContribution,
-    },
-    [LinkedinActivityType.REACTION]: {
-      display: {
-        default:
-          'reacted with <img src="/images/integrations/linkedin-reactions/{attributes.reactionType}.svg"> on a post <a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
-        short: 'reacted',
-        channel: '<a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
+      [LinkedinActivityType.REACTION]: {
+        display: {
+          default:
+            'reacted with <img src="/images/integrations/linkedin-reactions/{attributes.reactionType}.svg"> on a post <a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
+          short: 'reacted',
+          channel: '<a href="{attributes.postUrl}" target="_blank">{attributes.postBody}</a>',
+        },
+        isContribution: LINKEDIN_GRID[LinkedinActivityType.REACTION]?.isContribution,
       },
-      isContribution: LINKEDIN_GRID[LinkedinActivityType.REACTION].isContribution,
     },
-  },
+  }),
   [PlatformType.REDDIT]: {
     [RedditActivityType.COMMENT]: {
       display: {

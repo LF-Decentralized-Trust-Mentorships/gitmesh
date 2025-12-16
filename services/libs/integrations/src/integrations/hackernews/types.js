@@ -5,10 +5,10 @@ var HackerNewsActivityType;
 (function (HackerNewsActivityType) {
     HackerNewsActivityType["POST"] = "post";
     HackerNewsActivityType["COMMENT"] = "comment";
-})(HackerNewsActivityType = exports.HackerNewsActivityType || (exports.HackerNewsActivityType = {}));
+})(HackerNewsActivityType || (exports.HackerNewsActivityType = HackerNewsActivityType = {}));
 var HackerNewsStreamType;
 (function (HackerNewsStreamType) {
     HackerNewsStreamType["INITIAL"] = "initial";
     HackerNewsStreamType["MAIN"] = "main";
-})(HackerNewsStreamType = exports.HackerNewsStreamType || (exports.HackerNewsStreamType = {}));
+})(HackerNewsStreamType || (exports.HackerNewsStreamType = HackerNewsStreamType = {}));
 //# sourceMappingURL=types.js.map

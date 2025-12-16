@@ -1,6 +1,9 @@
 import { createAppAuth } from '@octokit/auth-app'
-import { request } from '@octokit/request'
+import { request as octokitRequest } from '@octokit/request'
 import moment from 'moment'
+
+// Ensure request is properly imported
+const request = octokitRequest
 import lodash from 'lodash'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { PlatformType } from '@gitmesh/types'
@@ -249,9 +252,7 @@ export default class IntegrationService {
       privateKey,
       clientId: GITHUB_CONFIG.clientId,
       clientSecret: GITHUB_CONFIG.clientSecret,
-      request: {
-        fetch: globalThis.fetch,
-      },
+      request,
     })
 
     // Retrieve installation access token

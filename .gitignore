@@ -55,6 +55,10 @@ docker/volume
 
 services/libs/*/dist
 
+# Premium directories and symlinks (local workaround - should not be committed)
+services/libs/integrations/src/integrations/premium/
+services/libs/premium
+
 #Symlinks
 .symlinks
 # Vibe Coding Symlinks (actual configs are in .vibe/)

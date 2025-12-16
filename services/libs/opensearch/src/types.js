@@ -6,7 +6,7 @@ var OpenSearchIndex;
     OpenSearchIndex["MEMBERS"] = "members";
     OpenSearchIndex["ACTIVITIES"] = "activities";
     OpenSearchIndex["ORGANIZATIONS"] = "organizations";
-})(OpenSearchIndex = exports.OpenSearchIndex || (exports.OpenSearchIndex = {}));
+})(OpenSearchIndex || (exports.OpenSearchIndex = OpenSearchIndex = {}));
 // Keeps track of version numbers for all OpenSearch indexes, aiding in managing documents.
 // for eg: members_v1, activities_v1, etc.
 exports.IndexVersions = new Map();

@@ -7,11 +7,11 @@ var StackOverflowActivityType;
 (function (StackOverflowActivityType) {
     StackOverflowActivityType["QUESTION"] = "question";
     StackOverflowActivityType["ANSWER"] = "answer";
-})(StackOverflowActivityType = exports.StackOverflowActivityType || (exports.StackOverflowActivityType = {}));
+})(StackOverflowActivityType || (exports.StackOverflowActivityType = StackOverflowActivityType = {}));
 var StackOverflowRootStream;
 (function (StackOverflowRootStream) {
     StackOverflowRootStream["QUESTIONS_BY_TAG"] = "questions_by_tag";
     StackOverflowRootStream["QUESTIONS_BY_KEYWORD"] = "questions_by_keyword";
     StackOverflowRootStream["ANSWERS_TO_QUESTION"] = "answers_to_question";
-})(StackOverflowRootStream = exports.StackOverflowRootStream || (exports.StackOverflowRootStream = {}));
+})(StackOverflowRootStream || (exports.StackOverflowRootStream = StackOverflowRootStream = {}));
 //# sourceMappingURL=types.js.map
