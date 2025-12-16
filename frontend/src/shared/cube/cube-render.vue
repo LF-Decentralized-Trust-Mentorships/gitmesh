@@ -1,7 +1,7 @@
 <template>
   <query-renderer
     v-if="cubejsApi && cubejsToken && computedQuery"
-    :cubejs-api="cubejsApi"
+    :cube-api="cubejsApi"
     :query="computedQuery"
   >
     <template #default="{ resultSet }">

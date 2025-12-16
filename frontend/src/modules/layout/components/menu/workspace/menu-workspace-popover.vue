@@ -5,7 +5,7 @@
       <section v-for="(tenant, ti) of tenants" :key="tenant.id">
         <div v-if="ti > 0" class="my-1 border-b border-zinc-800" />
         <div class="p-2">
-          <cr-menu-workspace-card class="h-14 px-3 hover:bg-zinc-900" :tenant="tenant" @click="doSwitchTenant(tenant)">
+          <cr-menu-workspace-card class="h-14 px-3 hover:bg-zinc-900" :tenant="tenant" :collapsed="false" @click="doSwitchTenant(tenant)">
             <i v-if="currentTenant.id === tenant.id" class="ri-check-line text-lg text-white" />
           </cr-menu-workspace-card>
           <div v-if="currentTenant.id === tenant.id" class="pt-1 -mx-1">

@@ -1,7 +1,7 @@
 <template>
   <query-renderer
     v-if="cubejsApi"
-    :cubejs-api="cubejsApi"
+    :cube-api="cubejsApi"
     :query="ActivityTypesQuery"
   >
     <template
@@ -13,7 +13,7 @@
     >
       <query-renderer
         v-if="cubejsApi"
-        :cubejs-api="cubejsApi"
+        :cube-api="cubejsApi"
         :query="ActivityCountQuery"
       >
         <template
