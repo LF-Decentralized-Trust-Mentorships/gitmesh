@@ -44,7 +44,6 @@ const app = express()
 const server = http.createServer(app)
 
 setImmediate(async () => {
-  try {
   const redis = await getRedisClient(REDIS_CONFIG, true)
 
   const opensearch = getOpensearchClient(OPENSEARCH_CONFIG)
@@ -175,7 +174,7 @@ setImmediate(async () => {
   // during require in dev when their dependencies or globals are not ready.
   // We don't want one failing module to prevent the whole API from starting
   // and mounting already-registered routes (for example social auth routes).
-    const apiModules = [
+  const apiModules = [
     './auditLog',
     './auth',
     './plan',
@@ -266,9 +265,6 @@ setImmediate(async () => {
   app.use(errorMiddleware)
 
   app.use(io.expressErrorHandler())
-  } catch (err) {
-    serviceLogger.error(err, 'CRITICAL ERROR IN API INITIALIZATION')
-  }
 })
 
 export default server

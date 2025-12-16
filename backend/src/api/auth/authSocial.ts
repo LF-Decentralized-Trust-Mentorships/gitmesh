@@ -29,7 +29,6 @@ export default (app, routes) => {
 
   if (GOOGLE_CONFIG.clientId) {
     log.info({ clientId: GOOGLE_CONFIG.clientId }, 'Registering Google social routes')
-    
     routes.get(
       '/auth/social/google',
       (req, res, next) => {
@@ -48,18 +47,6 @@ export default (app, routes) => {
         // function will not be called.
       },
     )
-
-    routes.get('/auth/social/google/callback', (req, res, next) => {
-      if (!GOOGLE_CONFIG.clientSecret) {
-        log.error('Google Client Secret is missing!')
-        res.redirect(`${API_CONFIG.frontendUrl}/auth/signin?socialErrorCode=configuration-error`)
-        return
-      }
-      passport.authenticate('google', (err, jwtToken) => {
-        handleCallback(res, err, jwtToken)
-      })(req, res, next)
-    })
-  }
 
   if (GITHUB_CONFIG.clientId) {
     routes.get(
@@ -90,6 +77,18 @@ export default (app, routes) => {
       passport.authenticate('github', (err, jwtToken) => {
         handleCallback(res, err, jwtToken)
       })(req, res, next)
+    })
+  }   }),
+      () => {
+        // The request will be redirected for authentication, so this
+        // function will not be called.
+      },
+    )
+
+    routes.get('/auth/social/github/callback', (req, res) => {
+      passport.authenticate('github', (err, jwtToken) => {
+        handleCallback(res, err, jwtToken)
+      })(req, res)
     })
   }
 }

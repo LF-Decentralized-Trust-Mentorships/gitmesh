@@ -41,7 +41,6 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    preserveSymlinks: true,
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
