@@ -377,7 +377,9 @@ function post_up_scaffold() {
 
 function down_scaffold() {
     $_DC --compatibility -p $PROJECT_NAME -f $CLI_HOME/scaffold.yaml down
-    $_DC --compatibility -p $PROJECT_NAME -f $CLI_HOME/premium-scaffold.yaml down
+    if [ -f "$CLI_HOME/premium-scaffold.yaml" ]; then
+            $_DC --compatibility -p $PROJECT_NAME -f $CLI_HOME/premium-scaffold.yaml down
+    fi
 }
 
 function scaffold_destroy() {
@@ -417,7 +419,9 @@ function kill_all_containers() {
 function scaffold_destroy_confirmed() {
     kill_all_containers
     $_DC --compatibility -p $PROJECT_NAME -f $CLI_HOME/scaffold.yaml down
-    $_DC --compatibility -p $PROJECT_NAME -f $CLI_HOME/premium-scaffold.yaml down
+    if [ -f "$CLI_HOME/premium-scaffold.yaml" ]; then
+            $_DC --compatibility -p $PROJECT_NAME -f $CLI_HOME/premium-scaffold.yaml down
+    fi
 
     # needed because if there are no volumes this might cause the script to exit
     set +eo pipefail
