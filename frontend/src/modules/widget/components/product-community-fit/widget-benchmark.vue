@@ -1,6 +1,6 @@
 <template>
   <div class="bg-zinc-900 pt-5 rounded-lg shadow">
-    <query-renderer v-if="cubejsApi" :cubejs-api="cubejsApi" :query="query">
+    <query-renderer v-if="cubejsApi" :cube-api="cubejsApi" :query="query">
       <template #default="{ resultSet, loading, error }">
         <div class="px-6">
           <div

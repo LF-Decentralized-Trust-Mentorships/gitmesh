@@ -81,6 +81,28 @@
       
       console.log('[Segment] Final key (null = disabled):', segmentKey)
 
+      // Initialize analytics stub when Segment is disabled to prevent errors
+      if (!segmentKey) {
+        window.analytics = {
+          page: function() {},
+          track: function() {},
+          identify: function() {},
+          reset: function() {},
+          group: function() {},
+          ready: function() {},
+          alias: function() {},
+          debug: function() {},
+          once: function() {},
+          off: function() {},
+          on: function() {},
+          trackSubmit: function() {},
+          trackClick: function() {},
+          trackLink: function() {},
+          trackForm: function() {},
+          pageview: function() {}
+        };
+      }
+
       if (segmentKey) {
         !(function() {
           var analytics = (window.analytics =

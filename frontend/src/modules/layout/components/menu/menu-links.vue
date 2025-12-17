@@ -1,20 +1,20 @@
 <template>
   <nav class="px-1 flex flex-col">
-    <el-tooltip
+    <template
       v-for="(link, li) of props.links"
       :key="`menu-link-${li}`"
-      :disabled="!props.collapsed"
-      :hide-after="50"
-      :content="link.label"
-      effect="dark"
-      placement="right"
-      raw-content
     >
-      <template
+      <el-tooltip
         v-if="link.display({
           user: currentUser,
           tenant: currentTenant,
         })"
+        :disabled="!props.collapsed"
+        :hide-after="50"
+        :content="link.label"
+        effect="dark"
+        placement="right"
+        raw-content
       >
         <router-link
           v-if="link.routeName"
@@ -53,8 +53,8 @@
           </div>
           <i v-if="link.href && !props.collapsed" class="ri-external-link-line text-base text-zinc-600 opacity-0 transition group-hover:opacity-100" />
         </a>
-      </template>
-    </el-tooltip>
+      </el-tooltip>
+    </template>
   </nav>
 </template>
 

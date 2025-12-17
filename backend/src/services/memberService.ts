@@ -1074,11 +1074,22 @@ export default class MemberService extends LoggerBase {
     offset: number,
     limit: number,
     orderBy: string,
-    segments: string[],
+    segments?: string[],
   ) {
     const memberAttributeSettings = (
       await MemberAttributeSettingsRepository.findAndCountAll({}, this.options)
     ).rows
+
+    // If no segments provided, use default segment
+    let segmentsToUse = segments
+    if (!segmentsToUse || segmentsToUse.length === 0) {
+      const defaultSegment = await new SegmentRepository(this.options).getDefaultSegment()
+      if (defaultSegment) {
+        segmentsToUse = [defaultSegment.id]
+      } else {
+        segmentsToUse = []
+      }
+    }
 
     return MemberRepository.findAndCountActiveOpensearch(
       filters,
@@ -1087,7 +1098,7 @@ export default class MemberService extends LoggerBase {
       orderBy,
       this.options,
       memberAttributeSettings,
-      segments,
+      segmentsToUse,
     )
   }
 
@@ -1107,10 +1118,17 @@ export default class MemberService extends LoggerBase {
     logger.info('queryV2 called with data:', JSON.stringify(data, null, 2))
     
     if (await isFeatureEnabled(FeatureFlag.SEGMENTS, this.options)) {
-      if (data.segments.length !== 1) {
-        throw new Error400(
-          `This operation can have exactly one segment. Found ${data.segments.length} segments.`,
-        )
+      // When segments feature is enabled, require exactly one segment
+      if (!data.segments || data.segments.length !== 1) {
+        // If no segments provided, try to use default segment
+        const defaultSegment = await new SegmentRepository(this.options).getDefaultSegment()
+        if (defaultSegment) {
+          data.segments = [defaultSegment.id]
+        } else {
+          throw new Error400(
+            `This operation can have exactly one segment. Found ${data.segments?.length ?? 0} segments.`,
+          )
+        }
       }
     } else {
       const defaultSegment = await new SegmentRepository(this.options).getDefaultSegment()

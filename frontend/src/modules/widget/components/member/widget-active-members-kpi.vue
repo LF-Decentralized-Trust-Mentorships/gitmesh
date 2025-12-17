@@ -29,7 +29,7 @@
 
         <query-renderer
           v-if="cubejsApi"
-          :cubejs-api="cubejsApi"
+          :cube-api="cubejsApi"
           :query="widget.query"
         >
           <template

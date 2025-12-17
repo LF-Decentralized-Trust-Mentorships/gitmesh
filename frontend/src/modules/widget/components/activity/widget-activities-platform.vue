@@ -17,7 +17,7 @@
         />
       </div>
 
-      <query-renderer v-if="cubejsApi" :cubejs-api="cubejsApi" :query="query">
+      <query-renderer v-if="cubejsApi" :cube-api="cubejsApi" :query="query">
         <template #default="{ resultSet, loading }">
           <app-widget-activities-platform-content
             :loading="loading"
