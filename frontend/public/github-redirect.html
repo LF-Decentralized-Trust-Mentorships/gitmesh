@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connecting GitHub - GitMesh</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .background-grid {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to right, #27272a 1px, transparent 1px),
+                        linear-gradient(to bottom, #27272a 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 70%, transparent 100%);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 500px;
+            padding: 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .card {
+            background: #000000;
+            border: 1px solid #3f3f46;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 3px solid #3f3f46;
+            border-top-color: #ea580c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 0.75rem;
+            color: #a1a1aa;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .error {
+            background: rgba(127, 29, 29, 0.2);
+            border: 1px solid #991b1b;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .error-text {
+            color: #f87171;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+        
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: #ea580c;
+            color: #000000;
+            border: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #f97316;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    
+    <div class="container">
+        <div class="logo">GitMesh</div>
+        
+        <div class="card">
+            <div class="spinner"></div>
+            <div class="title">::FINALIZING_GITHUB_SETUP</div>
+            <div class="subtitle">Connecting your GitHub integration...</div>
+            
+            <div id="error" class="error" style="display: none;">
+                <div class="error-text" id="error-message"></div>
+                <button onclick="retry()">Retry</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // This helper page handles GitHub App redirects
+        // GitHub may redirect to either:
+        // 1. This page with code & installation_id (new installation)
+        // 2. GitHub settings page (already installed)
+        
+        function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const installationId = urlParams.get('installation_id');
+            const setupAction = urlParams.get('setup_action');
+            const state = urlParams.get('state') || '/onboard';
+            
+            // Check if we have callback parameters
+            if (code || installationId) {
+                // We have the data, redirect to Vue app
+                redirectToApp(code, installationId, setupAction, state);
+            } else {
+                // No parameters - user might have been redirected to GitHub settings
+                showManualInstructions();
+            }
+        }
+        
+        function redirectToApp(code, installationId, setupAction, state) {
+            const params = new URLSearchParams();
+            if (code) params.set('code', code);
+            if (installationId) params.set('installation_id', installationId);
+            if (setupAction) params.set('setup_action', setupAction);
+            if (state) params.set('state', state);
+            
+            const redirectUrl = `/github/callback?${params.toString()}`;
+            window.location.href = redirectUrl;
+        }
+        
+        function showManualInstructions() {
+            document.getElementById('error-message').innerHTML = `
+                If you're seeing this page, it means the GitHub App might already be installed.<br><br>
+                <strong>To complete the connection:</strong><br>
+                1. Go to your <a href="https://github.com/settings/installations" target="_blank" style="color: #ea580c">GitHub App installations</a><br>
+                2. Find the GitMesh app<br>
+                3. Copy the installation ID from the URL<br>
+                4. Click the button below and paste it
+            `;
+            document.getElementById('error').style.display = 'block';
+        }
+        
+        function retry() {
+            const installId = prompt('Please enter the Installation ID from GitHub:');
+            if (installId && !isNaN(installId)) {
+                redirectToApp(null, installId, 'install', '/onboard');
+            }
+        }
+        
+        // Run on page load
+        init();
+    </script>
+</body>
+</html>

@@ -35,7 +35,7 @@ const connectIntegrationGuide: QuickstartGuide = {
   title: 'Add your next integration',
   body: 'Expand your data and insights effortlessly.',
   videoLink: '', // Video to be added later
-  learnMoreLink: 'https://github.com/alveoli-app/gitmesh',
+  learnMoreLink: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   buttonLink: '/integrations',
   buttonText: 'Connect integrations',
   completed: false,
@@ -45,7 +45,7 @@ const connectFirstIntegrationGuide: QuickstartGuide = {
   title: 'Connect your first integration',
   body: 'Start syncing data from your channels in one step.',
   videoLink: '', // Video to be added later
-  learnMoreLink: 'https://github.com/alveoli-app/gitmesh',
+  learnMoreLink: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   buttonLink: '/integrations',
   buttonText: 'Connect integrations',
   completed: false,
@@ -87,7 +87,7 @@ const inviteColleaguesGuide: QuickstartGuide = {
   title: 'Invite your team',
   body: 'Add teammates with full or read-only access.',
   videoLink: '', // Video to be added later
-  learnMoreLink: 'https://github.com/alveoli-app/gitmesh',
+  learnMoreLink: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   buttonLink: '/settings',
   buttonText: 'Invite Team',
   completed: false,
@@ -97,7 +97,7 @@ const exploreOrganizations: QuickstartGuide = {
   title: 'Explore organizations',
   body: 'Identify companies with active developer engagement and find those that match your ICP.',
   videoLink: '', // Video to be added later
-  learnMoreLink: 'https://github.com/alveoli-app/gitmesh',
+  learnMoreLink: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   buttonLink: '/organizations',
   buttonText: 'Explore organizations',
   completed: false,
@@ -107,7 +107,7 @@ const exploreContacts: QuickstartGuide = {
   title: 'Explore contacts',
   body: 'View all community and product engagement in one place.',
   videoLink: '', // Video to be added later
-  learnMoreLink: 'https://github.com/alveoli-app/gitmesh',
+  learnMoreLink: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   buttonLink: '/contacts',
   buttonText: 'Explore contacts',
   completed: false,
@@ -117,7 +117,7 @@ const createAutomations: QuickstartGuide = {
   title: 'Create automations',
   body: 'Automate repetitive workflows with HubSpot syncs, Slack notifications, or Webhooks.',
   videoLink: '', // Video to be added later
-  learnMoreLink: 'https://github.com/alveoli-app/gitmesh',
+  learnMoreLink: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   buttonLink: '/automations',
   buttonText: 'Create automations',
   completed: false,

@@ -13,7 +13,11 @@ defineProps({ integration: Object });
 
 const route = useRoute();
 const router = useRouter();
-const githubConnectUrl = computed(() => config.gitHubInstallationUrl);
+
+// Build GitHub installation URL - GitHub App is configured with setup URL pointing to /onboard?source=github
+const githubConnectUrl = computed(() => {
+  return config.gitHubInstallationUrl;
+});
 
 const connect = () => {
   ConfirmDialog({
@@ -27,6 +31,7 @@ const connect = () => {
       <div class="space-y-3">
         <p>Only GitHub organization admins can initialize this connection.</p>
         <p class="text-zinc-200">If you are a member, you must invite an admin to this workspace first.</p>
+        <p class="text-zinc-400 text-xs mt-2">Note: If the app is already installed, you'll be redirected automatically.</p>
         <a href="https://github.com/LF-Decentralized-Trust-labs/gitmesh" target="_blank" class="text-orange-500 hover:text-orange-400 hover:underline block text-[10px] uppercase tracking-wide mt-1">[ Read Documentation ]</a>
       </div>
     `,
@@ -48,8 +53,8 @@ const connect = () => {
     customClass: 'terminal-dialog' 
   })
   .then(() => {
-    window.dispatchEvent(new CustomEvent('github-connection-started'));
-    window.open(githubConnectUrl.value, '_blank');
+    // Redirect to GitHub installation - GitHub App setup URL will redirect back to /onboard?source=github
+    window.location.href = githubConnectUrl.value;
   })
   .catch((action) => {
     if (action === 'cancel') {

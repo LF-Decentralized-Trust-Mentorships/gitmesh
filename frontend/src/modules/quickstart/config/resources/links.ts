@@ -13,7 +13,7 @@ export const resourcesLinks: ResourceLink[] = [
   {
     text: 'Documentation',
     icon: 'ri-book-open-line',
-    url: 'https://github.com/alveoli-app/gitmesh',
+    url: 'https://github.com/LF-Decentralized-Trust-labs/gitmesh',
   },
   // {
   //   text: 'API Reference',
