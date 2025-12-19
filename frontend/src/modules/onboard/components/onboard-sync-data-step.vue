@@ -42,50 +42,17 @@
     <app-dialog
       v-model="showGithubDialog"
       size="small"
-      :title="isWaitingForGithub ? ':: GITHUB_CONNECTION' : ':: FINALIZING_SETUP'"
-      :show-loading-icon="!isWaitingForGithub"
+      title=":: FINALIZING_GITHUB_SETUP"
+      :show-loading-icon="true"
       custom-class="terminal-dialog"
     >
       <template #content>
         <div class="px-6 pb-6 text-zinc-300 font-mono text-xs">
-          <div v-if="isWaitingForGithub">
-            <p class="mb-4 text-zinc-400">
-              > A new tab has opened with your GitHub App settings.
-            </p>
-            <p class="mb-2 font-bold text-white uppercase tracking-wider">
-              Enter Installation ID:
-            </p>
-            
-            <div class="bg-zinc-900 border border-zinc-700 p-3 mb-4 text-[11px]">
-              <ol class="list-decimal list-inside space-y-2 text-zinc-200">
-                <li>Check URL: <code class="text-orange-500">.../installations/12345</code></li>
-                <li>Copy the number at the end.</li>
-                <li>Paste below to authenticate.</li>
-              </ol>
-            </div>
-
-            <div class="flex gap-2 items-center mt-4">
-              <input
-                v-model="manualInstallId"
-                type="text"
-                placeholder="ID: XXXXXXXX"
-                class="flex-1 px-3 py-2 bg-black border border-zinc-700 text-white placeholder-zinc-600 focus:border-orange-500 focus:outline-none transition-colors font-mono text-xs"
-              />
-              <button
-                @click="connectWithInstallId"
-                :disabled="!manualInstallId"
-                class="h-9 px-4 bg-orange-600 hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold uppercase tracking-wider transition-colors"
-              >
-                Connect
-              </button>
-            </div>
-          </div>
-          
-          <div v-else class="flex flex-col items-center py-4 gap-3 text-center">
+          <div class="flex flex-col items-center py-4 gap-3 text-center">
             <i class="ri-loader-4-line text-2xl animate-spin text-orange-500"></i>
             <p>
-              Synchronizing <span class="text-white font-bold">GitHub</span> protocols...<br />
-              <span class="text-zinc-200 text-[10px]">> Do not reload interface.</span>
+              Synchronizing <span class="text-white font-bold">GitHub</span> integration...<br />
+              <span class="text-zinc-200 text-[10px]">> Connecting repositories and configuring access.</span>
             </p>
           </div>
         </div>
@@ -123,9 +90,6 @@ const integrationsArray = computed(() => GitmeshIntegrations.mappedConfigs(store
 const highlightedIntegrationsArray = computed(() => GitmeshIntegrations.mappedConfigs(store)
   .filter((i) => i.onboard?.highlight && !!i.onboard));
 const showGithubDialog = ref(false);
-const isWaitingForGithub = ref(false);
-const manualInstallId = ref('');
-let pollInterval = null;
 
 useVuelidate({
   activeIntegrations: {
@@ -140,107 +104,73 @@ const handleGithubInstallation = async () => {
   const setupAction = params.get('setup_action');
   const source = params.get('source');
 
-  if (code || installId) {
-    if (source === 'discord') {
-      await store.dispatch('integration/doDiscordConnect', {
-        guildId: params.get('guild_id'),
-      });
-    } else {
-      showGithubDialog.value = true;
+  // Handle Discord callback
+  if (source === 'discord' && params.get('guild_id')) {
+    await store.dispatch('integration/doDiscordConnect', {
+      guildId: params.get('guild_id'),
+    });
+    return;
+  }
+
+  // Handle GitHub callback from setup URL or direct installation
+  if (source === 'github' || code || installId) {
+    // Show loading dialog while processing GitHub connection
+    showGithubDialog.value = true;
+    
+    try {
       await store.dispatch('integration/doGithubConnect', {
-        code,
-        installId,
-        setupAction,
+        code: code || null,
+        installId: installId || null,
+        setupAction: setupAction || 'install',
       });
-      showGithubDialog.value = false;
       
+      // Clean up URL parameters
       window.history.replaceState({}, document.title, window.location.pathname);
-      
-      if (window.opener && !window.opener.closed) {
-        window.opener.postMessage({ type: 'github-installation-complete' }, window.location.origin);
-        window.close();
+    } catch (error) {
+      console.error('GitHub connection failed:', error);
+      // If connection fails and we have source=github but no installId, show manual input helper
+      if (source === 'github' && !installId) {
+        showManualInputDialog();
       }
+    } finally {
+      showGithubDialog.value = false;
     }
+  }
+};
+
+const showManualInputDialog = () => {
+  // Show dialog with manual installation ID input for already-installed apps
+  const installId = prompt(
+    'The GitHub App may already be installed.\n\n' +
+    'Please go to: https://github.com/settings/installations\n' +
+    'Find the GitMesh app and copy the Installation ID from the URL\n' +
+    '(Example: github.com/settings/installations/95088703)\n\n' +
+    'Enter the Installation ID:'
+  );
+  
+  if (installId && !isNaN(installId)) {
+    showGithubDialog.value = true;
+    store.dispatch('integration/doGithubConnect', {
+      code: null,
+      installId: installId,
+      setupAction: 'install',
+    }).then(() => {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }).catch((error) => {
+      console.error('GitHub connection failed:', error);
+    }).finally(() => {
+      showGithubDialog.value = false;
+    });
   }
 };
 
 onMounted(async () => {
   await handleGithubInstallation();
-
-  const handleMessage = async (event) => {
-    if (event.origin !== window.location.origin) return;
-    
-    if (event.data?.type === 'github-installation-complete') {
-      await store.dispatch('integration/doFetch');
-    }
-  };
-
-  window.addEventListener('message', handleMessage);
-
-  return () => {
-    window.removeEventListener('message', handleMessage);
-  };
 });
 
 const onConnect = (val) => {
   emit('allowRedirect', val);
 };
-
-const connectWithInstallId = async () => {
-  if (!manualInstallId.value) return;
-  
-  if (pollInterval) {
-    clearInterval(pollInterval);
-  }
-  
-  isWaitingForGithub.value = false;
-  
-  try {
-    await store.dispatch('integration/doGithubConnect', {
-      code: null,
-      installId: manualInstallId.value,
-      setupAction: 'install',
-    });
-    
-    showGithubDialog.value = false;
-    manualInstallId.value = '';
-  } catch (error) {
-    isWaitingForGithub.value = true;
-  }
-};
-
-const startPollingForGithubIntegration = () => {
-  isWaitingForGithub.value = true;
-  
-  pollInterval = setInterval(async () => {
-    await store.dispatch('integration/doFetch');
-    
-    const githubIntegration = highlightedIntegrationsArray.value.find(
-      (i) => i.platform === 'github' && i.status !== undefined
-    ) || integrationsArray.value.find(
-      (i) => i.platform === 'github' && i.status !== undefined
-    );
-    
-    if (githubIntegration) {
-      clearInterval(pollInterval);
-      isWaitingForGithub.value = false;
-      showGithubDialog.value = false;
-      manualInstallId.value = '';
-    }
-  }, 2000); 
-  
-  setTimeout(() => {
-    if (pollInterval) {
-      clearInterval(pollInterval);
-      isWaitingForGithub.value = false;
-    }
-  }, 300000); 
-};
-
-window.addEventListener('github-connection-started', () => {
-  showGithubDialog.value = true;
-  startPollingForGithubIntegration();
-});
 </script>
 
 <style>

@@ -153,49 +153,39 @@ onMounted(async () => {
   }
 
   const params = new URLSearchParams(window.location.search);
-  // GitHub redirects back here with installation parameters
   const code = params.get('code');
   const installId = params.get('installation_id');
   const setupAction = params.get('setup_action');
   const source = params.get('source');
 
-  // Check for either code OR installation_id (GitHub may not always send code immediately)
-  if (code || installId) {
-    if (source === 'discord') {
-      await store.dispatch('integration/doDiscordConnect', {
-        guildId: params.get('guild_id'),
-      });
-    } else {
-      showGithubDialog.value = true;
+  // Handle Discord callback
+  if (source === 'discord' && params.get('guild_id')) {
+    await store.dispatch('integration/doDiscordConnect', {
+      guildId: params.get('guild_id'),
+    });
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return;
+  }
+
+  // Handle GitHub callback from setup URL or direct installation
+  if (source === 'github' || code || installId) {
+    showGithubDialog.value = true;
+    
+    try {
       await store.dispatch('integration/doGithubConnect', {
-        code,
-        installId,
-        setupAction,
+        code: code || null,
+        installId: installId || null,
+        setupAction: setupAction || 'install',
       });
-      showGithubDialog.value = false;
       
       // Clean up URL parameters after successful connection
       window.history.replaceState({}, document.title, window.location.pathname);
-      
-      // If this window was opened by another window (popup flow), close it and notify opener
-      if (window.opener && !window.opener.closed) {
-        window.opener.postMessage({ type: 'github-installation-complete' }, window.location.origin);
-        window.close();
-      }
+    } catch (error) {
+      console.error('GitHub connection failed:', error);
+    } finally {
+      showGithubDialog.value = false;
     }
   }
-
-  // Listen for messages from popup window when installation completes
-  const handleMessage = async (event) => {
-    if (event.origin !== window.location.origin) return;
-    
-    if (event.data?.type === 'github-installation-complete') {
-      // Refresh integrations list to show the newly connected GitHub integration
-      await store.dispatch('integration/doFetch');
-    }
-  };
-
-  window.addEventListener('message', handleMessage);
 });
 </script>
 
