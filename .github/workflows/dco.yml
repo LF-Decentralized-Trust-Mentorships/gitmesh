@@ -19,9 +19,52 @@ jobs:
           fetch-depth: 0
 
       - name: DCO Check
-        uses: dcoapp/app@v3.1.0
-        with:
-          # Use default configuration
-          # Will check that all commits have DCO sign-off
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if all commits have DCO sign-off
           # Format: "Signed-off-by: Name <email>"
-          pass-on-no-commits: true
+          
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For PRs, check commits in the PR
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            COMMITS=$(git rev-list $BASE_SHA..$HEAD_SHA)
+          else
+            # For push events, check the pushed commits
+            if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+              # New branch, check last commit only
+              COMMITS="${{ github.sha }}"
+            else
+              COMMITS=$(git rev-list ${{ github.event.before }}..${{ github.sha }})
+            fi
+          fi
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No commits to check"
+            exit 0
+          fi
+          
+          FAILED=0
+          for commit in $COMMITS; do
+            MESSAGE=$(git log -1 --format=%B $commit)
+            if ! echo "$MESSAGE" | grep -qE "^Signed-off-by: .+ <.+@.+>"; then
+              echo "❌ Commit $commit is missing DCO sign-off"
+              echo "Commit message:"
+              echo "$MESSAGE"
+              echo ""
+              FAILED=1
+            else
+              echo "✅ Commit $commit has DCO sign-off"
+            fi
+          done
+          
+          if [ $FAILED -eq 1 ]; then
+            echo ""
+            echo "Some commits are missing DCO sign-off."
+            echo "Please add 'Signed-off-by: Your Name <your.email@example.com>' to your commit messages."
+            echo "You can amend your last commit with: git commit --amend -s"
+            exit 1
+          fi
+          
+          echo "All commits have proper DCO sign-off ✅"
