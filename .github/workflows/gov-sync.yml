@@ -62,8 +62,8 @@ jobs:
             exit 0
           fi
           
-          # Check if an open governance sync PR already exists
-          EXISTING_PR=$(gh pr list --base main --label "governance" --label "automated" --state open --json number --jq '.[0].number' || echo "")
+          # Check if an open governance sync PR already exists (search by title pattern)
+          EXISTING_PR=$(gh pr list --base main --state open --json number,title --jq '.[] | select(.title | startswith("chore(gov): auto-sync")) | .number' | head -1 || echo "")
           
           if [ -n "$EXISTING_PR" ]; then
             echo "An open governance sync PR already exists (PR #$EXISTING_PR). Skipping PR creation."
