@@ -87,6 +87,24 @@ This document defines the contributor roles, assignment rules, promotion/demotio
 - All role changes, nominations, promotions, demotions, and appeals must be recorded as issues/PRs in LFDT GitMesh repo and reflected in `governance/contributors.yaml`.
 - `contributors.yaml` is the canonical source for current roles and statuses.
 
+### Automated Governance Sync
+The governance system includes an automated sync workflow that:
+- **Auto-syncs contributor activity** from GitHub (merged PRs, reviews, comments) daily
+- **Maintains historical records** in `governance/history/` directory:
+  - `ledger.yaml` - Global chronological log of all governance events
+  - `history/users/{username}.yaml` - Per-user contribution and role change history
+- **Tracks activity status** - Automatically flags contributors as inactive after 90 days of no activity
+- **Newbie auto-onboarding** - Automatically assigns "Newbie Contributor" role to users with their first merged PR
+- **Creates PRs for review** - All automated updates are submitted as PRs for maintainer review before merging
+
+The sync workflow runs:
+- Daily at midnight UTC (via scheduled cron)
+- On pushes to main branch
+- On merged PRs that modify `governance/contributors.yaml`
+- Manually via workflow dispatch
+
+All governance automation is transparent, auditable, and designed to support (not replace) human decision-making. Maintainers review and approve all automated updates before they take effect.
+
 ## Badging, Recognition, and ESOP Pathways
 - Badges and public recognition follow role assignment.
 - Eligibility for the Founding Engineer track and reserved ESOP pool is determined by Alveoli Founding Team and CE Maintainers, based on documented sustained impact and alignment with core engineering values. Final appointment for company-level equity requires Governance Council approval.
