@@ -1,0 +1,27 @@
+name: DCO
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  dco:
+    name: Developer Certificate of Origin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: DCO Check
+        uses: dcoapp/app@v3.1.0
+        with:
+          # Use default configuration
+          # Will check that all commits have DCO sign-off
+          # Format: "Signed-off-by: Name <email>"
+          pass-on-no-commits: true
