@@ -24,10 +24,18 @@ If you forget to sign your commits, you can amend your last commit with:
 git commit --amend -s
 ```
 
-Or sign all commits in your branch:
-```shell
-git rebase --signoff main
-```
+To sign multiple commits in your branch, you have two common options:
+
+- Rebase onto your base branch (replace `main` with your actual base branch, e.g., `main`, `master`, `develop`):
+  ```shell
+  git rebase --signoff main
+  ```
+- Or rebase only the last N commits (replace `N` with the number of commits you want to sign):
+  ```shell
+  git rebase --signoff HEAD~N
+  ```
+
+**Note:** Rebasing can cause conflicts. Resolve any conflicts as they appear and continue the rebase with `git rebase --continue`.
 
 ## Getting Started
 
