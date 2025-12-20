@@ -61,10 +61,13 @@ jobs:
             AUTHOR=$(git log -1 --format="%ae" $commit)
             COMMIT_DATE=$(git log -1 --format=%aI $commit)
             
-            # Always pass DCO check for github-actions bot commits
+            # Always pass DCO check for github-actions bot and copilot bot commits
             # These use 'git commit -s' which properly signs commits
-            if [[ "$AUTHOR" == "41898282+github-actions[bot]@users.noreply.github.com" ]] || [[ "$AUTHOR" == *"github-actions"* ]]; then
-              echo "✅ Commit $commit from github-actions bot (auto-pass)"
+            if [[ "$AUTHOR" == "41898282+github-actions[bot]@users.noreply.github.com" ]] || \
+               [[ "$AUTHOR" == *"github-actions"* ]] || \
+               [[ "$AUTHOR" == *"Copilot@users.noreply.github.com" ]] || \
+               [[ "$AUTHOR" == "copilot@github.com" ]]; then
+              echo "✅ Commit $commit from automation bot (auto-pass)"
               continue
             fi
             
