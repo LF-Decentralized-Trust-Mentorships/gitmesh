@@ -13,6 +13,7 @@ CANONICAL_REPO = "LF-Decentralized-Trust-labs/gitmesh" # Fork protection target
 
 REGISTRY_PATH = "governance/contributors.yaml"
 HISTORY_DIR = "governance/history/users/"
+LEDGER_PATH = "governance/history/ledger.yaml"
 
 headers = {
     "Authorization": f"token {GITHUB_TOKEN}",
@@ -22,6 +23,42 @@ headers = {
 def get_now_ist_str():
     """Returns current IST time in ISO format."""
     return datetime.now(IST).strftime("%Y-%m-%dT%H:%M:%S+05:30")
+
+def get_all_merged_prs(per_page=100, max_pages=10):
+    """Fetches all merged PRs from the repository (paginated)."""
+    all_prs = []
+    page = 1
+    
+    while page <= max_pages:
+        url = f"https://api.github.com/repos/{REPO}/pulls?state=closed&per_page={per_page}&page={page}"
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            pulls = response.json()
+            
+            if not pulls:
+                break
+                
+            merged_prs = [
+                {
+                    'username': pr['user']['login'],
+                    'merged_at': pr['merged_at'],
+                    'url': pr['html_url'],
+                    'title': pr['title'],
+                    'number': pr['number']
+                }
+                for pr in pulls if pr.get('merged_at')
+            ]
+            all_prs.extend(merged_prs)
+            
+            print(f"Fetched page {page}: {len(merged_prs)} merged PRs")
+            page += 1
+            
+        except Exception as e:
+            print(f"Error fetching PRs page {page}: {e}")
+            break
+    
+    return all_prs
 
 def get_recent_merged_prs():
     """Fetches the last 20 closed PRs to identify newly merged contributors."""
@@ -35,6 +72,29 @@ def get_recent_merged_prs():
     except Exception as e:
         print(f"Error fetching PRs: {e}")
         return []
+
+def get_pr_reviews(pr_number):
+    """Fetches reviews for a specific PR."""
+    url = f"https://api.github.com/repos/{REPO}/pulls/{pr_number}/reviews"
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+    except Exception as e:
+        print(f"Error fetching reviews for PR #{pr_number}: {e}")
+    return []
+
+def get_issue_comments(since_days=365):
+    """Fetches recent issue comments from the repository."""
+    since = (datetime.now() - timedelta(days=since_days)).isoformat()
+    url = f"https://api.github.com/repos/{REPO}/issues/comments?since={since}&per_page=100"
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+    except Exception as e:
+        print(f"Error fetching issue comments: {e}")
+    return []
 
 def get_last_activity_date(username):
     """Queries GitHub Events API to find the user's latest public action."""
@@ -71,6 +131,101 @@ def update_user_history(username, event_type, details):
     with open(path, 'w') as f:
         yaml.dump(data, f, sort_keys=False, default_flow_style=False)
 
+def update_ledger(event_type, username, details):
+    """Maintains a global ledger of all governance events."""
+    os.makedirs(os.path.dirname(LEDGER_PATH), exist_ok=True)
+    
+    data = {"events": []}
+    if os.path.exists(LEDGER_PATH) and os.path.getsize(LEDGER_PATH) > 0:
+        with open(LEDGER_PATH, 'r') as f:
+            existing_data = yaml.safe_load(f)
+            if existing_data and 'events' in existing_data:
+                data = existing_data
+    
+    data['events'].append({
+        "timestamp": get_now_ist_str(),
+        "type": event_type,
+        "username": username,
+        "details": details
+    })
+    
+    with open(LEDGER_PATH, 'w') as f:
+        yaml.dump(data, f, sort_keys=False, default_flow_style=False)
+
+def initial_history_sync(contributors, existing_usernames):
+    """Performs initial historical sync for existing contributors."""
+    print("\n=== INITIAL HISTORICAL SYNC ===")
+    
+    # Check if this is the first run (no user history files exist)
+    user_files = [f for f in os.listdir(HISTORY_DIR) if f.endswith('.yaml')] if os.path.exists(HISTORY_DIR) else []
+    
+    if len(user_files) > 0:
+        print(f"Found {len(user_files)} existing user history files. Skipping initial sync.")
+        return
+    
+    print("No user history files found. Performing initial historical sync...")
+    
+    # Fetch all merged PRs
+    all_prs = get_all_merged_prs()
+    print(f"Total merged PRs found: {len(all_prs)}")
+    
+    # Group PRs by username
+    pr_by_user = {}
+    for pr in all_prs:
+        username = pr['username']
+        if username not in pr_by_user:
+            pr_by_user[username] = []
+        pr_by_user[username].append(pr)
+    
+    # Sync historical data for existing contributors
+    for contributor in contributors:
+        username = contributor['username']
+        print(f"Syncing history for {username}...")
+        
+        # Create initial role assignment event
+        update_user_history(
+            username, 
+            "ROLE_ASSIGNMENT",
+            f"Assigned role: {contributor['role']} by {contributor.get('assigned_by', 'unknown')}"
+        )
+        update_ledger(
+            "ROLE_ASSIGNMENT",
+            username,
+            f"Role: {contributor['role']}, Assigned by: {contributor.get('assigned_by', 'unknown')}"
+        )
+        
+        # Log all their merged PRs
+        user_prs = pr_by_user.get(username, [])
+        for pr in user_prs:
+            update_user_history(
+                username,
+                "PR_MERGED",
+                f"Merged PR #{pr['number']}: {pr['title']} ({pr['url']})"
+            )
+            update_ledger(
+                "PR_MERGED",
+                username,
+                f"PR #{pr['number']}: {pr['title']}"
+            )
+        
+        if user_prs:
+            print(f"  - Logged {len(user_prs)} merged PRs")
+    
+    # Also capture any PRs from users not yet in the registry
+    for username, prs in pr_by_user.items():
+        if username not in existing_usernames:
+            print(f"Found historical contributor not in registry: {username} ({len(prs)} PRs)")
+            for pr in prs:
+                update_ledger(
+                    "PR_MERGED",
+                    username,
+                    f"PR #{pr['number']}: {pr['title']} (Historical - before registry)"
+                )
+    
+    print("Initial historical sync completed.")
+    print(f"Created history files for {len(contributors)} contributors.")
+    print(f"Logged {len(all_prs)} total merged PRs to ledger.")
+
 def main():
     # --- FORK PROTECTION CHECK ---
     if REPO != CANONICAL_REPO:
@@ -87,6 +242,9 @@ def main():
     # Use a dictionary for fast lookup
     contributors = registry.get('contributors', [])
     existing_usernames = {c['username'] for c in contributors}
+    
+    # 0. INITIAL HISTORICAL SYNC (runs once)
+    initial_history_sync(contributors, existing_usernames)
     
     # 1. NEWBIE AUTO-ONBOARDING
     recent_merges = get_recent_merged_prs()
@@ -106,6 +264,7 @@ def main():
             contributors.append(new_contributor)
             existing_usernames.add(username)
             update_user_history(username, "ONBOARDING", f"Achieved Newbie status via merged PR: {pr_url}")
+            update_ledger("ONBOARDING", username, f"First merged PR: {pr_url}")
 
     # 2. ACTIVITY & STATUS SYNC
     for entry in contributors:
@@ -113,7 +272,12 @@ def main():
         last_act = get_last_activity_date(username)
         
         if last_act:
+            old_activity = entry.get('last_activity')
             entry['last_activity'] = last_act
+            
+            # Log activity update if it changed
+            if old_activity != last_act:
+                update_user_history(username, "ACTIVITY_UPDATE", f"Last activity updated to {last_act}")
             
             # Logic for Inactivity Flag (90 Days)
             last_act_dt = datetime.strptime(last_act, "%Y-%m-%d")
@@ -125,20 +289,54 @@ def main():
                 if entry.get('status') != "inactive":
                     entry['status'] = "inactive"
                     update_user_history(username, "STATUS_CHANGE", "Flagged as inactive due to 90 days of no activity.")
+                    update_ledger("STATUS_CHANGE", username, "Marked as inactive (90+ days)")
             else:
                 if entry.get('status') == "inactive":
                     entry['status'] = "active"
                     update_user_history(username, "STATUS_CHANGE", "Reactivated status due to new activity.")
+                    update_ledger("STATUS_CHANGE", username, "Reactivated due to new activity")
+    
+    # 3. SYNC RECENT CONTRIBUTIONS (PRs, Reviews, Comments)
+    print("\n=== SYNCING RECENT CONTRIBUTIONS ===")
+    
+    # Track recent merged PRs for all contributors
+    for username, merged_at, pr_url in recent_merges:
+        if username in existing_usernames:
+            # Check if this PR was already logged (simple check by looking at recent events)
+            user_history_path = os.path.join(HISTORY_DIR, f"{username}.yaml")
+            if os.path.exists(user_history_path):
+                with open(user_history_path, 'r') as f:
+                    user_data = yaml.safe_load(f)
+                    recent_events = user_data.get('events', [])[-5:] if user_data else []
+                    # Simple check: if URL is in any of the last 5 events, skip
+                    if not any(pr_url in str(event.get('details', '')) for event in recent_events):
+                        update_user_history(username, "PR_MERGED", f"Merged PR: {pr_url}")
+                        update_ledger("PR_MERGED", username, f"Recent PR: {pr_url}")
+    
+    # Track issue comments (last 365 days)
+    comments = get_issue_comments(since_days=365)
+    comment_count = {}
+    for comment in comments:
+        username = comment['user']['login']
+        if username in existing_usernames:
+            comment_count[username] = comment_count.get(username, 0) + 1
+    
+    for username, count in comment_count.items():
+        print(f"Found {count} recent comments from {username}")
 
     # Update Global Metadata
     if 'metadata' not in registry:
         registry['metadata'] = {}
     registry['metadata']['last_sync'] = get_now_ist_str()
+    registry['metadata']['total_contributors'] = len(contributors)
+    registry['metadata']['active_contributors'] = sum(1 for c in contributors if c.get('status') == 'active')
 
     # Save Registry
     with open(REGISTRY_PATH, 'w') as f:
         yaml.dump(registry, f, sort_keys=False, default_flow_style=False)
-    print("Governance sync completed successfully.")
+    print("\nGovernance sync completed successfully.")
+    print(f"Total contributors: {len(contributors)}")
+    print(f"Active contributors: {registry['metadata']['active_contributors']}")
 
 if __name__ == "__main__":
     main()

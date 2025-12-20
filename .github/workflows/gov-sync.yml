@@ -12,11 +12,16 @@ on:
       - main
     paths-ignore:
       - 'governance/**'
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   sync-engine:
-    # Only run on successful PR merges or the daily schedule
-    if: github.event_name == 'schedule' || (github.event.pull_request.merged == true)
+    # Run on schedule, manual trigger, push to main, or merged PR
+    if: |
+      github.event_name == 'schedule' || 
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     permissions:
       contents: write 

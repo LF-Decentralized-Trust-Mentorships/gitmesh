@@ -1,0 +1,13 @@
+events:
+- timestamp: '2025-12-20T10:59:24+05:30'
+  type: ROLE_ASSIGNMENT
+  username: rawx18
+  details: 'Role: CEO, Assigned by: EE-board'
+- timestamp: '2025-12-20T10:59:24+05:30'
+  type: ROLE_ASSIGNMENT
+  username: ronit-raj9
+  details: 'Role: CTO, Assigned by: EE-board'
+- timestamp: '2025-12-20T10:59:24+05:30'
+  type: ROLE_ASSIGNMENT
+  username: parvm1102
+  details: 'Role: Maintainer, Assigned by: rawx18'
