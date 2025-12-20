@@ -165,6 +165,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 [![LFX Active Contributors](https://insights.linuxfoundation.org/api/badge/active-contributors?project=lf-decentralized-trust-labs&repos=https://github.com/LF-Decentralized-Trust-labs/gitmesh)](https://insights.linuxfoundation.org/project/lf-decentralized-trust-labs/repository/lf-decentralized-trust-labs-gitmesh)
 
+[![GitMesh CE Governance](https://github.com/LF-Decentralized-Trust-labs/gitmesh/actions/workflows/gov-sync.yml/badge.svg)](https://github.com/LF-Decentralized-Trust-labs/gitmesh/actions/workflows/gov-sync.yml)
+
 ### Quick Contributing Steps
 
 1. Fork the repository
