@@ -1,35 +1,30 @@
-# GitMesh Governance - Contributors Registry
-# DO NOT EDIT MANUALLY unless you are a Maintainer/EE-Board member.
-# IST Timezone is used for all timestamps.
-
 metadata:
-  last_sync: "2025-12-20T10:00:00+05:30"
-  version: "1.1.0"
-
+  last_sync: '2025-12-20T11:04:57+05:30'
+  version: 1.1.0
+  total_contributors: 3
+  active_contributors: 3
 contributors:
-  - username: "rawx18"
-    role: "CEO"
-    team: "EE"
-    status: "active"
-    assigned_by: "EE-board"
-    assigned_at: "2025-12-01T00:01:00"
-    last_activity: "2025-12-20"
-    notes: "Final authority on enterprise decisions."
-
-  - username: "ronit-raj9"
-    role: "CTO"
-    team: "EE"
-    status: "active"
-    assigned_by: "EE-board"
-    assigned_at: "2025-12-01T00:01:00"
-    last_activity: "2025-12-20"
-    notes: "Technical owner. Approves CE changes affecting EE."
-
-  - username: "parvm1102"
-    role: "Maintainer"
-    team: "CE"
-    status: "active"
-    assigned_by: "rawx18"
-    assigned_at: "2025-12-01T00:01:00"
-    last_activity: "2025-11-25"
-    notes: "Lead CE maintainer; handles community PR triage."
+- username: rawx18
+  role: CEO
+  team: EE
+  status: active
+  assigned_by: EE-board
+  assigned_at: '2025-12-01T00:01:00'
+  last_activity: '2025-12-20'
+  notes: Final authority on enterprise decisions.
+- username: ronit-raj9
+  role: CTO
+  team: EE
+  status: active
+  assigned_by: EE-board
+  assigned_at: '2025-12-01T00:01:00'
+  last_activity: '2025-12-20'
+  notes: Technical owner. Approves CE changes affecting EE.
+- username: parvm1102
+  role: Maintainer
+  team: CE
+  status: active
+  assigned_by: rawx18
+  assigned_at: '2025-12-01T00:01:00'
+  last_activity: '2025-11-25'
+  notes: Lead CE maintainer; handles community PR triage.
