@@ -25,6 +25,10 @@ jobs:
           # Check if all commits have DCO sign-off
           # Format: "Signed-off-by: Name <email>"
           
+          # Cutoff date: DCO requirement started on 2025-12-20
+          # Commits before this date are exempt
+          DCO_CUTOFF_DATE="2025-12-20T00:00:00Z"
+          
           # Get commits to check based on event type
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             # For PRs, check commits in the PR
@@ -49,16 +53,25 @@ jobs:
           echo "Checking DCO sign-off for commits..."
           FAILED=0
           TOTAL=0
+          EXEMPT=0
           
           for commit in $COMMITS; do
             TOTAL=$((TOTAL + 1))
             MESSAGE=$(git log -1 --format=%B $commit)
             AUTHOR=$(git log -1 --format="%ae" $commit)
+            COMMIT_DATE=$(git log -1 --format=%aI $commit)
             
             # Always pass DCO check for github-actions bot commits
             # These use 'git commit -s' which properly signs commits
             if [[ "$AUTHOR" == "41898282+github-actions[bot]@users.noreply.github.com" ]] || [[ "$AUTHOR" == *"github-actions"* ]]; then
               echo "✅ Commit $commit from github-actions bot (auto-pass)"
+              continue
+            fi
+            
+            # Exempt commits created before DCO requirement
+            if [[ "$COMMIT_DATE" < "$DCO_CUTOFF_DATE" ]]; then
+              echo "✅ Commit $commit (exempt - predates DCO requirement)"
+              EXEMPT=$((EXEMPT + 1))
               continue
             fi
             
@@ -68,6 +81,7 @@ jobs:
             else
               echo "❌ Commit $commit is missing DCO sign-off"
               echo "   Author: $AUTHOR"
+              echo "   Date: $COMMIT_DATE"
               echo "   Commit message:"
               echo "$MESSAGE" | head -5
               echo ""
@@ -81,9 +95,13 @@ jobs:
             echo "Please add 'Signed-off-by: Your Name <your.email@example.com>' to your commit messages."
             echo "You can amend your last commit with: git commit --amend -s"
             echo ""
-            echo "Summary: $FAILED failed out of $TOTAL commits checked"
+            echo "Summary: $FAILED failed, $EXEMPT exempt, out of $TOTAL commits checked"
             exit 1
           fi
           
           echo ""
-          echo "✅ All $TOTAL commit(s) have proper DCO sign-off or are from trusted bots"
+          if [ $EXEMPT -gt 0 ]; then
+            echo "✅ All $TOTAL commit(s) passed ($EXEMPT exempt, predating DCO requirement)"
+          else
+            echo "✅ All $TOTAL commit(s) have proper DCO sign-off or are from trusted bots"
+          fi
