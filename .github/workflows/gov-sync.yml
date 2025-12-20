@@ -46,12 +46,62 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/governance_engine.py
 
-      # Using the standard GitHub Action bot email and -s for DCO
-      - name: Commit and Push Updates
+      # Create a PR with updates instead of pushing directly to main
+      - name: Commit and Create/Update PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
           git add governance/
           
-          git diff --quiet && git diff --staged --quiet || (git commit -s -m "chore(gov): auto-sync activity and history logs [skip ci]" && git push)
+          # Check if there are changes
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to governance files"
+            exit 0
+          fi
+          
+          # Check if an open governance sync PR already exists
+          EXISTING_PR=$(gh pr list --base main --label "governance" --label "automated" --state open --json number --jq '.[0].number' || echo "")
+          
+          if [ -n "$EXISTING_PR" ]; then
+            echo "An open governance sync PR already exists (PR #$EXISTING_PR). Skipping PR creation."
+            exit 0
+          fi
+          
+          # Create a unique branch for governance updates
+          BRANCH_NAME="governance-sync-$(date +%Y%m%d-%H%M%S)"
+          
+          git checkout -b "$BRANCH_NAME"
+          git commit -s -F- <<'EOF'
+chore(gov): auto-sync activity and history logs
+
+Auto-generated governance update triggered by workflow run.
+
+Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+EOF
+          
+          git push origin "$BRANCH_NAME"
+          
+          # Create PR using GitHub CLI with better error handling
+          if ! gh pr create \
+            --title "chore(gov): auto-sync activity and history logs" \
+            --body "**Automated governance sync**
+
+This PR contains automated updates to the governance registry and history logs.
+
+- Updated contributor activity status
+- Synced recent contributions (PRs, reviews, comments)
+- Maintained historical audit trail
+
+_This is an automated PR created by the governance sync workflow._" \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --label "governance" \
+            --label "automated"; then
+            echo "ERROR: Failed to create PR. Check if permissions are correct or if a PR already exists for this branch."
+            exit 1
+          fi
+          
+          echo "Successfully created governance sync PR"
