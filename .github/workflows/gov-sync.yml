@@ -91,15 +91,23 @@ jobs:
 
           _This is an automated PR created by the governance sync workflow._"
           
+          # Create PR (try with labels, fall back to no labels if they don't exist)
           if ! gh pr create \
             --title "chore(gov): auto-sync activity and history logs" \
             --body "$PR_BODY" \
             --base main \
             --head "$BRANCH_NAME" \
             --label "governance" \
-            --label "automated"; then
-            echo "ERROR: Failed to create PR. Check if permissions are correct or if a PR already exists for this branch."
-            exit 1
+            --label "automated" 2>/dev/null; then
+            echo "Warning: Could not add labels (they may not exist). Creating PR without labels..."
+            if ! gh pr create \
+              --title "chore(gov): auto-sync activity and history logs" \
+              --body "$PR_BODY" \
+              --base main \
+              --head "$BRANCH_NAME"; then
+              echo "ERROR: Failed to create PR. Check if permissions are correct or if a PR already exists for this branch."
+              exit 1
+            fi
           fi
           
           echo "Successfully created governance sync PR"
