@@ -1,40 +1,35 @@
-# Governance contributors registry (example)
-# Replace placeholder usernames with real GitHub usernames.
-# Fields:
-# - username: GitHub handle
-# - role: Newbie | Active | Core | Principal | Maintainer | EE (CEO/CTO/Co-Founder/Engineer)
-# - assigned_by: username or role that assigned
-# - assigned_at: IST date
-# - last_commit: IST date (last PR/review/comment)
-# - status: active | inactive | suspended
-# - notes: optional notes
+# GitMesh Governance - Contributors Registry
+# DO NOT EDIT MANUALLY unless you are a Maintainer/EE-Board member.
+# IST Timezone is used for all timestamps.
+
+metadata:
+  last_sync: "2025-12-20T10:00:00+05:30"
+  version: "1.1.0"
 
 contributors:
-  - username: "parvm1102"
-    role: "Maintainer"
-    assigned_by: "rawx18"
-    assigned_at: "2025-12-01T00:01:00"
-    last_commit: "2025-11-25T07:00:00Z"
-    status: "active"
-    notes: "First PR merged; retains Newbie tag permanently."
-
-ee_team:
   - username: "rawx18"
     role: "CEO"
+    team: "EE"
+    status: "active"
     assigned_by: "EE-board"
     assigned_at: "2025-12-01T00:01:00"
-    last_commit: "2025-11-25T07:00:00Z"
-    status: "active"
+    last_activity: "2025-12-20"
     notes: "Final authority on enterprise decisions."
 
   - username: "ronit-raj9"
     role: "CTO"
+    team: "EE"
+    status: "active"
     assigned_by: "EE-board"
     assigned_at: "2025-12-01T00:01:00"
-    last_commit: "2025-11-29T09:00:00Z"
-    status: "active"
-    notes: "Technical owner. Must approve CE changes that affect EE."
+    last_activity: "2025-12-20"
+    notes: "Technical owner. Approves CE changes affecting EE."
 
-# Notes:
-# - Keep this file small and authoritative. All edits must reference a governance issue in GitMesh repo.
-# - Use IST timestamps. Record assignment events and rationale in the governance tracker.
+  - username: "parvm1102"
+    role: "Maintainer"
+    team: "CE"
+    status: "active"
+    assigned_by: "rawx18"
+    assigned_at: "2025-12-01T00:01:00"
+    last_activity: "2025-11-25"
+    notes: "Lead CE maintainer; handles community PR triage."
