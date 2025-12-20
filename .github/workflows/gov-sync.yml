@@ -46,12 +46,47 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/governance_engine.py
 
-      # Using the standard GitHub Action bot email and -s for DCO
-      - name: Commit and Push Updates
+      # Create a PR with updates instead of pushing directly to main
+      - name: Commit and Create/Update PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
           git add governance/
           
-          git diff --quiet && git diff --staged --quiet || (git commit -s -m "chore(gov): auto-sync activity and history logs [skip ci]" && git push)
+          # Check if there are changes
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to governance files"
+            exit 0
+          fi
+          
+          # Create a unique branch for governance updates
+          BRANCH_NAME="governance-sync-$(date +%Y%m%d-%H%M%S)"
+          
+          git checkout -b "$BRANCH_NAME"
+          git commit -s -m "chore(gov): auto-sync activity and history logs
+
+Auto-generated governance update triggered by workflow run.
+
+Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          
+          git push origin "$BRANCH_NAME"
+          
+          # Create PR using GitHub CLI
+          gh pr create \
+            --title "chore(gov): auto-sync activity and history logs" \
+            --body "**Automated governance sync**
+
+This PR contains automated updates to the governance registry and history logs.
+
+- Updated contributor activity status
+- Synced recent contributions (PRs, reviews, comments)
+- Maintained historical audit trail
+
+_This is an automated PR created by the governance sync workflow._" \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --label "governance" \
+            --label "automated" || echo "PR may already exist or creation failed"
