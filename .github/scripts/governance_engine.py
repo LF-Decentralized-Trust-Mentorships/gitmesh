@@ -337,12 +337,13 @@ def main():
                     if event.get('type') in ['PR_MERGED', 'ONBOARDING']:
                         details = event.get('details', '')
                         # Extract URL from details string if present
-                        if 'https://github.com' in details:
-                            # Simple extraction: find the URL in the details
-                            parts = details.split()
-                            for part in parts:
-                                if part.startswith('https://github.com'):
-                                    logged_pr_urls.add(part.rstrip('.,)'))
+                        # Use regex to match GitHub PR URLs more precisely
+                        parts = details.split()
+                        for part in parts:
+                            # Ensure URL is actually from github.com with proper format
+                            # Expected format: https://github.com/owner/repo/pull/number
+                            if part.startswith('https://github.com/') and '/pull/' in part:
+                                logged_pr_urls.add(part.rstrip('.,)'))
     
     print(f"Found {len(logged_pr_urls)} already logged PRs")
     
