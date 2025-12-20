@@ -74,28 +74,26 @@ jobs:
           BRANCH_NAME="governance-sync-$(date +%Y%m%d-%H%M%S)"
           
           git checkout -b "$BRANCH_NAME"
-          git commit -s -F- <<'EOF'
-chore(gov): auto-sync activity and history logs
-
-Auto-generated governance update triggered by workflow run.
-
-Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-EOF
+          git commit -s -m "chore(gov): auto-sync activity and history logs" \
+            -m "Auto-generated governance update triggered by workflow run." \
+            -m "Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
           
           git push origin "$BRANCH_NAME"
           
           # Create PR using GitHub CLI with better error handling
+          PR_BODY="**Automated governance sync**
+
+          This PR contains automated updates to the governance registry and history logs.
+
+          - Updated contributor activity status
+          - Synced recent contributions (PRs, reviews, comments)
+          - Maintained historical audit trail
+
+          _This is an automated PR created by the governance sync workflow._"
+          
           if ! gh pr create \
             --title "chore(gov): auto-sync activity and history logs" \
-            --body "**Automated governance sync**
-
-This PR contains automated updates to the governance registry and history logs.
-
-- Updated contributor activity status
-- Synced recent contributions (PRs, reviews, comments)
-- Maintained historical audit trail
-
-_This is an automated PR created by the governance sync workflow._" \
+            --body "$PR_BODY" \
             --base main \
             --head "$BRANCH_NAME" \
             --label "governance" \
