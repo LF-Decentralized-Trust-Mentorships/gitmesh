@@ -24,12 +24,21 @@ def get_now_ist_str():
     """Returns current IST time in ISO format."""
     return datetime.now(IST).strftime("%Y-%m-%dT%H:%M:%S+05:30")
 
-def get_all_merged_prs(per_page=100, max_pages=10):
-    """Fetches all merged PRs from the repository (paginated)."""
+def get_all_merged_prs(per_page=100, max_pages=None):
+    """Fetches all merged PRs from the repository (paginated).
+    
+    Args:
+        per_page: Number of PRs per page (max 100)
+        max_pages: Maximum number of pages to fetch (None = fetch all)
+    """
     all_prs = []
     page = 1
     
-    while page <= max_pages:
+    while True:
+        if max_pages and page > max_pages:
+            print(f"Reached max_pages limit: {max_pages}")
+            break
+            
         url = f"https://api.github.com/repos/{REPO}/pulls?state=closed&per_page={per_page}&page={page}"
         try:
             response = requests.get(url, headers=headers)
@@ -37,6 +46,7 @@ def get_all_merged_prs(per_page=100, max_pages=10):
             pulls = response.json()
             
             if not pulls:
+                print(f"No more PRs found at page {page}")
                 break
                 
             merged_prs = [
@@ -156,11 +166,23 @@ def initial_history_sync(contributors, existing_usernames):
     """Performs initial historical sync for existing contributors."""
     print("\n=== INITIAL HISTORICAL SYNC ===")
     
-    # Check if this is the first run (no user history files exist)
-    user_files = [f for f in os.listdir(HISTORY_DIR) if f.endswith('.yaml')] if os.path.exists(HISTORY_DIR) else []
+    # Check if initial sync has been completed by looking for a marker file
+    sync_marker_path = os.path.join(os.path.dirname(HISTORY_DIR), ".initial_sync_completed")
     
-    if len(user_files) > 0:
-        print(f"Found {len(user_files)} existing user history files. Skipping initial sync.")
+    if os.path.exists(sync_marker_path):
+        print("Initial sync already completed (marker file found). Skipping.")
+        return
+    
+    # Also check if user history files exist for all current contributors
+    os.makedirs(HISTORY_DIR, exist_ok=True)
+    existing_history_files = {f.replace('.yaml', '') for f in os.listdir(HISTORY_DIR) if f.endswith('.yaml')}
+    current_usernames = {c['username'] for c in contributors}
+    
+    if current_usernames.issubset(existing_history_files):
+        print(f"Found history files for all {len(contributors)} contributors. Marking sync as complete.")
+        # Create marker file
+        with open(sync_marker_path, 'w') as f:
+            f.write(f"Initial sync completed at: {get_now_ist_str()}\n")
         return
     
     print("No user history files found. Performing initial historical sync...")
@@ -225,6 +247,12 @@ def initial_history_sync(contributors, existing_usernames):
     print("Initial historical sync completed.")
     print(f"Created history files for {len(contributors)} contributors.")
     print(f"Logged {len(all_prs)} total merged PRs to ledger.")
+    
+    # Create marker file to indicate sync is complete
+    with open(sync_marker_path, 'w') as f:
+        f.write(f"Initial sync completed at: {get_now_ist_str()}\n")
+        f.write(f"Contributors synced: {len(contributors)}\n")
+        f.write(f"Total PRs logged: {len(all_prs)}\n")
 
 def main():
     # --- FORK PROTECTION CHECK ---
@@ -299,19 +327,32 @@ def main():
     # 3. SYNC RECENT CONTRIBUTIONS (PRs, Reviews, Comments)
     print("\n=== SYNCING RECENT CONTRIBUTIONS ===")
     
+    # Build a set of already logged PR URLs from ledger to avoid duplicates
+    logged_pr_urls = set()
+    if os.path.exists(LEDGER_PATH) and os.path.getsize(LEDGER_PATH) > 0:
+        with open(LEDGER_PATH, 'r') as f:
+            ledger_data = yaml.safe_load(f)
+            if ledger_data and 'events' in ledger_data:
+                for event in ledger_data['events']:
+                    if event.get('type') in ['PR_MERGED', 'ONBOARDING']:
+                        details = event.get('details', '')
+                        # Extract URL from details string if present
+                        if 'https://github.com' in details:
+                            # Simple extraction: find the URL in the details
+                            parts = details.split()
+                            for part in parts:
+                                if part.startswith('https://github.com'):
+                                    logged_pr_urls.add(part.rstrip('.,)'))
+    
+    print(f"Found {len(logged_pr_urls)} already logged PRs")
+    
     # Track recent merged PRs for all contributors
     for username, merged_at, pr_url in recent_merges:
-        if username in existing_usernames:
-            # Check if this PR was already logged (simple check by looking at recent events)
-            user_history_path = os.path.join(HISTORY_DIR, f"{username}.yaml")
-            if os.path.exists(user_history_path):
-                with open(user_history_path, 'r') as f:
-                    user_data = yaml.safe_load(f)
-                    recent_events = user_data.get('events', [])[-5:] if user_data else []
-                    # Simple check: if URL is in any of the last 5 events, skip
-                    if not any(pr_url in str(event.get('details', '')) for event in recent_events):
-                        update_user_history(username, "PR_MERGED", f"Merged PR: {pr_url}")
-                        update_ledger("PR_MERGED", username, f"Recent PR: {pr_url}")
+        if username in existing_usernames and pr_url not in logged_pr_urls:
+            update_user_history(username, "PR_MERGED", f"Merged PR: {pr_url}")
+            update_ledger("PR_MERGED", username, f"Recent PR: {pr_url}")
+            logged_pr_urls.add(pr_url)
+            print(f"Logged new PR for {username}: {pr_url}")
     
     # Track issue comments (last 365 days)
     comments = get_issue_comments(since_days=365)
