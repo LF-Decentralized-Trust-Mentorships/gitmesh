@@ -86,17 +86,33 @@ jobs:
           
           git push origin "$BRANCH_NAME"
           
+          # Extract Code Owners from .github/CODEOWNERS for notification
+          CODE_OWNERS=""
+          if [ -f ".github/CODEOWNERS" ]; then
+            # Find line matching governance/contributors.yaml and extract @usernames
+            CODE_OWNERS=$(grep "governance/contributors.yaml" .github/CODEOWNERS | grep -o "@[a-zA-Z0-9-]*" | tr '\n' ' ')
+          fi
+
           # Create PR using GitHub CLI
-          PR_TITLE="chore(gov): auto-sync activity and history logs"
-          PR_BODY="**Automated governance sync**
+          PR_TITLE="chore(gov): automated governance registry & history sync"
+          PR_BODY="## 🤖 GitMesh Steward Bot Report
 
-          This PR contains automated updates to the governance registry and history logs.
+          **Automated Governance Sync**
 
-          - Updated contributor activity status
-          - Synced recent contributions (PRs, reviews, comments)
-          - Maintained historical audit trail
+          This PR contains automated updates to the **GitMesh Community Edition** governance registry and history logs.
 
-          _This is an automated PR created by the governance sync workflow._"
+          ### 🔄 Updates Included
+          - **Activity Sync**: Updated contributor activity status based on recent GitHub events.
+          - **History Log**: Synced recent contributions (PRs, reviews, comments) to the immutable ledger.
+          - **Role Management**: Processed any pending role changes or promotions.
+          - **Audit Trail**: Maintained historical records in \`governance/history/\`.
+
+          ### 🔔 Attention Code Owners
+          cc: $CODE_OWNERS
+
+          Please review the changes to ensure accuracy. This system is designed to support transparent and auditable governance.
+
+          _Generated automatically by the GitMesh Steward Bot._"
           
           # Create PR without labels to avoid permission issues
           gh pr create \

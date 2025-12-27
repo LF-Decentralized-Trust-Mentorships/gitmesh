@@ -95,6 +95,7 @@ The governance system includes an automated sync workflow that:
   - `history/users/{username}.yaml` - Per-user contribution and role change history
 - **Tracks activity status** - Automatically flags contributors as inactive after 90 days of no activity
 - **Newbie auto-onboarding** - Automatically assigns "Newbie Contributor" role to users with their first merged PR
+- **Role Management via PR** - Supports changing roles by including commands in PR bodies (e.g., `/gov promote @username to Active Contributor`).
 - **Creates PRs for review** - All automated updates are submitted as PRs for maintainer review before merging
 
 The sync workflow runs:
