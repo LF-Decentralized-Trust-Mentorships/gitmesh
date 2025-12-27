@@ -1,5 +1,13 @@
 name: GitMesh Steward Bot
 
+# ⚠️ LOOP PREVENTION:
+# This workflow has multiple safeguards to prevent infinite PR loops:
+# 1. paths-ignore on push events excludes 'governance/**' 
+# 2. Job-level 'if' condition filters out commits by github-actions[bot]
+# 3. Job-level 'if' condition filters out PRs with title matching bot's pattern
+# 4. Commit message includes [skip ci] marker as additional safety
+# 5. Workflow checks for existing open PRs before creating new ones
+
 on:
   schedule:
     - cron: '0 0 * * *' 
@@ -12,16 +20,22 @@ on:
       - main
     paths-ignore:
       - 'governance/**'
+      - '.github/workflows/gov-sync.yml'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
   sync-engine:
     # Run on schedule, manual trigger, push to main, or merged PR
+    # IMPORTANT: Skip if triggered by the bot's own commits or PRs to prevent infinite loops
     if: |
-      github.event_name == 'schedule' || 
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+      (github.event_name == 'schedule' || 
+       github.event_name == 'workflow_dispatch' ||
+       github.event_name == 'push' ||
+       (github.event_name == 'pull_request' && github.event.pull_request.merged == true)) &&
+      (github.event.head_commit.author.email != '41898282+github-actions[bot]@users.noreply.github.com' || 
+       github.event.head_commit.author.email == null) &&
+      (github.event.pull_request.title != 'chore(gov): automated governance registry & history sync' ||
+       github.event.pull_request.title == null)
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -81,8 +95,9 @@ jobs:
           BRANCH_NAME="governance-sync-$(date +%Y%m%d-%H%M%S)"
           
           git checkout -b "$BRANCH_NAME"
-          git commit -s -m "chore(gov): auto-sync activity and history logs" \
-            -m "Auto-generated governance update triggered by workflow run."
+          git commit -s -m "chore(gov): auto-sync activity and history logs [skip ci]" \
+            -m "Auto-generated governance update triggered by workflow run." \
+            -m "Automated by: github-actions[bot]"
           
           git push origin "$BRANCH_NAME"
           
