@@ -356,3 +356,7 @@ events:
   username: RAWx18
   details: 'PR #213: feat: extend governance with auto-synced contributors registry
     and full contribution history'
+- timestamp: '2025-12-27T10:38:25+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #214: chore(gov): automated governance registry & history sync'

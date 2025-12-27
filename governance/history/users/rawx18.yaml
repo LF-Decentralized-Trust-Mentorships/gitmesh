@@ -69,3 +69,7 @@ events:
 - timestamp: '2025-12-27T10:32:16+05:30'
   type: ACTIVITY_UPDATE
   details: Last activity updated to 2025-12-27
+- timestamp: '2025-12-27T10:38:25+05:30'
+  type: PR_MERGED
+  details: 'Merged PR #214: chore(gov): automated governance registry & history sync
+    (https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/214)'
