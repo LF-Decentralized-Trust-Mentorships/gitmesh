@@ -1,4 +1,4 @@
-name: GitMesh CE Governance Sync
+name: GitMesh Steward Bot
 
 on:
   schedule:
@@ -81,7 +81,7 @@ jobs:
           
           git push origin "$BRANCH_NAME"
           
-          # Create PR using GitHub CLI with better error handling
+          # Create PR using GitHub CLI
           PR_TITLE="chore(gov): auto-sync activity and history logs"
           PR_BODY="**Automated governance sync**
 
@@ -93,37 +93,9 @@ jobs:
 
           _This is an automated PR created by the governance sync workflow._"
           
-          # Try to create PR with labels first, fall back to no labels if they don't exist
-          PR_CREATED=false
-          
-          # Attempt with labels
-          if gh pr create \
+          # Create PR without labels to avoid permission issues
+          gh pr create \
             --title "$PR_TITLE" \
             --body "$PR_BODY" \
             --base main \
-            --head "$BRANCH_NAME" \
-            --label "governance" \
-            --label "automated" 2>/tmp/pr_error_labels.log; then
-            PR_CREATED=true
-          elif grep -q "label.*not found" /tmp/pr_error_labels.log 2>/dev/null; then
-            # Labels don't exist, try without them
-            echo "Warning: Labels 'governance' or 'automated' not found. Creating PR without labels..."
-            if gh pr create \
-              --title "$PR_TITLE" \
-              --body "$PR_BODY" \
-              --base main \
-              --head "$BRANCH_NAME" 2>/tmp/pr_error_nolabels.log; then
-              PR_CREATED=true
-            fi
-          fi
-          
-          if [ "$PR_CREATED" = false ]; then
-            echo "ERROR: Failed to create PR."
-            echo "=== First attempt (with labels) ==="
-            cat /tmp/pr_error_labels.log 2>/dev/null || echo "No error log from first attempt"
-            echo "=== Second attempt (without labels) ==="
-            cat /tmp/pr_error_nolabels.log 2>/dev/null || echo "No error log from second attempt"
-            exit 1
-          fi
-          
-          echo "Successfully created governance sync PR"
+            --head "$BRANCH_NAME"
