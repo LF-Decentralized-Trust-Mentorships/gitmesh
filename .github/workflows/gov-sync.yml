@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -44,16 +44,19 @@ jobs:
 
       - name: Execute Governance Logic
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
         run: python .github/scripts/governance_engine.py
 
       # Create a PR with updates instead of pushing directly to main
       - name: Commit and Create/Update PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          
+          # Explicitly set remote with token to ensure write access
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
           
           git add governance/
           
@@ -62,6 +65,9 @@ jobs:
             echo "No changes to governance files"
             exit 0
           fi
+          
+          # Export GITHUB_TOKEN for gh cli
+          export GITHUB_TOKEN=$GH_TOKEN
           
           # Check if an open governance sync PR already exists (search by title pattern)
           EXISTING_PR=$(gh pr list --base main --state open --json number,title --jq '.[] | select(.title | startswith("chore(gov): auto-sync")) | .number' | head -1 || echo "")
@@ -76,8 +82,7 @@ jobs:
           
           git checkout -b "$BRANCH_NAME"
           git commit -s -m "chore(gov): auto-sync activity and history logs" \
-            -m "Auto-generated governance update triggered by workflow run." \
-            -m "Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+            -m "Auto-generated governance update triggered by workflow run."
           
           git push origin "$BRANCH_NAME"
           
