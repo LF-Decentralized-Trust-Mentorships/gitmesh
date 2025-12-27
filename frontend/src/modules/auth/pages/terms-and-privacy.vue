@@ -26,11 +26,11 @@
             >
               <div class="text-zinc-400 text-[11px] font-mono leading-relaxed pt-0.5">
                 I accept the 
-                <a href="https://github.com/LF-Decentralized-Trust-labs/gitmesh" target="_blank" rel="noopener noreferrer" class="text-zinc-300 hover:text-orange-500 underline decoration-zinc-700 hover:decoration-orange-500 transition-colors">
+                <a @click.stop.prevent="openTerms" class="text-zinc-300 hover:text-orange-500 underline decoration-zinc-700 hover:decoration-orange-500 transition-colors cursor-pointer">
                   Terms of Service
                 </a>
                 and 
-                <a href="https://github.com/LF-Decentralized-Trust-labs/gitmesh" target="_blank" rel="noopener noreferrer" class="text-zinc-300 hover:text-orange-500 underline decoration-zinc-700 hover:decoration-orange-500 transition-colors">
+                <a @click.stop.prevent="openPrivacy" class="text-zinc-300 hover:text-orange-500 underline decoration-zinc-700 hover:decoration-orange-500 transition-colors cursor-pointer">
                   Privacy Policy
                 </a>
               </div>
@@ -98,6 +98,16 @@ export default {
 
   methods: {
     ...mapActions('auth', ['doRefreshCurrentUser', 'doSignout']),
+
+    openTerms() {
+      const routeData = this.$router.resolve({ name: 'terms' });
+      window.open(routeData.href, '_blank');
+    },
+
+    openPrivacy() {
+      const routeData = this.$router.resolve({ name: 'privacy' });
+      window.open(routeData.href, '_blank');
+    },
 
     doSubmit() {
       if (this.model.acceptedTermsAndPrivacy) {
