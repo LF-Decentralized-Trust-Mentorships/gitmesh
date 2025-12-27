@@ -1,0 +1,365 @@
+events:
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ROLE_ASSIGNMENT
+  username: rawx18
+  details: 'Role: CEO, Assigned by: EE-board'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ROLE_ASSIGNMENT
+  username: ronit-raj9
+  details: 'Role: CTO, Assigned by: EE-board'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ROLE_ASSIGNMENT
+  username: parvm1102
+  details: 'Role: Maintainer, Assigned by: rawx18'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: RAWx18
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/1'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #1: Initial codebase migration from RAWx18/Beetle to LFDT-Beetle'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: Parvm1102
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/20'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #20: docs: updated contributing.md'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: Ronit-Raj9
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/27'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #27: Implement Comprehensive RAG Chat System with Vector StorageImplement
+    Comprehensive RAG Chat System with Vector Storage'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #28: Added .env.example and updated readme'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #30: Updated gitignore and deleted qdrant storage directory'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #31: V2'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #34: fix: Hub/overview page data fetching'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #35: feature: profiles added'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #36: Fix: Shifted database to Supabase'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #37: Clean: removed ai + rag code'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #38: Prod'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #39: fix: updated rag pipeline and made UI compatible for branch import'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #40: Fix: RAG + AI works and minor fixes'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #42: fixed minor ui changes for the import page for selecting the files.'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #51: fixed rag speed and reuploading'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #52: fix: Not owned public repo issue'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #53: Fixed Rag Context and file processing issues'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #55: Added Control Panel Data for RAG chat context'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: ruriazz
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/54'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: ruriazz
+  details: 'PR #54: fix: Unable to unselect files in /contribution/chat upload UI'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #58: feat: Added FRONTEND_URL environment variable for configurable
+    frontend URLs'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #66: feat: Add clickable GitHub links and discussions integration'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: Copilot
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/64'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #64: Fix import popup not closing after pressing import button'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #63: Fix branch selector showing stale branches when switching projects'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: dependabot[bot]
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/67'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: dependabot[bot]
+  details: 'PR #67: Bump next from 14.2.30 to 14.2.32 in /ui'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #62: Enhance branch selection UI with search and better ordering using
+    real repository data'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #68: bug: search repo card fix acc to bet 50 for #104 commit'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #74: Add Apache License 2.0'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #75: feat: added gitlab, fixed ui changes, faster inference, added
+    edit mode'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #81: Fixes in chat page'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #95: Fixed #78, #82, #83,  #92, #93, #94'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #100: chats are now working more smoothly'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: ONBOARDING
+  username: gagan-ahlawat-0
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/102'
+- timestamp: '2025-12-27T10:12:02+05:30'
+  type: PR_MERGED
+  username: gagan-ahlawat-0
+  details: 'PR #102: feat: Add public repo search for GitHub and GitLab projects'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: "PR #103: fixed bug: Intermittent \u201CCannot read properties of null\
+    \ (reading 'use\u2026"
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: ONBOARDING
+  username: mithulcrafts
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/104'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #104: Improved user experience by making header logo redirect to home
+    page'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #111: feat: Enforce signed commits with reliable commit-msg hook'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #112: Revise README badges and community links'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: ONBOARDING
+  username: focuzd
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/113'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: focuzd
+  details: 'PR #113: feat: implement create new project feature'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #118: feat: Enable live fetching and automatic PR creation'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: focuzd
+  details: 'PR #121: bug fix: fix chat page content shift when sidebar expands'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #123: Docs/enhance readme.md contribution.md'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #125: After updating repo links in CONTRIBUTING.md'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: ONBOARDING
+  username: SK8-infi
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/127'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: SK8-infi
+  details: 'PR #127: Redesign and stabilize /hub/settings/local-providers UI'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #128: UX Improvement: Notifications Accessible via Navbar Bell and
+    removing notifications section from settings'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: ONBOARDING
+  username: berkaymuratt
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/130'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: berkaymuratt
+  details: 'PR #130: add remove profile picture functionality'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #132: After fixing the show details button UI in hub/settings/event-log'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #136: Profile image upload failure UI fix'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: ONBOARDING
+  username: Sharkyii
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/135'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: Sharkyii
+  details: 'PR #135: Integrated Additional MCP Servers'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: SK8-infi
+  details: 'PR #137: Add PR Template'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: Ronit-Raj9
+  details: 'PR #139: chore: untrack .env.production and update production config'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #141: After fixing the setting update toast bug'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: "PR #143: assign distinct colors to notification filter icons for better\
+    \ visual\u2026"
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: ONBOARDING
+  username: jason2000-cpu
+  details: 'First merged PR: https://github.com/LF-Decentralized-Trust-labs/gitmesh/pull/144'
+- timestamp: '2025-12-27T10:12:03+05:30'
+  type: PR_MERGED
+  username: jason2000-cpu
+  details: 'PR #144: fix: fixed the color pallet for better content visibility on
+    both dark and light themes'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: focuzd
+  details: 'PR #145: fix: cloning repo loading screen appearing twice'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: focuzd
+  details: 'PR #146: feat/add a toggle to include readme in create new project dialog'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #150: Update README.md'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #151: `fix:After fixing theme-toggle bug`'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: mithulcrafts
+  details: 'PR #152: After adding ISSUE_Templates'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #154: feat: pivoted version updated'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #155: minor fix'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #156: auth fixed'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Parvm1102
+  details: 'PR #163: fix: solved frontend reload errors and cubejs restarting issues'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: "PR #200: fixed feat: simplify GitHub integration with automatic App installati\u2026"
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #201: feat(gov): establish automated governance registry and history
+    ledger'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #202: fix(workflows): enable push permissions for governance auto-sync
+    workflow'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #203: sync check'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #204: [WIP] Add auto-synced contributors registry with full contribution
+    history'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #206: Add DCO workflow and fix governance sync for branch protection'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #207: fix(dco): exempt merge commits from DCO sign-off requirement'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #208: fix: resolve YAML syntax error in gov-sync workflow'
+- timestamp: '2025-12-27T10:12:04+05:30'
+  type: PR_MERGED
+  username: Copilot
+  details: 'PR #209: fix: handle missing labels in governance sync workflow'
+- timestamp: '2025-12-27T10:12:05+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #210: fixed the steward bot'
+- timestamp: '2025-12-27T10:12:05+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #211: PAT fix'
