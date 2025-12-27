@@ -128,9 +128,12 @@
         </a>
       </div>
 
-      <div class="text-center mt-6">
+      <div class="text-center mt-6 flex items-center justify-center gap-4">
         <router-link :to="{ name: 'signup' }" class="text-zinc-200 hover:text-orange-500 text-xs font-mono transition-colors">
           [ create_account ]
+        </router-link>
+        <router-link :to="{ path: '/' }" class="text-zinc-200 hover:text-orange-500 text-xs font-mono transition-colors">
+          [ home ]
         </router-link>
       </div>
 

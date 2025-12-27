@@ -62,7 +62,10 @@ export default async function ({
     return;
   }
 
-  if (!currentUser.acceptedTermsAndPrivacy) {
+  // Allow access to terms and privacy pages without checking acceptance
+  const isTermsOrPrivacyPage = to.name === 'terms' || to.name === 'privacy' || to.path === '/auth/terms-and-privacy';
+  
+  if (!currentUser.acceptedTermsAndPrivacy && !isTermsOrPrivacyPage) {
     router.push({ path: '/auth/terms-and-privacy' });
     return;
   }

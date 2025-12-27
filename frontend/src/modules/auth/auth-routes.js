@@ -14,6 +14,8 @@ const PasswordResetPage = () => import('@/modules/auth/pages/password-reset-page
 const VerifyEmailPage = () => import('@/modules/auth/pages/verify-email-page.vue');
 const InvitationPage = () => import('@/modules/auth/pages/invitation-page.vue');
 const TermsAndPrivacyPage = () => import('@/modules/auth/pages/terms-and-privacy.vue');
+const TermsPage = () => import('@/modules/auth/pages/terms-page.vue');
+const PrivacyPage = () => import('@/modules/auth/pages/privacy-page.vue');
 const EmptyPermissionsPage = () => import('@/modules/auth/pages/empty-permissions-page.vue');
 
 export default [
@@ -75,6 +77,18 @@ export default [
         path: 'terms-and-privacy',
         component: TermsAndPrivacyPage,
         meta: { title: 'Terms of service and privacy policy' },
+      },
+      {
+        name: 'terms',
+        path: 'terms',
+        component: TermsPage,
+        meta: { title: 'Terms of Service' },
+      },
+      {
+        name: 'privacy',
+        path: 'privacy',
+        component: PrivacyPage,
+        meta: { title: 'Privacy Policy' },
       },
     ],
   },
