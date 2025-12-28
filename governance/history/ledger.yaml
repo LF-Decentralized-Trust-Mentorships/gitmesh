@@ -368,3 +368,7 @@ events:
   type: PR_MERGED
   username: RAWx18
   details: 'PR #224: bug: gitmesh steward bot workflow creates infinite PR loop'
+- timestamp: '2025-12-28T05:55:24+05:30'
+  type: PR_MERGED
+  username: RAWx18
+  details: 'PR #225: chore(gov): automated governance registry & history sync'
